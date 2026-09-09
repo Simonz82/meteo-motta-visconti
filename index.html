@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Stazione Meteo Motta Visconti">
+<meta property="og:url" content="https://meteo.nas.vagitaly.it/">
+<meta property="og:title" content="Stazione Meteo Motta Visconti">
+<meta property="og:description" content="Dati meteo in tempo reale e storico della stazione meteorologica di Motta Visconti.">
+<meta property="og:image" content="https://meteo.nas.vagitaly.it/image/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="description" content="Dati meteo in tempo reale e storico della stazione meteorologica di Motta Visconti.">
+<title>Stazione Meteo Motta Visconti</title>
+
+<!-- Auto-refresh della pagina ogni 5 minuti e 5 secondi (305 secondi) -->
+<meta content="305" http-equiv="refresh"/>
+<!-- Favicon Meteo incorporata -->
+<link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;⛅&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js">
+
+</script>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+    
+   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #111111; color: #e1e1e1; margin: 0; padding: 15px; max-width: 800px; margin-left: auto; margin-right: auto; }
+        
+        .main-title { text-align: center; color: #fff; font-size: 1.8rem; font-weight: 800; margin: 1px 0 25px 0; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+
+        .card-interactive { background: #1c1c1c; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; cursor: pointer; transition: transform 0.2s, background 0.2s; overflow: hidden; }
+        .card-interactive:hover, .card-interactive:active { transform: scale(1.03); background: #252525; }
+
+        /* 1. CICLI */
+        .cycles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 10px; }
+        .cycle-item { background: #1c1c1c; border-radius: 20px; padding: 9px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
+        .cycle-item:hover { transform: scale(1.05); background: #252525; }
+        .cycle-icon { width: 45px; height: 45px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .cycle-name { font-size: 0.75rem; font-weight: bold; color: #fff; margin: 0; }
+        .cycle-state { font-size: 0.65rem; color: #9e9e9e; text-align: center; line-height: 1.1; text-transform: capitalize;}
+
+        /* 2. I QUATTRO OROLOGINI */
+        .gauge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 12px; }
+        @media (min-width: 600px) { .gauge-grid { grid-template-columns: repeat(4, 1fr); } }
+        
+        .gauge-card { padding: 10px 8px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .gauge-card h3 { margin: 0 0 12px 0; font-size: 15px; color: #fff; font-weight: 700; pointer-events: none;}
+        
+        .gauge-visual-container { position: relative; width: 100%; display: flex; justify-content: center; }
+        .gauge-visual-container.circle-type { height: 115px; align-items: center; max-width: 120px; margin-top: 0; }
+        
+        .gauge-svg { width: 100%; max-width: 145px; height: auto; overflow: visible; pointer-events: none; }
+        .baro-svg { width: 100%; max-width: 145px; height: auto; overflow: visible; pointer-events: none; margin-top: -5px; }
+        
+        .gauge-value { position: absolute; text-align: center; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .gauge-value.inside-circle { bottom: 3px; }
+        .gauge-value.inside-circle .gauge-val { font-size: 1rem; font-weight: 700; color: #fff; line-height: 1; }
+        .gauge-value.inside-circle .gauge-unit { font-size: 0.6rem; color: #9e9e9e; margin-top: 1px; font-weight: 600;}
+
+        /* Bussola Vento */
+        .compass-container { width: 115px; height: 115px; border-radius: 50%; border: 3px solid #333; position: relative; background: radial-gradient(circle, #2a2a2a 0%, #1c1c1c 100%); pointer-events: none;}
+        .compass-label { position: absolute; font-size: 0.75rem; font-weight: bold; color: #9e9e9e; z-index: 2;}
+        .comp-n { top: 14px; left: 50%; transform: translateX(-50%); color: #ff5252;}
+        .comp-s { bottom: 14px; left: 50%; transform: translateX(-50%); }
+        .comp-e { top: 50%; right: 16px; transform: translateY(-50%); }
+        .comp-w { top: 50%; left: 16px; transform: translateY(-50%); }
+        .compass-sublabel { position: absolute; font-size: 0.6rem; font-weight: 600; color: #555; z-index: 2;}
+        .comp-ne { top: 24%; right: 24%; transform: translate(50%, -50%); }
+        .comp-se { bottom: 24%; right: 24%; transform: translate(50%, 50%); }
+        .comp-sw { bottom: 24%; left: 24%; transform: translate(-50%, 50%); }
+        .comp-nw { top: 24%; left: 24%; transform: translate(-50%, -50%); }
+        .compass-arrow { position: absolute; top: 32%; left: 50%; width: 4px; height: 18%; background: #00d4ff; transform-origin: bottom center; transform: translateX(-50%) rotate(0deg); transition: transform 1s cubic-bezier(0.4, 2.5, 0.3, 1); border-radius: 2px; z-index: 1;}
+        .compass-arrow::after { content: ''; position: absolute; top: -5px; left: -3px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid #00d4ff; }
+
+        /* 3. TWIN CARDS ORIZZONTALI */
+        .twin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 12px; }
+        .twin-card { padding: 10px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; text-align: left;}
+        .twin-info { margin-bottom: 0; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; } 
+        .twin-info h3 { margin: 0; font-size: 15px; color: #fff; font-weight: 700; }
+        .twin-val { font-size: 0.95rem; font-weight: 800; color: #fff; line-height: 1.1; margin-top: 5px; } 
+        .twin-val span { font-size: 0.65rem; font-weight: 600; color: #9e9e9e;}
+        .twin-desc { font-size: 8px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-top: 8px; color: #111; letter-spacing: 0.5px; }
+        
+        .pyramid-container { width: 55px; height: 55px; position: relative; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background-color: #2a2a2a; pointer-events: none; flex-shrink: 0;}
+        .pyramid-fill-wrapper { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        .pyramid-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to top, #4caf50 0%, #ffeb3b 40%, #ff9800 60%, #f44336 80%, #9c27b0 100%); }
+        .pyramid-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(to bottom, transparent, transparent 19.5%, rgba(0,0,0,0.6) 20%); z-index: 2; pointer-events: none; }
+
+        .drop-container { width: 47px; height: 55px; position: relative; pointer-events: none; display: flex; justify-content: center; flex-shrink: 0;}
+        .drop-svg { width: 100%; height: 100%; overflow: visible; }
+
+        /* NUOVA SEZIONE: QUALITÀ ARIA */
+        .dashboard-panel { background: #1c1c1c; border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; margin-bottom: 12px;}
+        .section-title { text-align: center; color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 5px; border-bottom: 1px solid #333; }
+        /* LEGENDA POLLINI */
+        .pollen-legend { display: flex; justify-content: center; align-items: center; gap: 8px; margin: -10px 0 15px 0; flex-wrap: nowrap; }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.55rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .bg-0 { background: #558b2f; }
+        .bg-1 { background: #7cb342; }
+        .bg-2 { background: #8bc34a; }
+        .bg-3 { background: #cddc39; }
+        .bg-4 { background: #ffc21b; }
+        .bg-5 { background: #ff5252; }
+        
+        .aqi-container { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 20px;}
+        @media (max-width: 500px) { .aqi-container { flex-direction: column; } }
+
+        .aqi-gauge-wrapper { width: 118px; display: flex; flex-direction: column; align-items: center; position: relative; cursor: pointer;}
+        .aqi-badge { margin-top: -10px; font-size: 0.65rem; font-weight: 700; padding: 4px 12px; border-radius: 12px; color: #111; letter-spacing: 0.5px; text-align: center; z-index: 2;}
+
+        /* Griglia a 4 per le barrette dei gas e PM */
+        .pm-bars-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 100%; }
+        @media (max-width: 600px) { .pm-bars-container { grid-template-columns: 1fr; } }
+        
+        .pm-bar-item { display: flex; flex-direction: column; cursor: pointer; padding: 2px 8px; border-radius: 8px; transition: background 0.2s;}
+        .pm-bar-item:hover { background: #252525; }
+        .pm-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 6px; }
+        .pm-title { font-size: 0.75rem; font-weight: 700; color: #e1e1e1; margin: 0; }
+        .pm-val { font-size: 0.85rem; font-weight: 800; color: #fff; line-height: 1; }
+        .pm-val span { font-size: 0.55rem; font-weight: 600; color: #9e9e9e; margin-left: 2px;}
+        
+        .progress-track { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; width: 0%; border-radius: 3px; transition: width 1.5s ease-out, background-color 1.5s ease; }
+        .progress-markers { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .marker { position: absolute; top: 0; height: 100%; width: 2px; background: #1c1c1c; }
+
+        /* 4. POLLINI */
+        .pollen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .pollen-item { height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 8px; font-weight: bold; font-size: 0.65rem; color: #999; background: transparent; text-align: center; border: 2px solid #333; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s; }
+        .pollen-item:hover, .pollen-item:active { transform: scale(1.05); background: #252525; }
+        .pollen-icon { font-size: 1.1rem; }
+        /* 0: Nessuno (Grigio-Verde spento) */
+        .level-0 { border-color: #558b2f !important; color: #558b2f !important; }
+        /* 1: Molto basso (Verde scuro) */
+        .level-1 { border-color: #7cb342 !important; color: #7cb342 !important; box-shadow: 0 1px 3px rgba(124, 179, 66, 0.2); }
+        /* 2: Basso (Verde standard) */
+        .level-2 { border-color: #8bc34a !important; color: #8bc34a !important; box-shadow: 0 1px 5px rgba(139, 195, 74, 0.3); }
+        /* 3: Moderata (Verde Lime acceso) */
+        .level-3 { border-color: #cddc39 !important; color: #cddc39 !important; box-shadow: 0 2px 6px rgba(205, 220, 57, 0.4); }
+        /* 4: Alta (Giallo Allerta) */
+        .level-4 { border-color: #ffc21b !important; color: #ffc21b !important; box-shadow: 0 0 10px 1px rgba(255, 235, 59, 0.5); }
+        /* 5: Molto alto (Rosso) */
+        .level-5 { border-color: #ff5252 !important; color: #ff5252 !important; box-shadow: 0 0 10px 2px rgba(255, 82, 82, 0.6); }
+
+        /* 5. MAPPA WINDY (IFRAME) */
+        .windy-card { background: #1c1c1c; border-radius: 20px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden; }
+        .windy-card h3 { margin: 0 0 10px 0; font-size: 15px; color: #ffffff; font-weight: 700; padding-left: 5px; }
+        .windy-iframe { width: 100%; height: 400px; border: none; border-radius: 12px; }
+
+        /* MODAL POP-UP STYLES */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #1c1c1c; border-radius: 20px; width: 92%; max-width: 600px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #757575; cursor: pointer; border: none; background: none; line-height: 1; padding: 0; }
+        .modal-title { margin: 0 0 15px 0; color: #fff; font-size: 1.3rem; font-weight: 600; }
+        .time-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .time-btn { background: #2a2a2a; border: 1px solid #444; color: #e1e1e1; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; flex: 1; transition: all 0.2s;}
+        .time-btn.active { background: #333; border-color: #fff; color: #fff; font-weight: bold; box-shadow: inset 0 0 0 1px #fff;}
+        .modal-chart-wrapper { position: relative; height: 35vh; width: 100%; }
+                /* FOOTER */
+        .site-footer { text-align: center; margin-top: 35px; margin-bottom: 30px; padding-top: 10px; border-top: 1px solid #333; font-size: 0.7rem; color: #777; line-height: 1.6; }
+        .site-footer .disclaimer { font-size: 0.65rem; color: #555; display: block; margin-top: 2px; margin-bottom: 12px; }
+        .site-footer .tech { color: #888; font-style: italic; }
+        .site-footer strong { color: #aaa; font-weight: 700; letter-spacing: 0.5px; }
+        .site-footer a { text-decoration: none; }
+        .site-footer a strong { color: #aaa; transition: color 0.3s ease; }
+        .site-footer a:hover strong { color: #00d4ff; text-shadow: 0 0 8px rgba(0, 212, 255, 0.5); }
+  
+    .footer-buttons-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        width: 100%;
+    }
+    @media (min-width: 600px) {
+        .footer-buttons-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    </style>
+<!-- MODAL POP-UP STYLES -->
+<style>
+   /* ... tutti i tuoi stili CSS del popup ... */
+    .modal-chart-wrapper { position: relative; height: 35vh; width: 100%; }
+  </style>
+<!-- Matomo -->
+<script>
+   var _paq = window._paq = window._paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="https://matomo.nas.vagitaly.it/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      })();
+  </script>
+<!-- End Matomo Code -->
+</head>
+<body>
+<svg aria-hidden="true" focusable="false" style="width:0;height:0;position:absolute;">
+<lineargradient id="gradRainFill" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#00d4ff">
+</stop>
+<stop offset="100%" stop-color="#0077ff">
+</stop>
+</lineargradient>
+</svg>
+<!-- TITOLO PRINCIPALE -->
+<h1 class="main-title" style="margin-bottom: 5px;">
+  Stazione Meteorologica
+  <br/>
+  di Motta Visconti (Mi)
+</h1>
+
+<div id="dpc-alert-banner" style="display:none; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; margin:0 auto 8px auto; max-width:600px; text-align:left; cursor:pointer;">
+  <span id="dpc-alert-icon" style="font-size:26px; line-height:1; flex-shrink:0;">⚠️</span>
+  <div>
+    <div id="dpc-alert-title" style="font-weight:bold; font-size:12px; color:#fff;"></div>
+    <div id="dpc-alert-subtitle" style="font-size:10px; color:#ccc; margin-top:2px;"></div>
+  </div>
+</div>
+<script>
+(function() {
+  fetch('/dpc_alert.php', {cache: 'no-store'})
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.active) return;
+      var rgb = (d.level === 4) ? '244,67,54' : (d.level === 3) ? '255,152,0' : '255,193,7';
+      var hex = (d.level === 4) ? '#F44336' : (d.level === 3) ? '#FF9800' : '#FFC107';
+      var banner = document.getElementById('dpc-alert-banner');
+      banner.style.display = 'flex';
+      banner.style.border = '3px solid ' + hex;
+      banner.style.background = 'rgba(' + rgb + ',0.12)';
+      banner.style.boxShadow = '0 0 14px 3px rgba(' + rgb + ',0.45)';
+      banner.onclick = function() { window.open(d.link, '_blank'); };
+      document.getElementById('dpc-alert-icon').style.color = hex;
+      document.getElementById('dpc-alert-title').textContent = d.label + ': Allerta ' + d.alert;
+      document.getElementById('dpc-alert-subtitle').textContent = d.info + ' — ' + d.zone;
+    })
+    .catch(function(){});
+})();
+</script>
+
+
+
+<style>
+  .main-title {
+    font-size: 1.35rem;
+    line-height: 1.05;
+    font-weight: 800;
+    text-align: center;
+    margin-top: 0;
+    letter-spacing: 0.2px;
+  }
+
+  @media (max-width: 640px) {
+    .main-title {
+      font-size: 1.15rem;
+      line-height: 1.02;
+    }
+  }
+</style>
+
+<div id="lastUpdateText" style="text-align: center; color: #888; font-size: 0.65rem; margin-bottom: 8px; font-weight: 500; letter-spacing: 0.5px;">
+  Ultimo aggiornamento dati: in caricamento...
+</div>
+<!-- PREVISIONI PROSSIMI GIORNI (Open-Meteo) -->
+<div class="dashboard-panel">
+  <h2 class="section-title" style="margin-bottom: 12px;">Previsioni Future</h2>
+  <div id="forecast-status" style="text-align: center; color: #9e9e9e; font-size: 0.75rem; margin-bottom: 10px;">Caricamento...</div>
+  <div id="forecast-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;"></div>
+</div>
+
+<script>
+function loadForecast() {
+  var status = document.getElementById('forecast-status');
+  var grid = document.getElementById('forecast-grid');
+  fetch('/previsioni.php', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.success || !d.giorni || d.giorni.length === 0) {
+        status.textContent = 'Previsioni non disponibili al momento.';
+        return;
+      }
+      status.style.display = 'none';
+      window.forecastGiorni = d.giorni;
+      grid.innerHTML = d.giorni.map(function(g, idx) {
+        return '<div onclick="openForecastDayModal(' + idx + ')" style="background:#2a2a2a; border-radius:12px; padding:10px 4px; text-align:center; cursor:pointer;">' +
+          '<div style="font-size:0.65rem; color:#9e9e9e; font-weight:600;">' + (g.giorno === 'Oggi' ? 'Oggi' : g.giorno.slice(0,3)) + '</div>' +
+          '<div style="font-size:0.6rem; color:#666; margin-bottom:4px;">' + g.data + '</div>' +
+          '<div style="font-size:2.2rem; line-height:1;">' + g.icona + '</div>' +
+          '<div style="font-size:0.75rem; font-weight:700; color:#ff5252; margin-top:4px;">' + g.temp_max + '°</div>' +
+          '<div style="font-size:0.7rem; color:#00d4ff;">' + g.temp_min + '°</div>' +
+          (g.pioggia > 0 ? '<div style="font-size:0.6rem; color:#4caf50; margin-top:2px;">💧' + g.pioggia + 'mm</div>' : '') +
+          '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      status.textContent = 'Errore nel caricamento delle previsioni.';
+    });
+}
+
+function openForecastDayModal(idx) {
+  var g = (window.forecastGiorni || [])[idx];
+  if (!g) return;
+
+  document.getElementById('modalDataZone').style.display = 'none';
+  document.getElementById('modalAstroZone').style.display = 'block';
+  document.getElementById('modalTitle').innerText = g.giorno + ' ' + g.data;
+  document.getElementById('astroImage').innerHTML = '<div style="font-size: 5rem; line-height:1;">' + g.icona + '</div><div style="color:#9e9e9e; font-size:0.85rem; margin-top:5px;">' + g.descrizione + '</div>';
+
+  // Mostra il dettaglio ogni 3 ore, come le fasce orarie dei siti meteo classici.
+  var oreFasce = (g.ore || []).filter(function(o) {
+    var h = parseInt(o.ora.split(':')[0], 10);
+    return h % 3 === 0;
+  });
+
+  var righe = oreFasce.map(function(o) {
+    return '<div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid #333;">' +
+      '<span style="width:45px; color:#9e9e9e;">' + o.ora + '</span>' +
+      '<span style="font-size:1.3rem;">' + o.icona + '</span>' +
+      '<span style="width:40px; text-align:right; font-weight:700; color:#fff;">' + o.temp + '°</span>' +
+      '<span style="width:55px; text-align:right; color:#00d4ff; font-size:0.75rem;">💧' + o.pioggia_prob + '%</span>' +
+      '<span style="width:55px; text-align:right; color:#9e9e9e; font-size:0.75rem;">🌬️' + o.vento + 'km/h</span>' +
+      '</div>';
+  }).join('');
+
+  document.getElementById('astroDataBox').innerHTML = `
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #444;">
+      <span>Max: <strong style="color:#ff5252;">${g.temp_max}°</strong></span>
+      <span>Min: <strong style="color:#00d4ff;">${g.temp_min}°</strong></span>
+      <span>Raffica: <strong style="color:#fff;">${g.raffica} km/h</strong></span>
+    </div>
+    ${righe}
+    <div style="text-align:center; margin-top:12px; font-size:0.65rem; color:#666;">Previsione: Open-Meteo</div>
+  `;
+  document.getElementById('chartModal').style.display = 'flex';
+}
+
+loadForecast();
+</script>
+
+<!-- CICLI (Sole, Luna, Stagione) -->
+<div class="cycles-grid">
+<div class="cycle-item" onclick="openSeasonModal()">
+<div class="cycle-icon" id="icon_season" style="font-size: 1.8rem; filter: drop-shadow(0 0 5px #4caf50);">
+     🌸
+    </div>
+<div class="cycle-name">
+     Stagione
+    </div>
+<div class="cycle-state" id="val_season">
+     In Attesa
+    </div>
+</div>
+<div class="cycle-item" onclick="openSunModal()">
+<div class="cycle-icon" id="icon_sun">
+<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;"/>
+</div>
+<div class="cycle-name">
+     Sole
+    </div>
+<div class="cycle-state" id="val_sun">
+     In Attesa
+    </div>
+</div>
+<div class="cycle-item" onclick="openMoonModal()">
+<div class="cycle-icon" id="icon_moon" style="font-size: 1.8rem; filter: drop-shadow(0 0 5px #fff);">
+     🌑
+    </div>
+<div class="cycle-name">
+     Luna
+    </div>
+<div class="cycle-state" id="val_moon">
+     In Attesa
+    </div>
+</div>
+</div>
+<!-- OROLOGINI GRAFANA E STRUMENTI -->
+<div class="gauge-grid">
+<div class="card-interactive gauge-card" onclick="window.location.href='storico.html?misura=temp'" style="position: relative;">
+<h3>
+     Temperatura
+    </h3>
+<div class="gauge-visual-container circle-type" id="container_temp">
+</div>
+<!-- Freccia MINIMA (In basso a Sinistra, piccola) -->
+<div style="position: absolute; bottom: 8px; left: 10px; text-align: left; line-height: 1.2;">
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Min
+     </div>
+<div style="font-size: 11px; font-weight: bold; color: #00d4ff; display: flex; align-items: center; gap: 2px;">
+<span>
+      ↓
+     </span>
+<span id="tempMinOggi">
+      --.-°
+     </span>
+</div>
+</div>
+<!-- Freccia MASSIMA (In basso a Destra, piccola) -->
+<div style="position: absolute; bottom: 8px; right: 10px; text-align: right; line-height: 1.2;">
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Max
+     </div>
+<div style="font-size: 12px; font-weight: bold; color: #ff5252; display: flex; align-items: center; gap: 2px; justify-content: flex-end;">
+<span>
+      ↑
+     </span>
+<span id="tempMaxOggi">
+      --.-°
+     </span>
+</div>
+</div>
+</div>
+<div class="card-interactive gauge-card" onclick="window.location.href='storico.html?misura=hum'" style="position: relative;">
+<h3>
+     Umidità
+    </h3>
+<div class="gauge-visual-container circle-type" id="container_hum">
+</div>
+<!-- Freccia MINIMA Umidità -->
+<div style="position: absolute; bottom: 8px; left: 10px; text-align: left; line-height: 1.2;">
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Min
+     </div>
+<div style="font-size: 11px; font-weight: bold; color: #00d4ff; display: flex; align-items: center; gap: 2px;">
+<span>
+      ↓
+     </span>
+<span id="humMinOggi">
+      --%
+     </span>
+</div>
+</div>
+<!-- Freccia MASSIMA Umidità -->
+<div style="position: absolute; bottom: 8px; right: 10px; text-align: right; line-height: 1.2;">
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Max
+     </div>
+<div style="font-size: 12px; font-weight: bold; color: #ff5252; display: flex; align-items: center; gap: 2px; justify-content: flex-end;">
+<span>
+      ↑
+     </span>
+<span id="humMaxOggi">
+      --%
+     </span>
+</div>
+</div>
+</div>
+<div class="card-interactive gauge-card" onclick="window.location.href='storico.html?misura=press'">
+<h3>
+     Pressione
+    </h3>
+<div class="gauge-visual-container circle-type">
+<svg class="baro-svg" viewbox="0 0 100 100">
+<g id="baro_ticks">
+</g>
+<polygon fill="#9c27b0" id="baro_needle" points="48.5,50 51.5,50 50,13" style="transition: transform 1.5s cubic-bezier(0.4, 2.5, 0.3, 1); transform-origin: 50px 50px; transform: rotate(-135deg);">
+</polygon>
+<circle cx="50" cy="50" fill="#1c1c1c" r="3.5" stroke="#9c27b0" stroke-width="2">
+</circle>
+</svg>
+<div class="gauge-value inside-circle">
+<div class="gauge-val" id="val_press">
+       --
+      </div>
+<div class="gauge-unit">
+       hPa
+      </div>
+</div>
+</div>
+</div>
+<div class="card-interactive gauge-card" onclick="window.location.href='storico.html?misura=wind'" style="position: relative;">
+<h3>
+     Vento
+    </h3>
+<div class="gauge-visual-container circle-type" style="height: 115px; max-width: 115px;">
+<div class="compass-container">
+<svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;" viewbox="0 0 100 100">
+<g id="compass_ticks">
+</g>
+</svg>
+<div class="compass-label comp-n">
+       N
+      </div>
+<div class="compass-label comp-s">
+       S
+      </div>
+<div class="compass-label comp-e">
+       E
+      </div>
+<div class="compass-label comp-w">
+       W
+      </div>
+<div class="compass-sublabel comp-ne">
+       NE
+      </div>
+<div class="compass-sublabel comp-se">
+       SE
+      </div>
+<div class="compass-sublabel comp-sw">
+       SW
+      </div>
+<div class="compass-sublabel comp-nw">
+       NW
+      </div>
+<div class="compass-arrow" id="compass_arrow">
+</div>
+<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#1c1c1c; border-radius:50%; width:50px; height:50px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:3; box-shadow: 0 0 10px rgba(0,0,0,0.8);">
+<div id="val_wind" style="font-size:0.95rem; font-weight:700; color:#fff; line-height: 1;">
+        --
+       </div>
+<div style="font-size:0.55rem; color:#9e9e9e;">
+        km/h
+       </div>
+</div>
+</div>
+</div>
+<!-- SCRITTINA RAFFICA MASSIMA (A capo e allineata a destra) -->
+<div style="position: absolute; bottom: 6px; right: 8px; text-align: right; line-height: 1.2; z-index: 10;">
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Max
+     </div>
+<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+      Raffica:
+     </div>
+<div style="font-size: 11px; font-weight: bold; color: #ff5252;">
+<span id="val_gust">
+       --.-
+      </span>
+<span style="font-size: 8px;">
+       km/h
+      </span>
+</div>
+</div>
+</div>
+</div>
+<!-- TWIN CARDS ORIZZONTALI: UV e PIOGGIA -->
+<div class="twin-grid">
+<div class="card-interactive twin-card" onclick="window.location.href='storico.html?misura=uv'">
+<div class="twin-info">
+<h3>
+      Raggi UV
+     </h3>
+<div class="twin-val" id="val_uv">
+      --
+     </div>
+<div class="twin-desc" id="desc_uv" style="background: #333; color: #999;">
+      In attesa
+     </div>
+</div>
+<div class="pyramid-container">
+<div class="pyramid-fill-wrapper" id="uv_fill_wrapper">
+<div class="pyramid-gradient">
+</div>
+</div>
+<div class="pyramid-lines">
+</div>
+</div>
+</div>
+<div class="card-interactive twin-card" onclick="window.location.href='storico.html?misura=rain'">
+<div class="twin-info">
+<h3>
+      Pioggia Oggi
+     </h3>
+<div class="twin-val" id="val_rain">
+      --
+      <span>
+       mm
+      </span>
+</div>
+<div class="twin-desc" id="desc_rain" style="background: #333; color: #999;">
+      In attesa
+     </div>
+</div>
+<div class="drop-container">
+<svg class="drop-svg" viewbox="0 0 100 100">
+<defs>
+<clippath id="dropClip">
+<path d="M50 5 C50 5 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 5 50 5 Z">
+</path>
+</clippath>
+</defs>
+<path d="M50 5 C50 5 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 5 50 5 Z" fill="#2a2a2a" stroke="#333" stroke-width="3">
+</path>
+<rect clip-path="url(#dropClip)" fill="url(#gradRainFill)" height="100" id="rain_fill_rect" style="transition: y 1.5s ease-out;" width="100" x="0" y="100">
+</rect>
+</svg>
+</div>
+</div>
+</div>
+<!-- BANNER DI ALLERTA FULMINI (A tutta larghezza) -->
+<div class="card-interactive" id="lightning_banner" onclick="window.location.href='storico.html?misura=lightning'" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-left: 5px solid #333; margin-bottom: 15px; background: #1a1a1a;">
+<div style="display: flex; align-items: center; gap: 15px;">
+<i class="fas fa-bolt" id="lightning_icon" style="font-size: 28px; color: #555;">
+</i>
+<div>
+<h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: 700; color: #fff;">
+      Ultimo Fulmine
+     </h3>
+<div id="lightning_time" style="font-size: 12px; color: #999; margin-top: 2px;">
+      Nessun rilevamento nelle ultime ore
+     </div>
+<div id="lightning_nearest_header" style="font-size: 11px; color: #4fc3f7; margin-top: 3px; font-weight: 600;">
+     </div>
+</div>
+</div>
+<div style="text-align: right;">
+<div style="font-size: 9px; color: #777; text-transform: uppercase; letter-spacing: 0.3px;">
+      Ultimo rilevamento
+     </div>
+<div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 4px;">
+<span id="lightning_dist" style="font-size: 26px; font-weight: bold; color: #555;">
+      --
+     </span>
+<span style="font-size: 14px; color: #777;">
+      km
+     </span>
+</div>
+<!-- Contatore lampi totale odierno -->
+<div style="font-size: 11px; color: #777; margin-top: 2px;">
+     Totale oggi:
+     <span id="lightning_count" style="font-weight: bold; color: #999;">
+      --
+     </span>
+</div>
+</div>
+</div>
+<!-- PANNELLO QUALITÀ ARIA -->
+<div class="dashboard-panel">
+<h2 class="section-title">
+    Qualità dell'Aria
+   </h2>
+<div class="aqi-container">
+<!-- Indice UAQI a Semicerchio -->
+<div class="aqi-gauge-wrapper" onclick="window.location.href='storico.html?misura=aqi'" style="cursor: pointer;">
+<div class="gauge-visual-container circle-type" id="container_aqi" style="height: 85px; max-width: 108px; margin-top: 5px;">
+</div>
+<div class="aqi-badge" id="badge_aqi" style="background: #333; color: #999;">
+      In attesa
+     </div>
+</div>
+<!-- Barre Progresso (Griglia 2x2) -->
+<div class="pm-bars-container">
+<!-- PM 2.5 -->
+<div class="pm-bar-item" onclick="window.location.href='storico.html?misura=pm25'" style="cursor: pointer;">
+<div class="pm-header">
+<h4 class="pm-title">
+        PM 2.5
+        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+         (Smog)
+        </span>
+</h4>
+<div class="pm-val" id="val_pm25">
+        --
+        <span>
+         μg/m³
+        </span>
+</div>
+</div>
+<div class="progress-track">
+<div class="progress-fill" id="fill_pm25" style="background: #333;">
+</div>
+<div class="progress-markers">
+<div class="marker" style="left: 30%;">
+</div>
+<div class="marker" style="left: 60%;">
+</div>
+</div>
+</div>
+</div>
+<!-- Ozono (O3) -->
+<div class="pm-bar-item" onclick="window.location.href='storico.html?misura=o3'" style="cursor: pointer;">
+<div class="pm-header">
+<h4 class="pm-title">
+        Ozono
+        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+         (O3)
+        </span>
+</h4>
+<div class="pm-val" id="val_o3">
+        --
+        <span>
+         ppb
+        </span>
+</div>
+</div>
+<div class="progress-track">
+<div class="progress-fill" id="fill_o3" style="background: #333;">
+</div>
+<div class="progress-markers">
+<div class="marker" style="left: 30%;">
+</div>
+<div class="marker" style="left: 60%;">
+</div>
+</div>
+</div>
+</div>
+<!-- PM 10 -->
+<div class="pm-bar-item" onclick="window.location.href='storico.html?misura=pm10'" style="cursor: pointer;">
+<div class="pm-header">
+<h4 class="pm-title">
+        PM 10
+        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+         (Polveri)
+        </span>
+</h4>
+<div class="pm-val" id="val_pm10">
+        --
+        <span>
+         μg/m³
+        </span>
+</div>
+</div>
+<div class="progress-track">
+<div class="progress-fill" id="fill_pm10" style="background: #333;">
+</div>
+<div class="progress-markers">
+<div class="marker" style="left: 40%;">
+</div>
+<div class="marker" style="left: 80%;">
+</div>
+</div>
+</div>
+</div>
+<!-- Anidride Nitrosa (NO2) -->
+<div class="pm-bar-item" onclick="window.location.href='storico.html?misura=no2'" style="cursor: pointer;">
+<div class="pm-header">
+<h4 class="pm-title">
+        Anidride Nitrosa
+        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+         (NO2)
+        </span>
+</h4>
+<div class="pm-val" id="val_no2">
+        --
+        <span>
+         ppb
+        </span>
+</div>
+</div>
+<div class="progress-track">
+<div class="progress-fill" id="fill_no2" style="background: #333;">
+</div>
+<div class="progress-markers">
+<div class="marker" style="left: 40%;">
+</div>
+<div class="marker" style="left: 80%;">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+<!-- PANNELLO POLLINI -->
+<div class="dashboard-panel">
+  <h2 class="section-title">Livello Polline</h2>
+
+  <!-- LEGENDA POLLINI -->
+  <div class="pollen-legend">
+    <div class="legend-item"><div class="legend-dot bg-2"></div><div>Basso</div></div>
+    <div class="legend-item"><div class="legend-dot bg-3"></div><div>Moderato</div></div>
+    <div class="legend-item"><div class="legend-dot bg-4"></div><div>Alto</div></div>
+    <div class="legend-item"><div class="legend-dot bg-5"></div><div>Molto Alto</div></div>
+  </div>
+
+  <!-- Riga 1: riepilogo -->
+  <div class="pollen-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 6px;">
+    <div class="pollen-item" id="poll_trees" onclick="window.location.href='storico.html?misura=p_alberi'" style="cursor: pointer;">
+      <span class="pollen-icon">🌲</span> Alberi
+    </div>
+    <div class="pollen-item" id="poll_grass" onclick="window.location.href='storico.html?misura=p_erba'" style="cursor: pointer;">
+      <span class="pollen-icon">🌿</span> Erba
+    </div>
+  </div>
+
+  <!-- Riga 2 -->
+  <div class="pollen-grid">
+    <div class="pollen-item" id="poll_amb" onclick="window.location.href='storico.html?misura=p_ambrosia'" style="cursor: pointer;">
+      <span class="pollen-icon">🌾</span> Ambrosia
+    </div>
+    <div class="pollen-item" id="poll_art" onclick="window.location.href='storico.html?misura=p_artemisia'" style="cursor: pointer;">
+      <span class="pollen-icon">🌿</span> Artemisia
+    </div>
+    <div class="pollen-item" id="poll_bet" onclick="window.location.href='storico.html?misura=p_betulla'" style="cursor: pointer;">
+      <span class="pollen-icon">🍃</span> Betulla
+    </div>
+    <div class="pollen-item" id="poll_fra" onclick="window.location.href='storico.html?misura=p_frassino'" style="cursor: pointer;">
+      <span class="pollen-icon">🌳</span> Frassino
+    </div>
+  </div>
+
+  <!-- Riga 3 -->
+  <div class="pollen-grid">
+    <div class="pollen-item" id="poll_noc" onclick="window.location.href='storico.html?misura=p_nocciolo'" style="cursor: pointer;">
+      <span class="pollen-icon">🌰</span> Nocciolo
+    </div>
+    <div class="pollen-item" id="poll_ont" onclick="window.location.href='storico.html?misura=p_ontano'" style="cursor: pointer;">
+      <span class="pollen-icon">🌲</span> Ontano
+    </div>
+    <div class="pollen-item" id="poll_erb" onclick="window.location.href='storico.html?misura=p_erbacee'" style="cursor: pointer;">
+      <span class="pollen-icon">🌱</span> Erbacee
+    </div>
+    <div class="pollen-item" id="pollstagione" onclick="window.location.href='storico.html?misura=p_stagione'" style="cursor: pointer;">
+      <span class="pollen-icon">🌿</span> In stagione
+    </div>
+  </div>
+
+  <!-- Riga 4 -->
+  <div class="pollen-grid">
+    <div class="pollen-item" id="poll_pin" onclick="window.location.href='storico.html?misura=p_pino'" style="cursor: pointer;">
+      <span class="pollen-icon">🌲</span> Pino
+    </div>
+    <div class="pollen-item" id="poll_pio" onclick="window.location.href='storico.html?misura=p_pioppo'" style="cursor: pointer;">
+      <span class="pollen-icon">🍂</span> Pioppo
+    </div>
+    <div class="pollen-item" id="poll_que" onclick="window.location.href='storico.html?misura=p_quercia'" style="cursor: pointer;">
+      <span class="pollen-icon">🍁</span> Quercia
+    </div>
+    <div class="pollen-item" id="poll_uli" onclick="window.location.href='storico.html?misura=p_ulivo'" style="cursor: pointer;">
+      <span class="pollen-icon">🫒</span> Ulivo
+    </div>
+  </div>
+</div>
+
+<!-- SEZIONE FIUME TICINO -->
+<div class="dashboard-panel">
+  <h2 class="section-title" style="margin-bottom: 5px; border-bottom: none; padding-bottom: 0;">
+    Fiume Ticino
+  </h2>
+
+  <div style="text-align: center; color: #9e9e9e; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+    Livello Idrometrico e Portata
+  </div>
+
+  <div style="width: 100%; height: 1px; background: #333; margin-bottom: 15px;"></div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+
+    <a href="#" onclick="toggleStationChart(event, 'bereguardo')"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
+       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
+       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Bereguardo</span>
+      <span id="bereguardo-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
+      <span id="bereguardo-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
+    </a>
+    <div id="bereguardo-chart-wrap" style="display:none; grid-column: 1 / -1;">
+      <div id="bereguardo-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="bereguardo-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <canvas id="bereguardo-chart" height="220"></canvas>
+    </div>
+
+    <a href="#" onclick="toggleStationChart(event, 'vigevano')"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
+       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
+       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Vigevano</span>
+      <span id="vigevano-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
+      <span id="vigevano-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
+    </a>
+    <div id="vigevano-chart-wrap" style="display:none; grid-column: 1 / -1;">
+      <div id="vigevano-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="vigevano-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <canvas id="vigevano-chart" height="220"></canvas>
+    </div>
+
+    <a href="#" onclick="toggleStationChart(event, 'pavia')"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
+       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
+       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Pavia</span>
+      <span id="pavia-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
+      <span id="pavia-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
+    </a>
+    <div id="pavia-chart-wrap" style="display:none; grid-column: 1 / -1;">
+      <div id="pavia-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="pavia-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <canvas id="pavia-chart" height="220"></canvas>
+    </div>
+
+  </div>
+
+<script>
+var stationConfigs = {
+  bereguardo: { endpoint: '/bereguardo_livello.php', name: 'Bereguardo' },
+  vigevano: { endpoint: '/vigevano_livello.php', name: 'Vigevano' },
+  pavia: { endpoint: '/pavia_livello.php', name: 'Pavia' }
+};
+var stationChartInstances = {};
+var stationLoaded = {};
+
+function formatStationLabel(p) {
+  var t = p.t.split(' ')[1] ? p.t.split(' ')[1].slice(0,5) : p.t;
+  return p.v.toFixed(1) + ' cm (ore ' + t + ')';
+}
+
+function loadStationLastValue(station) {
+  var cfg = stationConfigs[station];
+  fetch(cfg.endpoint + '?days=1', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var el = document.getElementById(station + '-last-value');
+      if (!el) return;
+      if (!d.success || !d.points || d.points.length === 0) {
+        el.textContent = 'Dato non disponibile';
+        return;
+      }
+      var last = d.points[d.points.length - 1];
+      el.textContent = 'Ultimo: ' + formatStationLabel(last);
+    })
+    .catch(function() {
+      var el = document.getElementById(station + '-last-value');
+      if (el) el.textContent = 'Dato non disponibile';
+    });
+}
+
+function toggleStationChart(e, station) {
+  e.preventDefault();
+  var wrap = document.getElementById(station + '-chart-wrap');
+  var label = document.getElementById(station + '-toggle-label');
+  var showing = wrap.style.display !== 'none';
+  if (showing) {
+    wrap.style.display = 'none';
+    label.textContent = 'Tocca per il grafico storico';
+    return;
+  }
+  wrap.style.display = 'block';
+  label.textContent = 'Tocca per nascondere il grafico';
+  if (!stationLoaded[station]) {
+    stationLoaded[station] = true;
+    loadStationChart(station);
+  }
+}
+
+function loadStationChart(station) {
+  var cfg = stationConfigs[station];
+  var status = document.getElementById(station + '-chart-status');
+  var summary = document.getElementById(station + '-chart-summary');
+  fetch(cfg.endpoint + '?days=7', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.success || !d.points || d.points.length === 0) {
+        status.textContent = 'Dati non disponibili al momento.';
+        return;
+      }
+      status.textContent = 'Ultimi 7 giorni — ' + d.label;
+
+      var values = d.points.map(function(p) { return p.v; });
+      var last = d.points[d.points.length - 1];
+      var min = Math.min.apply(null, values);
+      var max = Math.max.apply(null, values);
+      summary.textContent = 'Ultimo: ' + last.v.toFixed(1) + ' cm  •  Min: ' + min.toFixed(1) + ' cm  •  Max: ' + max.toFixed(1) + ' cm';
+
+      var labels = d.points.map(function(p) { return p.t; });
+      var ctx = document.getElementById(station + '-chart').getContext('2d');
+      stationChartInstances[station] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Livello (cm)',
+            data: values,
+            borderColor: '#00d4ff',
+            backgroundColor: 'rgba(0,212,255,0.1)',
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#00d4ff',
+            tension: 0.2,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          interaction: { mode: 'nearest', intersect: false, axis: 'x' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              mode: 'nearest',
+              intersect: false,
+              callbacks: {
+                label: function(ctx) { return ctx.parsed.y.toFixed(1) + ' cm'; }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#9e9e9e', maxTicksLimit: 8 }, grid: { color: '#333' } },
+            y: { ticks: { color: '#9e9e9e' }, grid: { color: '#333' } }
+          }
+        }
+      });
+    })
+    .catch(function() {
+      status.textContent = 'Errore nel caricamento dei dati.';
+    });
+}
+
+Object.keys(stationConfigs).forEach(loadStationLastValue);
+</script>
+
+</div>
+
+
+
+
+<!-- MAPPA WINDY.COM -->
+<div class="windy-card">
+<h3>
+    🌍 Radar Meteo
+   </h3>
+<iframe class="windy-iframe" src="https://embed.windy.com/embed.html?type=map&amp;location=coordinates&amp;metricRain=default&amp;metricTemp=%C2%B0C&amp;metricWind=km/h&amp;zoom=11&amp;overlay=radar&amp;product=radar&amp;level=surface&amp;lat=45.283&amp;lon=8.9833">
+</iframe>
+</div>
+<!-- FOOTER -->
+<div class="site-footer">
+<!-- MENU COLLEGAMENTI: METEO, APP E STORIA -->
+<div class="footer-buttons-grid" style="width: 100%; padding-bottom: 25px; padding-top: 15px; border-bottom: 1px solid #333; margin-bottom: 20px;   ">
+<!-- Pulsante Record Storici -->
+<a href="#" onclick="openRecordsModal(); return false;" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s; cursor: pointer;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      🏆
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #ffeb3b; font-size: 1.1rem; display: block; margin-bottom: 2px;">
+       Record Storici
+      </strong>
+<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Temperature e pioggia dal 1940
+      </span>
+</div>
+</a>
+<!-- Pulsante App Android -->
+<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      📱
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #4caf50; font-size: 0.95rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
+<span id="dataApp" style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Verifica versione in corso...
+      </span>
+</div>
+</a>
+<!-- Pulsante Foto Storiche -->
+<a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      📸
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #00d4ff; font-size: 1.1rem; display: block; margin-bottom: 2px;">Archivio Storico Foto</strong>
+<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Com'era Motta Visconti
+      </span>
+</div>
+</a>
+<a href="#" onclick="openTechModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px; display:flex; align-items:center; justify-content:center; width:42px; height:42px;">
+  🌦️
+</span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #9c27b0; font-size: 1.1rem; display: block; margin-bottom: 2px;">
+       Specifiche Tecniche
+      </strong>
+<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Stazione &amp; Motta Visconti
+      </span>
+</div>
+</a>
+</div>
+<strong>
+    Stazione Meteo – Motta Visconti (MI)
+   </strong>
+<br/>
+   Dati ambientali rilevati in tempo reale e aggiornati ogni 5 minuti.
+   <span class="disclaimer">
+    Le misurazioni meteorologiche e della qualità dell'aria hanno scopo puramente informativo e amatoriale.
+   </span>
+<span class="tech">
+    Powered by Home Assistant, InfluxDB &amp; Ecowitt Sensors
+   </span>
+<br/>
+   Sistema di acquisizione sviluppato e curato da
+   <a href="https://t.me/Simonz82" target="_blank">
+<strong>
+     Simonz82
+    </strong>
+</a>
+   © 2026
+  </div>
+<!-- POP-UP GRAFICI E ASTRONOMIA -->
+<div class="modal-overlay" id="chartModal" onclick="closeModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()">
+<button class="modal-close" onclick="closeModal(event)">
+     ×
+    </button>
+<h3 class="modal-title" id="modalTitle">
+     Grafico
+    </h3>
+<!-- SEZIONE GRAFICO TRADIZIONALE -->
+<div id="modalDataZone">
+<div id="solarTabs" style="display: none; gap: 10px; margin-bottom: 15px;">
+<button class="time-btn" id="btnTabUV" onclick="switchSolarTab('ecowitt_uv_index', 'Raggi UV', '#ffeb3b', 'Index')">
+       UV
+      </button>
+<button class="time-btn" id="btnTabRad" onclick="switchSolarTab('ecowitt_solar_radiation', 'Radiazione', '#ff9800', 'W/m²')">
+       W/m²
+      </button>
+<button class="time-btn" id="btnTabLux" onclick="switchSolarTab('ecowitt_solar_lux', 'Luminosità', '#4caf50', 'klx')">
+       klx
+      </button>
+</div>
+<div class="time-buttons">
+<button class="time-btn active" id="btn24h" onclick="updateModalRange(24)">
+       24h
+      </button>
+<button class="time-btn" id="btn7d" onclick="updateModalRange(168)">
+       7 Giorni
+      </button>
+<button class="time-btn" id="btn30d" onclick="updateModalRange(720)">
+       30 Giorni
+      </button>
+</div>
+<div class="modal-chart-wrapper">
+<canvas id="modalCanvas">
+</canvas>
+</div>
+</div>
+<!-- SEZIONE ASTRONOMICA (Nascosta di default) -->
+<div id="modalAstroZone" style="display: none; text-align: center;">
+<div id="astroImage" style="margin: 20px auto; width: 120px; height: 120px;">
+</div>
+<div id="astroDataBox" style="background: #2a2a2a; border-radius: 15px; padding: 15px; text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.8;">
+</div>
+</div>
+</div>
+</div>
+<script>
+   let globalStore = {};
+        let modalChartInstance = null;
+        let currentModalEntity = '';
+        let currentModalColor = '';
+        let currentModalUnit = '';
+
+        // --- MOTORE GRAFICO STILE GRAFANA ---
+        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+            var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return { x: centerX + (radius * Math.cos(angleInRadians)), y: centerY + (radius * Math.sin(angleInRadians)) };
+        }
+
+        function describeArc(x, y, radius, startAngle, endAngle){
+            var start = polarToCartesian(x, y, radius, startAngle);
+            var end = polarToCartesian(x, y, radius, endAngle);
+            var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+            return ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y].join(" ");
+        }
+
+        function interpolateColor(c1, c2, factor) {
+            let r1 = parseInt(c1.substring(1,3), 16), g1 = parseInt(c1.substring(3,5), 16), b1 = parseInt(c1.substring(5,7), 16);
+            let r2 = parseInt(c2.substring(1,3), 16), g2 = parseInt(c2.substring(3,5), 16), b2 = parseInt(c2.substring(5,7), 16);
+            let r = Math.round(r1 + factor * (r2 - r1)); let g = Math.round(g1 + factor * (g2 - g1)); let b = Math.round(b1 + factor * (b2 - b1));
+            return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+        }
+
+        function getGradientColor(val, stops) {
+            for(let i=0; i<stops.length-1; i++) {
+                if(val >= stops[i].val && val <= stops[i+1].val) {
+                    let pct = (val - stops[i].val) / (stops[i+1].val - stops[i].val);
+                    return interpolateColor(stops[i].color, stops[i+1].color, pct);
+                }
+            }
+            if(val >= stops[stops.length-1].val) return stops[stops.length-1].color;
+            return stops[0].color;
+        }
+
+        /* AGGIUNTO raggio piccolo per il perno per distanziare il testo */
+        function createSyncfusionSVG(containerId, needleId, textId, min, max, stops, ticks, unit, valSize="1rem", unitSize="0.6rem", bottomOffset="28px", centerRadius="5") {
+            const startAngle = -120; const totalAngle = 240;
+            const innerRadius = 41; const innerWidth = 10;
+            const outerRadius = 49; const outerWidth = 2.5;
+
+            let svg = `<svg viewBox="-12 -12 124 124" class="baro-svg" style="overflow:visible;">`;
+            const dashLen = 2 * Math.PI * innerRadius * (240 / 360);
+
+            svg += `<defs><mask id="mask_${needleId}"><path id="mask_path_${needleId}" d="${describeArc(50, 50, innerRadius, startAngle, 120)}" fill="none" stroke="white" stroke-width="${innerWidth+2}" stroke-linecap="round" stroke-dasharray="${dashLen}" stroke-dashoffset="${dashLen}" style="transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 2.5, 0.3, 1);"/></mask></defs>`;
+            svg += `<path d="${describeArc(50, 50, innerRadius, startAngle, 120)}" fill="none" stroke="#222" stroke-width="${innerWidth}" stroke-linecap="round"/>`;
+
+            const steps = 60; const angleStep = totalAngle / steps; const valStep = (max - min) / steps;
+            
+            let startPosOuter = polarToCartesian(50, 50, outerRadius, startAngle);
+            let endPosOuter = polarToCartesian(50, 50, outerRadius, 120);
+            let startPosInner = polarToCartesian(50, 50, innerRadius, startAngle);
+            let endPosInner = polarToCartesian(50, 50, innerRadius, 120);
+
+            svg += `<circle cx="${startPosOuter.x}" cy="${startPosOuter.y}" r="${outerWidth/2}" fill="${getGradientColor(min, stops)}"/>`;
+            svg += `<circle cx="${endPosOuter.x}" cy="${endPosOuter.y}" r="${outerWidth/2}" fill="${getGradientColor(max, stops)}"/>`;
+
+            for(let i=0; i<steps; i++) {
+                let a1 = startAngle + i * angleStep; let a2 = startAngle + (i+1) * angleStep + 0.5; 
+                let midVal = min + (i + 0.5) * valStep; let color = getGradientColor(midVal, stops);
+                svg += `<path d="${describeArc(50, 50, outerRadius, a1, a2)}" fill="none" stroke="${color}" stroke-width="${outerWidth}" stroke-linecap="butt"/>`;
+            }
+
+            svg += `<g mask="url(#mask_${needleId})">`;
+            svg += `<circle cx="${startPosInner.x}" cy="${startPosInner.y}" r="${innerWidth/2}" fill="${getGradientColor(min, stops)}"/>`;
+            svg += `<circle cx="${endPosInner.x}" cy="${endPosInner.y}" r="${innerWidth/2}" fill="${getGradientColor(max, stops)}"/>`;
+
+            for(let i=0; i<steps; i++) {
+                let a1 = startAngle + i * angleStep; let a2 = startAngle + (i+1) * angleStep + 0.5; 
+                let midVal = min + (i + 0.5) * valStep; let color = getGradientColor(midVal, stops);
+                svg += `<path d="${describeArc(50, 50, innerRadius, a1, a2)}" fill="none" stroke="${color}" stroke-width="${innerWidth}" stroke-linecap="butt"/>`;
+            }
+            svg += `</g>`;
+
+            ticks.forEach(t => {
+                let pct = (t - min) / (max - min); let angle = startAngle + pct * totalAngle;
+                let pStart = polarToCartesian(50, 50, outerRadius + 2.5, angle);
+                let pEnd = polarToCartesian(50, 50, outerRadius + 5, angle);
+                let pText = polarToCartesian(50, 50, outerRadius + 11.5, angle); 
+                svg += `<line x1="${pStart.x}" y1="${pStart.y}" x2="${pEnd.x}" y2="${pEnd.y}" stroke="#555" stroke-width="1.5" />`;
+                svg += `<text x="${pText.x}" y="${pText.y}" fill="#888" font-size="7" font-weight="600" text-anchor="middle" dominant-baseline="central">${t}</text>`;
+            });
+
+            /* Perno con raggio modificabile e base lancetta sollevata */
+            svg += `<g style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));"><polygon id="${needleId}" points="48.5,50 51.5,50 50,25" fill="#e1e1e1" style="transition: transform 1.5s cubic-bezier(0.4, 2.5, 0.3, 1); transform-origin: 50px 50px; transform: rotate(-120deg);"/><circle cx="50" cy="50" r="${centerRadius}" fill="#111" stroke="#e1e1e1" stroke-width="1.5"/></g></svg>`;
+            
+            /* Usa il bottomOffset molto esagerato per l'AQI */
+            svg += `<div class="gauge-value inside-circle" style="bottom: ${bottomOffset};"><div class="gauge-val" id="${textId}" style="transition: color 1s ease; font-size: ${valSize}; line-height: 0.9;">${min}</div><div class="gauge-unit" style="font-size: ${unitSize}; margin-top:0;">${unit}</div></div>`;
+
+            document.getElementById(containerId).innerHTML = svg;
+        }
+
+        function updateSyncfusionValue(needleId, textId, value, min, max, stops, isFloat) {
+            let clampVal = Math.min(Math.max(value, min), max);
+            let pct = (clampVal - min) / (max - min);
+            
+            document.getElementById(needleId).style.transform = `rotate(${-120 + (pct * 240)}deg)`;
+            document.getElementById(`mask_path_${needleId}`).style.strokeDashoffset = (2 * Math.PI * 41 * (240 / 360)) - (pct * (2 * Math.PI * 41 * (240 / 360)));
+            
+            let color = getGradientColor(clampVal, stops);
+            document.getElementById(textId).innerText = isFloat ? value.toFixed(1) : Math.round(value);
+            document.getElementById(textId).style.color = color; 
+        }
+
+        const tempSegments = [{val: -5, color: '#2196f3'}, {val: 16, color: '#4caf50'}, {val: 30, color: '#ffeb3b'}, {val: 33, color: '#ff9800'}, {val: 35, color: '#f44336'}, {val: 40, color: '#f44336'}];
+        const tempTicks = [-5, 0, 5, 10, 15, 20, 25, 30, 35, 40]; 
+        
+        const humSegments = [{val: 0, color: '#f44336'}, {val: 10, color: '#ff9800'}, {val: 30, color: '#ffeb3b'}, {val: 35, color: '#4caf50'}, {val: 55, color: '#4caf50'}, {val: 80, color: '#2196f3'}, {val: 100, color: '#9c27b0'}];
+        const humTicks = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+        const aqiSegments = [{val: 0, color: '#00e400'}, {val: 50, color: '#ffff00'}, {val: 100, color: '#ff7e00'}, {val: 150, color: '#ff0000'}, {val: 200, color: '#8f3f97'}, {val: 300, color: '#7e0023'}];
+        const aqiTicks = [0, 50, 100, 150, 200, 300];
+
+        function initSyncfusionGauges() {
+            createSyncfusionSVG('container_temp', 'arc_temp', 'val_temp', -5, 40, tempSegments, tempTicks, '&deg;C');
+            createSyncfusionSVG('container_hum', 'arc_hum', 'val_hum', 0, 100, humSegments, humTicks, '%');
+            // GAUGE AQI: offset impostato a 48px, raggio centrale ridotto a 3
+            createSyncfusionSVG('container_aqi', 'arc_aqi', 'val_aqi', 0, 300, aqiSegments, aqiTicks, 'UAQI', '1.05rem', '0.5rem', '15px', '3');
+        }
+
+        function drawBarometer() {
+            const svg = document.getElementById('baro_ticks'); let html = '';
+            for(let p = 960; p <= 1030; p += 2) {
+                let deg = -135 + ((p - 960) / 70) * 270;
+                let isMajor = (p % 10 === 0);
+                html += `<line x1="50" y1="4" x2="50" y2="${isMajor ? 12 : 8}" stroke="${isMajor ? '#fff' : '#555'}" stroke-width="${isMajor ? 2 : 1}" transform="rotate(${deg}, 50, 50)" />`;
+                if (isMajor) {
+                    let rad = (deg - 90) * Math.PI / 180;
+                    html += `<text x="${50 + 26 * Math.cos(rad)}" y="${50 + 26 * Math.sin(rad)}" fill="#9e9e9e" font-size="5.5" font-weight="bold" text-anchor="middle" dominant-baseline="central">${p}</text>`;
+                }
+            }
+            svg.innerHTML = html;
+        }
+
+        function drawCompassTicks() {
+            const svg = document.getElementById('compass_ticks'); let html = '';
+            for(let d = 0; d < 360; d += 5) { 
+                let isMajor = (d % 45 === 0); let isMinor = (d % 15 === 0) && !isMajor;
+                let len = isMajor ? 5 : (isMinor ? 3.5 : 2);
+                let sw = isMajor ? 2 : (isMinor ? 1.5 : 1);
+                let col = isMajor ? '#999' : (isMinor ? '#777' : '#555');
+                html += `<line x1="50" y1="1" x2="50" y2="${1+len}" stroke="${col}" stroke-width="${sw}" transform="rotate(${d}, 50, 50)" />`;
+            }
+            svg.innerHTML = html;
+        }
+
+        initSyncfusionGauges(); drawBarometer(); drawCompassTicks();
+
+        // --- UTILITY E MODAL ---
+        function getLatestValue(dataArray, entityName) {
+            const values = dataArray[entityName];
+            if (!values || values.length === 0) return null;
+            
+            let ultimoPunto = null;
+            let maxTime = 0;
+            
+            // Dato che il file live ha i timestamp corretti, cerchiamo il più recente in assoluto
+            for (let i = 0; i < values.length; i++) {
+                if (values[i].value !== null && !isNaN(values[i].value) && values[i].time) {
+                    if (values[i].time.getTime() > maxTime) {
+                        maxTime = values[i].time.getTime();
+                        ultimoPunto = values[i].value;
+                    }
+                }
+            }
+            return ultimoPunto;
+        }
+
+        function hexToRgba(hex, alpha) {
+            let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        // --- UTILITY E MODAL ---
+        function openModal(entity, title, color, unit) {
+            currentModalEntity = entity; currentModalColor = color; currentModalUnit = unit;
+            document.getElementById('modalTitle').innerText = title;
+            
+            // Nasconde l'AstroZone e mostra i Grafici
+            document.getElementById('modalAstroZone').style.display = 'none';
+            document.getElementById('modalDataZone').style.display = 'block';
+            
+            // Mostra il menu solare solo se stiamo guardando UV o affini
+            const solarTabs = document.getElementById('solarTabs');
+            if (entity.includes('uv_index') || entity.includes('solar')) {
+                solarTabs.style.display = 'flex';
+                document.getElementById('btnTabUV').classList.toggle('active', entity === 'ecowitt_uv_index');
+                document.getElementById('btnTabRad').classList.toggle('active', entity === 'ecowitt_solar_radiation');
+                document.getElementById('btnTabLux').classList.toggle('active', entity === 'ecowitt_solar_lux');
+            } else {
+                solarTabs.style.display = 'none';
+            }
+
+            document.getElementById('chartModal').style.display = 'flex';
+            updateModalRange(24);
+        }
+
+        // Funzione per cambiare grafico restando dentro il modal solare
+        function switchSolarTab(entity, title, color, unit) {
+            currentModalEntity = entity; currentModalColor = color; currentModalUnit = unit;
+            document.getElementById('modalTitle').innerText = title;
+            
+            document.getElementById('btnTabUV').classList.toggle('active', entity === 'ecowitt_uv_index');
+            document.getElementById('btnTabRad').classList.toggle('active', entity === 'ecowitt_solar_radiation');
+            document.getElementById('btnTabLux').classList.toggle('active', entity === 'ecowitt_solar_lux');
+
+            let activeHours = 24;
+            if (document.getElementById('btn7d').classList.contains('active')) activeHours = 168;
+            if (document.getElementById('btn30d') && document.getElementById('btn30d').classList.contains('active')) {
+                activeHours = 720;
+            }
+            updateModalRange(activeHours);
+        }
+
+        function closeModal(e) { document.getElementById('chartModal').style.display = 'none'; }
+
+
+        // --- FUNZIONI ASTRONOMICHE (Motta Visconti) ---
+        const MOTTA_LAT = 45.2924;
+        const MOTTA_LNG = 8.9864;
+
+        // Unica fonte per nome/icona fase lunare da una fase SunCalc (0-1), usata sia
+        // dal modal dettagliato che dalla card compatta (nameShort per lo spazio ridotto).
+        function getMoonPhaseInfo(phase) {
+            if (phase <= 0.03 || phase >= 0.97) return { icon: "🌑", name: "Luna Nuova", nameShort: "Luna Nuova" };
+            if (phase < 0.22) return { icon: "🌒", name: "Luna Crescente", nameShort: "Luna Crescente" };
+            if (phase < 0.28) return { icon: "🌓", name: "Primo Quarto", nameShort: "Primo Quarto" };
+            if (phase < 0.47) return { icon: "🌔", name: "Gibbosa Crescente", nameShort: "Gibb. Crescente" };
+            if (phase < 0.53) return { icon: "🌕", name: "Luna Piena", nameShort: "Luna Piena" };
+            if (phase < 0.72) return { icon: "🌖", name: "Gibbosa Calante", nameShort: "Gibb. Calante" };
+            if (phase < 0.78) return { icon: "🌗", name: "Ultimo Quarto", nameShort: "Ultimo Quarto" };
+            return { icon: "🌘", name: "Luna Calante", nameShort: "Luna Calante" };
+        }
+
+        function openMoonModal() {
+            document.getElementById('modalDataZone').style.display = 'none';
+            document.getElementById('modalAstroZone').style.display = 'block';
+            document.getElementById('modalTitle').innerText = "Dettagli Astronomici Luna";
+            
+            let now = new Date();
+            
+            // Usa SunCalc per calcolare i dati reali per Motta Visconti in questo istante
+            let moonIllum = SunCalc.getMoonIllumination(now);
+            let moonPos = SunCalc.getMoonPosition(now, MOTTA_LAT, MOTTA_LNG);
+            let moonTimes = SunCalc.getMoonTimes(now, MOTTA_LAT, MOTTA_LNG);
+            
+            // Fasi Lunari precise
+            let phase = moonIllum.phase;
+            let moonInfo = getMoonPhaseInfo(phase);
+            let phaseName = moonInfo.name; let moonIcon = moonInfo.icon;
+
+            // Calcolo approssimativo Età e Prossime lune (Ciclo di 29.53 giorni)
+            let ageDays = (phase * 29.53).toFixed(1);
+            let daysToFull = (phase < 0.5) ? (14.76 - ageDays).toFixed(0) : (44.3 - ageDays).toFixed(0);
+            let daysToNew = (29.53 - ageDays).toFixed(0);
+
+            // Conversioni Radianti -> Gradi per le coordinate nel cielo
+            let altitudeDeg = (moonPos.altitude * 180 / Math.PI).toFixed(1);
+            // Azimut: SunCalc restituisce 0 per il sud, quindi aggiungiamo 180 per riportarlo al nord standard (0=N, 90=E, 180=S)
+            let azimuthDeg = ((moonPos.azimuth * 180 / Math.PI) + 180).toFixed(1);
+            
+            // Orari culmine (altezza massima)
+            let culmTime = "Non culmina oggi";
+            if (moonTimes.highest) {
+                culmTime = moonTimes.highest.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+            }
+
+            document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));">${moonIcon}</div>`;
+            document.getElementById('astroDataBox').innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Stato Attuale:</span> <strong style="color:#fff;">${phaseName}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Illuminazione:</span> <strong style="color:#00d4ff;">${(moonIllum.fraction * 100).toFixed(1)}%</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Età della Luna:</span> <strong style="color:#fff;">${ageDays} giorni</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Prossima Piena tra:</span> <strong style="color:#ffeb3b;">~ ${daysToFull} gg</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Prossima Nuova tra:</span> <strong style="color:#aaa;">~ ${daysToNew} gg</strong></div>
+                
+                <div style="margin-top:15px; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px; color:#ffeb3b; font-weight:bold; font-size:0.75rem;">POSIZIONE NEL CIELO (Motta Visconti)</div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Altitudine (Elevazione):</span> <strong style="color:#fff;">${altitudeDeg}° ${altitudeDeg > 0 ? '(Visibile)' : '(Sotto orizz.)'}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Azimut (Direzione):</span> <strong style="color:#fff;">${azimuthDeg}°</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Distanza:</span> <strong style="color:#fff;">${moonPos.distance.toFixed(0)} km</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Culminazione (Altezza Max):</span> <strong style="color:#00d4ff;">${culmTime}</strong></div>
+            `;
+            document.getElementById('chartModal').style.display = 'flex';
+        }
+
+
+        // Calcoli solari fittizi (simulati in base a latitudine Motta Visconti 45.28N per mese)
+        function openSunModal() {
+            document.getElementById('modalDataZone').style.display = 'none';
+            document.getElementById('modalAstroZone').style.display = 'block';
+            document.getElementById('modalTitle').innerText = "Ciclo Solare - Motta Visconti";
+            
+            let now = new Date();
+            
+            // Calcolo REALE degli orari del sole per Motta Visconti tramite SunCalc
+            let sunTimes = SunCalc.getTimes(now, MOTTA_LAT, MOTTA_LNG);
+            let alba = sunTimes.sunrise;
+            let tramonto = sunTimes.sunset;
+            let mezzogiorno = sunTimes.solarNoon;
+            
+            // Formattazione per la visualizzazione (con gli zeri davanti se necessario)
+            let albaStr = alba.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+            let tramontoStr = tramonto.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+            let mezzogiornoStr = mezzogiorno.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+            
+            // Calcolo ore di luce totali (differenza tra alba e tramonto)
+            let diffMs = tramonto - alba;
+            let oreLuce = Math.floor(diffMs / 3600000);
+            let minLuce = Math.floor((diffMs % 3600000) / 60000);
+            
+            // Posizione attuale per aggiornare l'arco
+            let hr = now.getHours();
+            let isDay = (now >= alba && now < tramonto);
+            
+            document.getElementById('astroImage').innerHTML = `
+                <div style="position:relative; width:100%; height:60px; border-bottom: 2px solid #555; overflow:hidden;">
+                    <div style="position:absolute; bottom:-60px; left:0; width:100%; height:120px; border-radius:50%; border:2px dashed #666;"></div>
+                    <div style="position:absolute; ${isDay ? 'top:10px' : 'bottom:-20px'}; left:50%; transform:translateX(-50%); font-size: 3rem; filter: drop-shadow(0 0 20px #ffeb3b); transition: top 1s;">☀️</div>
+                </div>
+            `;
+            
+            document.getElementById('astroDataBox').innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Posizione Attuale:</span> <strong style="color:#fff;">${isDay ? 'Sopra l\'orizzonte' : 'Sotto l\'orizzonte'}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Alba:</span> <strong style="color:#ff9800;">${albaStr}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Mezzogiorno solare:</span> <strong style="color:#ffeb3b;">${mezzogiornoStr}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Tramonto:</span> <strong style="color:#ff5252;">${tramontoStr}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Ore di luce totali:</span> <strong style="color:#fff;">${oreLuce}h ${minLuce}m</strong></div>
+            `;
+            document.getElementById('chartModal').style.display = 'flex';
+        }
+
+        function openSeasonModal() {
+            document.getElementById('modalDataZone').style.display = 'none';
+            document.getElementById('modalAstroZone').style.display = 'block';
+            document.getElementById('modalTitle').innerText = "Stagione in Corso";
+
+            let now = new Date();
+            let month = now.getMonth();
+            let day = now.getDate();
+            let season = "Inverno";
+            let sColor = "#00d4ff";
+            let icon = "❄️";
+            let prog = "Siamo in Inverno";
+
+            if ((month === 2 && day >= 20) || (month === 3) || (month === 4) || (month === 5 && day <= 20)) {
+                season = "Primavera";
+                sColor = "#4caf50";
+                icon = "🌸";
+                prog = "Siamo in Primavera";
+            } else if ((month === 5 && day >= 21) || (month === 6) || (month === 7) || (month === 8 && day <= 21)) {
+                season = "Estate";
+                sColor = "#ffeb3b";
+                icon = "🌻";
+                prog = "Siamo in Estate";
+            } else if ((month === 8 && day >= 22) || (month === 9) || (month === 10) || (month === 11 && day <= 20)) {
+                season = "Autunno";
+                sColor = "#ff9800";
+                icon = "🍂";
+                prog = "Siamo in Autunno";
+            }
+
+            document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px ${sColor});">${icon}</div>`;
+            document.getElementById('astroDataBox').innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Stagione Attuale:</span> <strong style="color:${sColor};">${season}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Primavera:</span> <strong style="color:#fff;">20 Marzo</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Estate:</span> <strong style="color:#fff;">21 Giugno</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Autunno:</span> <strong style="color:#fff;">22 Settembre</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Inverno:</span> <strong style="color:#fff;">21 Dicembre</strong></div>
+                <div style="text-align:center; margin-top:15px; font-style:italic; color:#888;">${prog}</div>
+            `;
+            document.getElementById('chartModal').style.display = 'flex';
+        }
+
+
+        function openRecordsModal() {
+            document.getElementById('modalDataZone').style.display = 'none';
+            document.getElementById('modalAstroZone').style.display = 'block';
+            document.getElementById('modalTitle').innerText = "Record Storici";
+            document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px #ffeb3b);">🏆</div>`;
+            document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Caricamento dati storici...</div>`;
+            document.getElementById('chartModal').style.display = 'flex';
+
+            fetch('/records.php', { cache: 'no-store' })
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (!d.success) {
+                        document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Dati non disponibili al momento.</div>`;
+                        return;
+                    }
+                    const r = d.records;
+                    document.getElementById('astroDataBox').innerHTML = `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Temperatura più alta:</span> <strong style="color:#ff5252;">${r.temp_max.valore}${r.temp_max.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.temp_max.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Temperatura più bassa:</span> <strong style="color:#00d4ff;">${r.temp_min.valore}${r.temp_min.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.temp_min.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Pioggia in un giorno:</span> <strong style="color:#4caf50;">${r.pioggia_max.valore}${r.pioggia_max.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.pioggia_max.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Raffica di vento max:</span> <strong style="color:#fff;">${r.raffica_max.valore}${r.raffica_max.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.raffica_max.data}</span></div>
+                        <div style="text-align:center; margin-top:15px; font-size:0.7rem; color:#666;">Periodo analizzato: ${d.periodo_da} — ${d.periodo_a}<br>Fonte: ${d.fonte}</div>
+                    `;
+                })
+                .catch(function() {
+                    document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Errore nel caricamento dei dati storici.</div>`;
+                });
+        }
+
+        function updateModalRange(hours) {
+            document.getElementById('btn24h').classList.toggle('active', hours === 24);
+            document.getElementById('btn7d').classList.toggle('active', hours === 168);
+            let btn30 = document.getElementById('btn30d');
+            if(btn30) btn30.classList.toggle('active', hours === 720);
+
+            const data = globalStore[currentModalEntity];
+            if (!data || data.length === 0) return;
+
+            const cutoffTime = new Date().getTime() - (hours * 60 * 60 * 1000);
+            const filteredData = data.filter(d => d.time.getTime() >= cutoffTime);
+
+            // FORMATTAZIONE DEI TESTI COME DA TUA RICHIESTA
+            const labels = filteredData.map(d => {
+                const giorno = d.time.getDate().toString().padStart(2, '0');
+                const mese = (d.time.getMonth() + 1).toString().padStart(2, '0');
+                
+                if (hours === 24) {
+                    // H24: mostra l'ora (03:00, 06:00, ecc.)
+                    return d.time.toLocaleTimeString('it-IT', { hour: '2-digit', minute:'2-digit' });
+                    
+                } else if (hours === 168) {
+                    // 7 GIORNI: mostra es. "mar 05/05"
+                    const giorniSettimana = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"];
+                    const nomeGiorno = giorniSettimana[d.time.getDay()];
+                    return `${nomeGiorno} ${giorno}/${mese}`;
+                    
+                } else {
+                    // 30 GIORNI: mostra es. "01/05"
+                    return `${giorno}/${mese}`;
+                }
+            });
+
+            const isStateGraph = (currentModalEntity === 'sun' || currentModalEntity === 'stagioni' || currentModalEntity === 'luna_fase');
+            
+            const vals = filteredData.map(d => {
+                let val = d.value;
+                if (typeof val === 'string') {
+                    let v = val.toLowerCase();
+                    if (v.includes('above') || v.includes('sopra')) return 1;
+                    if (v.includes('below') || v.includes('sotto')) return 0;
+                    val = Number(val) || 0;
+                }
+                
+                // Se stiamo guardando i Lux, dividiamo per 1000 per disegnare i klx sul grafico
+                if (currentModalEntity === 'ecowitt_solar_lux') {
+                    return val / 1000;
+                }
+                return val;
+            });
+
+            const isPollen = currentModalEntity.includes('polline');
+            const lineTension = (isPollen || isStateGraph) ? 0 : 0.4;
+            const isStepped = (isPollen || isStateGraph) ? 'before' : false;
+
+            const ctx = document.getElementById('modalCanvas').getContext('2d');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+            }
+
+            Chart.defaults.color = '#9e9e9e';
+
+            // REGOLAZIONE MATEMATICA DELLE ETICHETTE SULL'ASSE X
+            let limiteEtichette;
+            let rotazioneTesto = 0;
+            
+            if (hours === 24) {
+                limiteEtichette = 9; // 9 etichette in 24h = una ogni ~3 ore
+                rotazioneTesto = 0;  // Orizzontale
+            } else if (hours === 168) {
+                limiteEtichette = 8; // 8 etichette nei 7 giorni = una al giorno
+                rotazioneTesto = 0;  // Orizzontale
+            } else {
+                limiteEtichette = 16; // 16 etichette nei 30 giorni = una ogni due giorni (per leggibilità)
+                rotazioneTesto = -45; // In diagonale come richiesto
+            }
+            
+            // --- PREPARAZIONE DATASET (SINGOLO O DOPPIO PER IL VENTO) ---
+            let isWind = (currentModalEntity === 'ecowitt_wind_speed');
+            let datasetsArray = [{
+                label: document.getElementById('modalTitle').innerText,
+                data: vals,
+                borderColor: currentModalColor,
+                backgroundColor: hexToRgba(currentModalColor, 0.2),
+                borderWidth: 3,
+                pointRadius: (isPollen || isStateGraph) ? 2 : 0,
+                tension: lineTension,
+                fill: true,
+                stepped: isStepped
+            }];
+
+            if (isWind) {
+                // Mappa veloce per unire l'orario del vento all'orario della raffica
+                const gustMap = new Map();
+                (globalStore['ecowitt_max_daily_gust'] || []).forEach(g => {
+                    gustMap.set(g.time.getTime(), g.value);
+                });
+                
+                const valsGust = filteredData.map(d => {
+                    return gustMap.has(d.time.getTime()) ? gustMap.get(d.time.getTime()) : null;
+                });
+
+                datasetsArray.push({
+                    label: 'Raffica Max',
+                    data: valsGust,
+                    borderColor: '#ff9800', // Arancione per la raffica
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5], // Linea tratteggiata!
+                    pointRadius: 0,
+                    tension: 0.4,
+                    fill: false,
+                    spanGaps: true
+                });
+            }
+            modalChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasetsArray // <-- Usa il nostro array dinamico
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { 
+                        legend: { 
+                            display: isWind, // <-- Mostra la legenda solo se c'è il vento!
+                            labels: { color: '#9e9e9e', usePointStyle: true, boxWidth: 8 }
+                        } 
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: limiteEtichette,
+                                maxRotation: Math.abs(rotazioneTesto),
+                                minRotation: Math.abs(rotazioneTesto)
+                            }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            title: { display: true, text: currentModalUnit, color: currentModalColor },
+                            min: (isPollen || currentModalEntity.includes('solar')) ? 0 : undefined,
+                            max: isPollen ? 4 : undefined,
+                            ticks: {
+                                stepSize: (isPollen || isStateGraph) ? 1 : undefined,
+                                callback: function(val) {
+                                    if (currentModalEntity === 'sun') {
+                                        return val === 1 ? 'Sopra' : 'Sotto';
+                                    }
+                                    return val;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- FETCH DATI ---
+        fetch('live.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '' && !line.startsWith('#'));
+                if(lines.length < 2) return;
+
+                const headers = lines[0].split(',').map(h => h.replace(/["\r\n]/g, '').trim());
+                const timeIdx = headers.indexOf('_time'); 
+                const valIdx = headers.indexOf('_value'); 
+                const entityIdx = headers.indexOf('entity_id');
+
+                const store = { 
+                    'ecowitt_outdoor_temperature': [],
+                    'ecowitt_humidity': [],
+                    'ecowitt_wind_speed': [],
+                    'ecowitt_wind_direction': [],
+                    'ecowitt_absolute_pressure': [],
+                    'ecowitt_uv_index': [],
+                    'ecowitt_daily_rain': [],
+                    'ecowitt_rain_rate': [],
+                    'ecowitt_max_daily_gust': [],
+                    'ecowitt_solar_lux': [],
+                    'ecowitt_solar_radiation': [],
+                    'ecowitt_lightning_strike_distance': [],
+                    'ecowitt_lightning_strikes': [],
+
+                    'polline_tipi_alberi': [],
+                    'polline_tipi_erba': [],
+                    'polline_tipi_erbacce': [],
+                    'polline_tipi_rischio_pollinico_complessivo_oggi': [],
+
+                    'polline_piante_ambrosia': [],
+                    'polline_piante_artemisia_comune': [],
+                    'polline_piante_betulla': [],
+                    'polline_piante_frassino': [],
+                    'polline_piante_nocciolo': [],
+                    'polline_piante_ontano': [],
+                    'polline_piante_piante_erbacee': [],
+                    'polline_piante_piante_in_stagione_oggi': [],
+                    'polline_piante_pino': [],
+                    'polline_piante_pioppo': [],
+                    'polline_piante_quercia': [],
+                    'polline_piante_ulivo': [],
+
+                    'air_quality_indice_universale_della_qualita_dell_aria_uaqi': [],
+                    'air_quality_pm2_5': [],
+                    'air_quality_pm10': [],
+                    'air_quality_ozono': [],
+                    'air_quality_anidride_nitrosa': []
+
+                };
+
+                let ultimoAggiornamento = 0;
+
+                for(let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',');
+                    if(cols.length > Math.max(timeIdx, valIdx, entityIdx)) {
+                        const entity = cols[entityIdx].replace(/["\r\n]/g, '').trim();
+                        let rawVal = cols[valIdx].replace(/["\r\n]/g, '').trim();
+                        let parsed = parseFloat(rawVal);
+                        let finalVal = isNaN(parsed) ? rawVal : parsed; 
+                        
+                        if(store[entity]) {
+                            // Convertiamo esplicitamente la stringa del DB (Z = UTC) nella data locale corretta
+                            let dateStr = cols[timeIdx];
+                            if(!dateStr.endsWith('Z')) dateStr += 'Z'; 
+                            
+                            const time = new Date(dateStr);
+                            store[entity].push({ time: time, value: finalVal });
+                            
+                            // Troviamo l'orario più recente per stamparlo
+                            if (time.getTime() > ultimoAggiornamento) {
+                                ultimoAggiornamento = time.getTime();
+                            }
+                        }
+                    }
+                }
+                // --- INIZIO CALCOLO MIN/MAX OGGI (Temp e Hum) ---
+                try {
+                    let minTemp = 999; let maxTemp = -999;
+                    let minHum = 999;  let maxHum = -999;
+                    
+                    // Ciclo per la Temperatura (essendo il live.csv già filtrato, tutti i punti sono validi!)
+                    if(store['ecowitt_outdoor_temperature']) {
+                        store['ecowitt_outdoor_temperature'].forEach(punto => {
+                            if (!isNaN(punto.value)) {
+                                if (punto.value < minTemp) minTemp = punto.value;
+                                if (punto.value > maxTemp) maxTemp = punto.value;
+                            }
+                        });
+                        // Mostra nell'HTML
+                        if(minTemp !== 999) document.getElementById('tempMinOggi').innerText = minTemp.toFixed(1) + '°';
+                        if(maxTemp !== -999) document.getElementById('tempMaxOggi').innerText = maxTemp.toFixed(1) + '°';
+                    }
+
+                    // Ciclo per l'Umidità (essendo il live.csv già filtrato, tutti i punti sono validi!)
+                    if(store['ecowitt_humidity']) {
+                        store['ecowitt_humidity'].forEach(punto => {
+                            if (!isNaN(punto.value)) {
+                                if (punto.value < minHum) minHum = punto.value;
+                                if (punto.value > maxHum) maxHum = punto.value;
+                            }
+                        });
+                        // Mostra nell'HTML
+                        if(minHum !== 999) document.getElementById('humMinOggi').innerText = minHum.toFixed(0) + '%';
+                        if(maxHum !== -999) document.getElementById('humMaxOggi').innerText = maxHum.toFixed(0) + '%';
+                    }
+                } catch(e) {
+                    console.error("Errore calcolo min/max:", e);
+                }
+                // --- FINE CALCOLO MIN/MAX OGGI ---
+                globalStore = store; 
+                
+                // --- SCRIVE LA DATA SOTTO AL TITOLO CON IL FUSO CORRETTO ---
+                if (ultimoAggiornamento > 0) {
+                    const d = new Date(ultimoAggiornamento);
+                    const dataStr = d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const oraStr = d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+                    
+                    const updateElement = document.getElementById('lastUpdateText');
+                    if(updateElement) {
+                        updateElement.innerText = `Ultimo aggiornamento dati: ${dataStr} ora ${oraStr}`;
+                    }
+                }
+
+                // --- AGGIORNAMENTO CICLI (Stagioni, Sole, Luna calcolati al volo) ---
+                function updateCyclesUI() {
+                    // Stagioni
+                    let nowSeason = new Date();
+                    let month = nowSeason.getMonth() + 1;
+                    let day = nowSeason.getDate();
+                    let seasonCode = month + (day / 100);
+                    let sText = "Inverno";
+                    let sIcon = "❄️";
+                    let sGlow = "#00d4ff";
+                    if (seasonCode >= 3.20 && seasonCode < 6.21) { sText = "Primavera"; sIcon = "🌸"; sGlow = "#4caf50"; }
+                    else if (seasonCode >= 6.21 && seasonCode < 9.22) { sText = "Estate"; sIcon = "🌻"; sGlow = "#ffeb3b"; }
+                    else if (seasonCode >= 9.22 && seasonCode < 12.21) { sText = "Autunno"; sIcon = "🍂"; sGlow = "#ff9800"; }
+                    document.getElementById('val_season').innerText = sText;
+                    document.getElementById('icon_season').innerHTML = sIcon;
+                    document.getElementById('icon_season').style.filter = `drop-shadow(0 0 5px ${sGlow})`;
+
+                    // Luna
+                    let now = new Date();
+                    let phase = SunCalc.getMoonIllumination(now).phase;
+                    let moonInfo = getMoonPhaseInfo(phase);
+                    document.getElementById('val_moon').innerText = moonInfo.nameShort;
+                    document.getElementById('icon_moon').innerHTML = moonInfo.icon;
+
+                    // Sole
+                    let sunTimes = SunCalc.getTimes(now, MOTTA_LAT, MOTTA_LNG);
+                    let isUp = (now >= sunTimes.sunrise && now < sunTimes.sunset);
+                    document.getElementById('val_sun').innerText = isUp ? 'Sopra orizz.' : 'Sotto orizz.';
+                    document.getElementById('icon_sun').innerHTML = isUp ?
+                        `<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;">` :
+                        `<img src="/image/sun_below_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;">`;
+                }
+                updateCyclesUI();
+                // --- GAUGES E SENSORI ---
+                const temp = getLatestValue(store, 'ecowitt_outdoor_temperature');
+                if(temp !== null) updateSyncfusionValue('arc_temp', 'val_temp', temp, -5, 40, tempSegments, true);
+                
+                const hum = getLatestValue(store, 'ecowitt_humidity');
+                if(hum !== null) updateSyncfusionValue('arc_hum', 'val_hum', hum, 0, 100, humSegments, false);
+                
+                const press = getLatestValue(store, 'ecowitt_absolute_pressure');
+                if(press !== null) { 
+                    document.getElementById('val_press').innerText = Math.round(press); 
+                    let pClamp = Math.min(Math.max(press, 960), 1030);
+                    document.getElementById('baro_needle').style.transform = `rotate(${-135 + ((pClamp - 960) / 70) * 270}deg)`;
+                }
+
+                // --- VENTO E RAFFICA ---
+                try {
+                    let wSpeed = 0.0;
+                    let wDir = 0;
+                    let maxGust = 0.0;
+                    
+                    // 1. Estrae Vento (Ultimo Timestamp assoluto)
+                    if (store['ecowitt_wind_speed']) {
+                        let maxTimeWind = 0;
+                        store['ecowitt_wind_speed'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTimeWind) {
+                                maxTimeWind = punto.time.getTime();
+                                wSpeed = punto.value;
+                            }
+                        });
+                        const valWindEl = document.getElementById('val_wind');
+                        if (valWindEl) { valWindEl.innerText = wSpeed.toFixed(1); }
+                    }
+
+                    // 2. Estrae Direzione Vento (Ultimo Timestamp assoluto)
+                    if (store['ecowitt_wind_direction']) {
+                        let maxTimeDir = 0;
+                        store['ecowitt_wind_direction'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTimeDir) {
+                                maxTimeDir = punto.time.getTime();
+                                wDir = punto.value;
+                            }
+                        });
+                        const arrowEl = document.getElementById('compass_arrow');
+                        if (arrowEl) { arrowEl.style.transform = `translateX(-50%) rotate(${wDir}deg)`; }
+                    }
+
+                    // 3. Estrae Raffica (Valore assoluto massimo odierno)
+                    if (store['ecowitt_max_daily_gust']) {
+                        store['ecowitt_max_daily_gust'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.value > maxGust) {
+                                maxGust = punto.value;
+                            }
+                        });
+                        const valGustEl = document.getElementById('val_gust');
+                        if (valGustEl && maxGust > 0) { 
+                            valGustEl.innerText = maxGust.toFixed(1); 
+                        }
+                    }
+                } catch(e) { console.error("Errore Vento/Raffica:", e); }
+
+                // --- QUALITÀ ARIA ---
+                const aqi = getLatestValue(store, 'air_quality_indice_universale_della_qualita_dell_aria_uaqi');
+                if(aqi !== null) {
+                    updateSyncfusionValue('arc_aqi', 'val_aqi', aqi, 0, 300, aqiSegments, false);
+                    let aText = 'OTTIMA'; let aColor = '#00e400'; let txtColor = '#111';
+                    if (aqi > 50 && aqi <= 100) { aText = 'DISCRETA'; aColor = '#ffff00'; }
+                    else if (aqi > 100 && aqi <= 150) { aText = 'MODERATA'; aColor = '#ff7e00'; }
+                    else if (aqi > 150 && aqi <= 200) { aText = 'SCARSA'; aColor = '#ff0000'; txtColor = '#fff'; }
+                    else if (aqi > 200 && aqi <= 300) { aText = 'PESSIMA'; aColor = '#8f3f97'; txtColor = '#fff'; }
+                    else if (aqi > 300) { aText = 'PERICOLOSA'; aColor = '#7e0023'; txtColor = '#fff'; }
+                    
+                    const badge = document.getElementById('badge_aqi');
+                    badge.innerText = aText; badge.style.background = aColor; badge.style.color = txtColor;
+                }
+
+                const pm25 = getLatestValue(store, 'air_quality_pm2_5');
+                if(pm25 !== null) {
+                    document.getElementById('val_pm25').innerHTML = `${pm25.toFixed(1)}<span>&mu;g/m&sup3;</span>`;
+                    let maxScale = 50; let pct = Math.min((pm25 / maxScale) * 100, 100);
+                    let color = pm25 <= 15 ? '#4caf50' : (pm25 <= 30 ? '#ffeb3b' : (pm25 <= 55 ? '#ff9800' : '#f44336'));
+                    const fill = document.getElementById('fill_pm25');
+                    fill.style.width = `${pct}%`; fill.style.backgroundColor = color;
+                }
+
+                const pm10 = getLatestValue(store, 'air_quality_pm10');
+                if(pm10 !== null) {
+                    document.getElementById('val_pm10').innerHTML = `${pm10.toFixed(1)}<span>&mu;g/m&sup3;</span>`;
+                    let maxScale = 100; let pct = Math.min((pm10 / maxScale) * 100, 100);
+                    let color = pm10 <= 40 ? '#4caf50' : (pm10 <= 80 ? '#ffeb3b' : (pm10 <= 120 ? '#ff9800' : '#f44336'));
+                    const fill = document.getElementById('fill_pm10');
+                    fill.style.width = `${pct}%`; fill.style.backgroundColor = color;
+                }
+
+                const o3 = getLatestValue(store, 'air_quality_ozono');
+                if(o3 !== null) {
+                    document.getElementById('val_o3').innerHTML = `${o3.toFixed(1)}<span>ppb</span>`;
+                    let maxScale = 100; let pct = Math.min((o3 / maxScale) * 100, 100);
+                    let color = o3 <= 50 ? '#4caf50' : (o3 <= 85 ? '#ffeb3b' : '#f44336');
+                    const fill = document.getElementById('fill_o3');
+                    fill.style.width = `${pct}%`; fill.style.backgroundColor = color;
+                }
+
+                const no2 = getLatestValue(store, 'air_quality_anidride_nitrosa');
+                if(no2 !== null) {
+                    document.getElementById('val_no2').innerHTML = `${no2.toFixed(1)}<span>ppb</span>`;
+                    let maxScale = 100; let pct = Math.min((no2 / maxScale) * 100, 100);
+                    let color = no2 <= 40 ? '#4caf50' : (no2 <= 100 ? '#ffeb3b' : '#f44336');
+                    const fill = document.getElementById('fill_no2');
+                    fill.style.width = `${pct}%`; fill.style.backgroundColor = color;
+                }
+
+
+
+                // --- POLLINI ---
+                const pollenMap = [
+                { boxId: 'poll_trees',    storeKey: 'polline_tipi_alberi' },
+                { boxId: 'poll_grass',    storeKey: 'polline_tipi_erba' },
+
+                { boxId: 'poll_amb',      storeKey: 'polline_piante_ambrosia' },
+                { boxId: 'poll_art',      storeKey: 'polline_piante_artemisia_comune' },
+                { boxId: 'poll_bet',      storeKey: 'polline_piante_betulla' },
+                { boxId: 'poll_fra',      storeKey: 'polline_piante_frassino' },
+
+                { boxId: 'poll_noc',      storeKey: 'polline_piante_nocciolo' },
+                { boxId: 'poll_ont',      storeKey: 'polline_piante_ontano' },
+                { boxId: 'poll_erb',      storeKey: 'polline_piante_piante_erbacee' },
+                { boxId: 'pollstagione',  storeKey: 'polline_piante_piante_in_stagione_oggi' },
+
+                { boxId: 'poll_pin',      storeKey: 'polline_piante_pino' },
+                { boxId: 'poll_pio',      storeKey: 'polline_piante_pioppo' },
+                { boxId: 'poll_que',      storeKey: 'polline_piante_quercia' },
+                { boxId: 'poll_uli',      storeKey: 'polline_piante_ulivo' }
+                ];
+
+                pollenMap.forEach(({ boxId, storeKey }) => {
+                const val = getLatestValue(store, storeKey);
+                const el = document.getElementById(boxId);
+                if (!el || val === null) return;
+
+                el.classList.remove('level-low', 'level-med', 'level-high', 'level-0', 'level-1', 'level-2', 'level-3', 'level-4', 'level-5');
+
+                let num = Math.round(val);
+                if (num < 0) num = 0;
+                if (num > 5) num = 5;
+
+                el.classList.add(`level-${num}`);
+                });
+
+                // --- UV ---
+                try {
+                    let uv = 0;
+                    // Troviamo l'UV più recente
+                    if (store['ecowitt_uv_index']) {
+                        let maxTimeUV = 0;
+                        store['ecowitt_uv_index'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTimeUV) {
+                                maxTimeUV = punto.time.getTime();
+                                uv = punto.value;
+                            }
+                        });
+                    }
+                    
+                    const valUvEl = document.getElementById('val_uv');
+                    if (valUvEl) {
+                        valUvEl.innerText = uv.toFixed(1);
+                        let uvText = 'BASSO'; let txtColor = '#4caf50';
+                        if(uv >= 3 && uv < 6) { uvText = 'MODERATO'; txtColor = '#d1a300';}
+                        else if(uv >= 6 && uv < 8) { uvText = 'ALTO'; txtColor = '#ff9800';}
+                        else if(uv >= 8) { uvText = (uv >= 11) ? 'ESTREMO' : 'MOLTO ALTO'; txtColor = (uv >= 11) ? '#9c27b0' : '#f44336'; }
+                        
+                        const descEl = document.getElementById('desc_uv'); 
+                        if (descEl) {
+                            descEl.innerText = uvText; 
+                            descEl.style.background = txtColor;
+                            descEl.style.color = '#ffffff'; 
+                            descEl.style.textShadow = '0px 1px 2px rgba(0,0,0,0.5)';
+                        }
+                        
+                        const fillUvEl = document.getElementById('uv_fill_wrapper');
+                        if (fillUvEl) {
+                            fillUvEl.style.height = `${Math.min((uv / 12) * 100, 100)}%`;
+                        }
+                    }
+                } catch(e) { console.error("Errore UV:", e); }
+                
+                // --- RADIAZIONE E LUX ---
+                try {
+                    let rad = 0;
+                    if (store['ecowitt_solar_radiation']) {
+                        let maxTimeRad = 0;
+                        store['ecowitt_solar_radiation'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTimeRad) {
+                                maxTimeRad = punto.time.getTime();
+                                rad = punto.value;
+                            }
+                        });
+                    }
+                    if (document.getElementById('val_rad')) {
+                        document.getElementById('val_rad').innerHTML = `${rad.toFixed(1)} <span style="font-size: 0.6rem; color: #9e9e9e;">W/m²</span>`;
+                    }
+
+                    let lux = 0;
+                    if (store['ecowitt_solar_lux']) {
+                        let maxTimeLux = 0;
+                        store['ecowitt_solar_lux'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTimeLux) {
+                                maxTimeLux = punto.time.getTime();
+                                lux = punto.value;
+                            }
+                        });
+                    }
+                    if (document.getElementById('val_lux')) {
+                        let klx = lux / 1000;
+                        document.getElementById('val_lux').innerHTML = `${klx.toFixed(1)} <span style="font-size: 0.6rem; color: #9e9e9e;">klx</span>`;
+                    }
+                } catch(e) { console.error("Errore RAD/LUX:", e); }
+                // --- FULMINI (Allerta e Totale) ---
+                try {
+                    const oraAttuale = new Date();
+                    const idDistanza = 'ecowitt_lightning_strike_distance';
+                    const idTotale = 'ecowitt_lightning_strikes';
+
+                    let ultimoFulmine = null;
+                    let maxTimeLight = 0;
+                    let fulmineVicinoOggi = null;
+
+                    // Estrae il fulmine più recente per distanza, e il più vicino della giornata odierna
+                    if (store[idDistanza] && store[idDistanza].length > 0) {
+                        store[idDistanza].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time) {
+                                let timeMs = punto.time.getTime();
+                                if (timeMs > maxTimeLight) {
+                                    maxTimeLight = timeMs;
+                                    ultimoFulmine = punto;
+                                }
+                                if (punto.time.toDateString() === oraAttuale.toDateString()) {
+                                    if (fulmineVicinoOggi === null || punto.value < fulmineVicinoOggi.value) {
+                                        fulmineVicinoOggi = punto;
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Estrae il totale giornaliero più alto
+                    let totaleOggi = 0;
+                    if (store[idTotale] && store[idTotale].length > 0) {
+                        store[idTotale].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.value > totaleOggi) {
+                                totaleOggi = punto.value;
+                            }
+                        });
+                    }
+
+                    const banner = document.getElementById('lightning_banner');
+                    const icon = document.getElementById('lightning_icon');
+                    const distTxt = document.getElementById('lightning_dist');
+                    const timeTxt = document.getElementById('lightning_time');
+                    const countTxt = document.getElementById('lightning_count');
+                    const nearestHeaderTxt = document.getElementById('lightning_nearest_header');
+
+                    // 1. Stampa il Totale e gestisce l'allarme rosso per supercelle (> 1000 fulmini)
+                    if (countTxt && totaleOggi > 0) {
+                        countTxt.innerText = totaleOggi;
+                        if (totaleOggi >= 1000) {
+                            countTxt.style.color = '#ff5252';
+                            setInterval(() => { countTxt.style.opacity = (countTxt.style.opacity == 0) ? 1 : 0; }, 800);
+                        }
+                    }
+
+                    // 1b. Stampa il Fulmine più vicino della giornata odierna (in testata e riga dedicata)
+                    if (fulmineVicinoOggi !== null && totaleOggi > 0) {
+                        let ov = fulmineVicinoOggi.time;
+                        let orarioVicino = ov.getHours().toString().padStart(2, '0') + ':' + ov.getMinutes().toString().padStart(2, '0');
+                        if (nearestHeaderTxt) nearestHeaderTxt.innerText = `Fulmine più vicino oggi: ${fulmineVicinoOggi.value} km (${orarioVicino})`;
+                    }
+
+                    // 2. Stampa l'Ultimo Fulmine e gestisce l'allarme giallo
+                    // Se oggi non ha fulminato, impediamo i falsi segnali rimasti in pancia al sensore
+                    let o = ultimoFulmine ? ultimoFulmine.time : new Date(0);
+                    if (totaleOggi === 0 && o.getDate() === oraAttuale.getDate()) {
+                        ultimoFulmine = null;
+                    }
+
+                    if (ultimoFulmine !== null && banner) {
+                        let oreTrascorse = Math.abs(oraAttuale.getTime() - ultimoFulmine.time.getTime()) / (1000 * 60 * 60);
+
+                        distTxt.innerText = ultimoFulmine.value;
+
+                        let o = ultimoFulmine.time;
+                        let orarioStr = o.getHours().toString().padStart(2, '0') + ':' + o.getMinutes().toString().padStart(2, '0');
+
+                        if (oreTrascorse <= 1 && ultimoFulmine.value <= 10) {
+                            distTxt.style.color = '#ffeb3b';
+                            icon.style.color = '#ffeb3b';
+                            banner.style.borderLeftColor = '#ffeb3b';
+                            banner.style.boxShadow = "0 0 15px rgba(255, 235, 59, 0.3)";
+                            timeTxt.innerText = `Rilevato alle ${orarioStr} - ATTENZIONE`;
+                            timeTxt.style.color = '#ffeb3b';
+
+                            setInterval(() => {
+                                banner.style.backgroundColor = banner.style.backgroundColor === 'rgb(51, 51, 51)' ? '#1a1a1a' : '#333';
+                            }, 1000);
+                        } else {
+                            timeTxt.innerText = `Ultimo rilevamento: ${orarioStr}`;
+                            distTxt.style.color = '#fff';
+                        }
+                    }
+                } catch(e) { console.error("Errore Fulmini:", e); }
+
+                // --- PIOGGIA (LIVE E TOTALE ODIERNO) ---
+                try {
+                    let rainDaily = 0.0;
+                    let rainRate = 0.0;
+                    
+                    // 1. Estrae l'intensità attuale (il timestamp più grande)
+                    if (store['ecowitt_rain_rate']) {
+                        let maxTime = 0;
+                        store['ecowitt_rain_rate'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.time && punto.time.getTime() > maxTime) {
+                                maxTime = punto.time.getTime();
+                                rainRate = punto.value;
+                            }
+                        });
+                    }
+
+                    // 2. Estrae la pioggia totale (il valore massimo cumulato raggiunto oggi)
+                    if (store['ecowitt_daily_rain']) {
+                        store['ecowitt_daily_rain'].forEach(punto => {
+                            if (!isNaN(punto.value) && punto.value > rainDaily) {
+                                rainDaily = punto.value;
+                            }
+                        });
+                    }
+
+                    // 3. AGGIORNAMENTO FORZATO DELL'HTML
+                    const valRainEl = document.getElementById('val_rain');
+                    const descRainEl = document.getElementById('desc_rain');
+                    const fillRectEl = document.getElementById('rain_fill_rect');
+                    
+                    if (valRainEl && descRainEl) {
+                        // Scrive i mm totali della giornata
+                        valRainEl.innerHTML = `${rainDaily.toFixed(1)} <span>mm</span>`;
+                        
+                        let rainText = 'ASCIUTTO'; 
+                        let rainColor = '#9e9e9e'; 
+                        let txtCol = '#111';
+                        
+                        // Gestisce i colori e i testi in base alla pioggia
+                        if (rainRate > 0) {
+                            txtCol = '#fff';
+                            if (rainRate < 2.5) { rainText = 'PIOGGIA LEGGERA'; rainColor = '#00d4ff'; }
+                            else if (rainRate < 10) { rainText = 'PIOGGIA MODERATA'; rainColor = '#0077ff'; }
+                            else if (rainRate < 50) { rainText = 'PIOGGIA FORTE'; rainColor = '#2196f3'; }
+                            else { rainText = 'NUBIFRAGIO'; rainColor = '#9c27b0'; }
+                        } else if (rainDaily > 0) { 
+                            rainText = 'HA PIOVUTO'; 
+                            rainColor = '#4caf50'; 
+                            txtCol = '#fff'; 
+                        }
+                        
+                        // Scrive il testo o l'intensità
+                        descRainEl.innerText = rainRate > 0 ? `${rainRate.toFixed(1)} mm/h` : rainText;
+                        descRainEl.style.background = rainColor; 
+                        descRainEl.style.color = txtCol;
+                    }
+
+                    // Anima la goccia in SVG
+                    if (fillRectEl) {
+                        fillRectEl.setAttribute('y', 100 - Math.min((rainDaily / 50) * 100, 100));
+                    }
+                } catch (e) { console.error("Errore nel blocco pioggia:", e); }
+                
+            }).catch(err => console.error("Errore script:", err));
+
+        // Cerca automaticamente l'APK dell'app
+        fetch('app_info.php')
+        .then(response => response.json())
+        .then(data => {
+            const linkApp = document.getElementById('linkApp');
+            const dataApp = document.getElementById('dataApp');
+            if (data.file) {
+                // Inserisce il link al file corretto e la data di modifica
+                linkApp.href = data.file;
+                dataApp.innerText = "Aggiornata al: " + data.date;
+            } else {
+                // Se non c'è nessun apk nella cartella
+                dataApp.innerText = "App momentaneamente non disp.";
+                if(linkApp) {
+                    linkApp.style.opacity = "0.5";
+                    linkApp.onclick = (e) => e.preventDefault();
+                }
+            }
+        })
+        .catch(err => console.error("Errore caricamento info app:", err));
+   // --- GESTIONE MODALE SPECIFICHE TECNICHE ---
+function openTechModal(e) {
+    if(e) e.preventDefault();
+    document.getElementById('techModal').style.display = 'flex';
+}
+function closeTechModal(e) {
+    if(e) e.stopPropagation();
+    document.getElementById('techModal').style.display = 'none';
+}
+  </script>
+<div class="modal-overlay" id="techModal" onclick="closeTechModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()">
+<button class="modal-close" onclick="closeTechModal(event)">
+     ×
+    </button>
+<h3 class="modal-title" style="color: #9c27b0; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
+     Specifiche Tecniche
+    </h3>
+<div style="text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.6;">
+<h4 style="color: #fff; margin-bottom: 5px;">
+      📍 Informazioni Geografiche
+     </h4>
+<ul style="list-style-type: none; padding-left: 0; margin-bottom: 15px;">
+<li>
+<strong>
+        Località:
+       </strong>
+       Motta Visconti (MI)
+      </li>
+<li>
+<strong>
+        Coordinate:
+       </strong>
+       Lat 45.2924° N, Lon 8.9864° E
+      </li>
+<li>
+<strong>
+        Altitudine:
+       </strong>
+       ~93 m s.l.m.
+      </li>
+</ul>
+<h4 style="color: #fff; margin-bottom: 5px;">
+      📡 Ecosistema Ecowitt &amp; Sensori
+     </h4>
+<ul style="list-style-type: none; padding-left: 0; margin-bottom: 15px;">
+<li style="margin-bottom: 6px;">
+<strong>
+        Gruppo Esterno WS69:
+       </strong>
+       Anemometro a coppette, banderuola direzione vento e pluviometro a bascula.
+      </li>
+<li style="margin-bottom: 6px;">
+<strong>
+        Termo-igrometro:
+       </strong>
+       Sensori ad alta precisione in schermo solare passivo.
+      </li>
+<li style="margin-bottom: 6px;">
+<strong>
+        Radiazione &amp; UV:
+       </strong>
+       Sensore di luminosità (fino a 120k Lux) e Indice UV (0-15).
+      </li>
+<li style="margin-bottom: 6px;">
+<strong>
+        Moduli Aggiuntivi:
+       </strong>
+       Rilevatore di fulmini WH57 (range 40 km) e sensori di Qualità dell'Aria (PM2.5 / PM10 / Gas).
+      </li>
+<li style="margin-bottom: 6px;">
+<strong>
+        Trasmissione Dati:
+       </strong>
+       Frequenza 868 MHz al gateway locale, invio diretto a Home Assistant (API no-cloud).
+      </li>
+</ul>
+<h4 style="color: #fff; margin-bottom: 5px;">
+      💻 Infrastruttura IT
+     </h4>
+<ul style="list-style-type: none; padding-left: 0;">
+<li style="margin-bottom: 6px;"><strong>Hosting Web:</strong> frontend e contenuti statici pubblicati su Synology DiskStation DS925+, NAS 4-bay basato su AMD Ryzen V1500B quad-core a 2.2 GHz, con storage su unità SSD/NAS e connettività di rete 2.5GbE.</li>
+<li style="margin-bottom: 6px;"><strong>Raccolta Dati Meteo:</strong> i dati primari della stazione meteo Ecowitt vengono acquisiti tramite Home Assistant in macchina virtuale e storicizzati su InfluxDB in container Docker.</li>
+<li style="margin-bottom: 6px;"><strong>Integrazione Dati Ambientali:</strong> alcuni indicatori derivati, tra cui qualità dell'aria e polline, vengono acquisiti tramite API esterne di Google Maps Platform (Air Quality API e Pollen API).</li>
+<li style="margin-bottom: 6px;"><strong>Architettura:</strong> infrastruttura locale basata su Synology NAS DS925+ per pubblicazione web e storage, Home Assistant in macchina virtuale per acquisizione e orchestrazione dei dati, InfluxDB in container Docker per la storicizzazione delle serie temporali e API Google per l’integrazione dei dati ambientali esterni.</li>
+<li style="margin-bottom: 6px;"><strong>Gestione e Sviluppo:</strong> sistema progettato, integrato e curato da <a href="https://t.me/Simonz82" rel="noopener noreferrer" style="color: #9c27b0; text-decoration: none; font-weight: 700;" target="_blank">Simonz82</a>.</li>
+</ul>
+<h4 style="color: #fff; margin-bottom: 5px;">
+      🌍 Fonti Dati Esterne
+     </h4>
+<ul style="list-style-type: none; padding-left: 0;">
+<li style="margin-bottom: 6px;"><strong>Previsioni Future:</strong> Open-Meteo Forecast API, dati orari e giornalieri gratuiti senza necessità di chiave API.</li>
+<li style="margin-bottom: 6px;"><strong>Record Storici:</strong> Open-Meteo Historical Weather API (archivio ERA5), serie storica dal 1940 ad oggi.</li>
+<li style="margin-bottom: 6px;"><strong>Livello Idrometrico Bereguardo &amp; Vigevano:</strong> portale Laghi.net, rete di monitoraggio idrometrico del Ticino.</li>
+<li style="margin-bottom: 6px;"><strong>Livello Idrometrico Pavia:</strong> rete IRIS di ARPA Lombardia (Agenzia Regionale per la Protezione dell'Ambiente).</li>
+<li style="margin-bottom: 6px;"><strong>Allerte Meteo:</strong> bollettino di criticità del Dipartimento della Protezione Civile, integrato tramite sensore Home Assistant.</li>
+<li style="margin-bottom: 6px;"><strong>Qualità dell'Aria &amp; Polline:</strong> Google Maps Platform (Air Quality API e Pollen API).</li>
+</ul>
+</div>
+</div>
+</div>
+</body>
+</html>
