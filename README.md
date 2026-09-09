@@ -35,6 +35,8 @@ Un progetto amatoriale che raccoglie e visualizza:
 
 Frontend statico in HTML/CSS/JavaScript vanilla, senza framework — [Chart.js](https://www.chartjs.org/) per i grafici storici e [SunCalc.js](https://github.com/mourner/suncalc) per i calcoli astronomici. Backend leggero in PHP per l'aggregazione e la cache delle API esterne.
 
+Il sito è stato realizzato con l'aiuto di diversi strumenti di intelligenza artificiale.
+
 ## Changelog
 
 Le modifiche vengono registrate in [CHANGELOG.md](CHANGELOG.md).
