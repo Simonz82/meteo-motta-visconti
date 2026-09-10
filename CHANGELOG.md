@@ -9,7 +9,7 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Popup riorganizzato in passaggi numerati con gli screenshot reali dei due avvisi (Chrome "Potrebbe essere dannoso" e Google Play Protect, con freccia che indica il pulsante "Installa comunque"), area istruzioni scorrevole e pulsante di download sempre visibile in fondo
 
 ### Modificato
-- Testo del pulsante di download app aggiornato per menzionare le notifiche meteo personalizzabili
+- Testo del pulsante di download app aggiornato per menzionare le notifiche meteo personalizzabili, poi rifinito in "Scarica l'APP di ANDROID per abilitare tutte le notifiche"
 - Icona della nebbia nel box "Previsioni Future" sostituita con una più coerente esteticamente con le altre (la precedente non veniva renderizzata correttamente su alcuni dispositivi)
 
 ## 2026-09-10
