@@ -2442,17 +2442,28 @@ function closeTechModal(e) {
 </div>
 <!-- Modale Download App -->
 <div class="modal-overlay" id="appModal" onclick="closeAppModal(event)">
-<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px;">
-<button class="modal-close" onclick="closeAppModal(event)">×</button>
+<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px; display: flex; flex-direction: column; padding: 0; max-height: 85vh; overflow: hidden;">
+<button class="modal-close" onclick="closeAppModal(event)" style="z-index: 2;">×</button>
+<div style="overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 15px 20px;">
 <h3 class="modal-title" style="color: #4caf50; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">📱 Installare l'App Android</h3>
 <div style="text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.6;">
-<p style="margin-top:0;">L'app non è distribuita tramite Google Play Store, quindi Android potrebbe mostrare alcuni avvisi durante il download e l'installazione. È tutto normale, ecco come procedere:</p>
-<ul style="padding-left: 18px; margin-bottom: 15px;">
-<li style="margin-bottom: 8px;">Se il download si ferma un istante intorno al <strong>99%</strong>, è normale: Google Play Protect sta scansionando il file. Attendi il completamento.</li>
-<li style="margin-bottom: 8px;">Se compare un avviso tipo <strong>"App non riconosciuta"</strong> o <strong>"Potrebbe essere dannosa"</strong>, tocca <strong>"Scarica comunque"</strong> / <strong>"Installa comunque"</strong> per procedere.</li>
-<li style="margin-bottom: 8px;">Alla prima installazione, il sistema potrebbe chiedere di autorizzare <strong>"Installa app sconosciute"</strong> per il browser: concedi il permesso e prosegui.</li>
-<li>Al termine del download, apri il file per installare l'app. Gli aggiornamenti successivi si installeranno sullo stesso posto, senza bisogno di disinstallare nulla.</li>
-</ul>
+<p style="margin-top:0;">L'app non è distribuita tramite Google Play Store, quindi Android mostra alcuni avvisi di sicurezza durante il download e l'installazione. È del tutto normale: ecco i passaggi per procedere senza problemi.</p>
+
+<p style="margin-bottom: 4px;"><strong style="color: #fff;">1. Durante il download</strong></p>
+<p style="margin-top: 0; margin-bottom: 15px;">Se il progresso si ferma un istante intorno al <strong>99%</strong>, non è un errore: Google Play Protect sta scansionando il file prima di consegnartelo. Attendi qualche secondo, si completa da solo.</p>
+
+<p style="margin-bottom: 4px;"><strong style="color: #fff;">2. All'apertura del file scaricato</strong></p>
+<p style="margin-top: 0; margin-bottom: 10px;">Comparirà un avviso di Play Protect come questo, perché l'app è nuova e non ancora "conosciuta" da Google. Tocca <strong>"Installa comunque"</strong> per andare avanti.</p>
+<img src="image/app_install_warning.jpg" alt="Avviso Google Play Protect con il pulsante Installa comunque" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333;">
+
+<p style="margin-bottom: 4px;"><strong style="color: #fff;">3. Se richiesto</strong></p>
+<p style="margin-top: 0; margin-bottom: 15px;">Alla primissima installazione, il sistema potrebbe chiedere di autorizzare <strong>"Installa app sconosciute"</strong> per il browser che stai usando: concedi il permesso e riprova l'installazione.</p>
+
+<p style="margin-bottom: 4px;"><strong style="color: #fff;">4. Fatto</strong></p>
+<p style="margin-top: 0; margin-bottom: 0;">Gli aggiornamenti futuri si installeranno automaticamente sopra a questa versione, senza mai dover disinstallare nulla.</p>
+</div>
+</div>
+<div style="flex-shrink: 0; padding: 15px 20px 20px 20px; border-top: 1px solid #333; background: #1c1c1c; border-radius: 0 0 20px 20px;">
 <a id="appModalDownloadBtn" href="#" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1b5e20, #2e7d32); color: #fff; padding: 12px 20px; border-radius: 15px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
 ⬇️&nbsp; Scarica <span id="appModalVersion" style="margin-left: 4px;"></span>
 </a>

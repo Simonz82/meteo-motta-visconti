@@ -6,6 +6,7 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 
 ### Aggiunto
 - Popup di istruzioni all'installazione dell'app Android: spiega gli avvisi che Android può mostrare (download fermo al 99%, "app non riconosciuta") e i passaggi per procedere, con pulsante di download che mostra la versione esatta in scarico
+- Popup riorganizzato in passaggi numerati con screenshot reale dell'avviso Google Play Protect, area istruzioni scorrevole e pulsante di download sempre visibile in fondo
 
 ### Modificato
 - Testo del pulsante di download app aggiornato per menzionare le notifiche meteo personalizzabili
