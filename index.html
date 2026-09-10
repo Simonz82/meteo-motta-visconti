@@ -858,27 +858,27 @@ loadForecast();
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
 
     <a href="#" onclick="toggleStationChart(event, 'bereguardo')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
        onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
       <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Bereguardo</span>
       <span id="bereguardo-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
     </a>
 
     <a href="#" onclick="toggleStationChart(event, 'vigevano')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
        onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
       <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Vigevano</span>
       <span id="vigevano-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
     </a>
 
     <a href="#" onclick="toggleStationChart(event, 'pavia')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
        onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
       <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Pavia</span>
       <span id="pavia-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
@@ -1041,52 +1041,66 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <!-- MENU COLLEGAMENTI: METEO, APP E STORIA -->
 <div class="footer-buttons-grid" style="width: 100%; padding-bottom: 25px; padding-top: 15px; border-bottom: 1px solid #333; margin-bottom: 20px;   ">
 <!-- Pulsante Record Storici -->
-<a href="#" onclick="openRecordsModal(); return false;" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s; cursor: pointer;">
+<a href="#" onclick="openRecordsModal(); return false;" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s; cursor: pointer;">
 <span style="font-size: 2rem; margin-right: 15px;">
       🏆
      </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #ffeb3b; font-size: 1.1rem; display: block; margin-bottom: 2px;">
+<strong style="color: #ffeb3b; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Record Storici
       </strong>
-<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
        Temperature e pioggia dal 1940
       </span>
 </div>
 </a>
+<!-- Pulsante Webcam nei Dintorni -->
+<a href="https://www.meteoblue.com/en/weather/webcams/motta-visconti_italy_3172502" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      📷
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #4dd0e1; font-size: 0.975rem; display: block; margin-bottom: 2px;">
+       Webcam nei Dintorni
+      </strong>
+<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Viste live intorno a Motta Visconti
+      </span>
+</div>
+</a>
 <!-- Pulsante App Android -->
-<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📱
      </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #4caf50; font-size: 0.95rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
-<span id="dataApp" style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
+<span id="dataApp" style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
        Verifica versione in corso...
       </span>
 </div>
 </a>
 <!-- Pulsante Foto Storiche -->
-<a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📸
      </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #00d4ff; font-size: 1.1rem; display: block; margin-bottom: 2px;">Archivio Storico Foto</strong>
-<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<strong style="color: #00d4ff; font-size: 0.975rem; display: block; margin-bottom: 2px;">Archivio Storico Foto</strong>
+<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
        Com'era Motta Visconti
       </span>
 </div>
 </a>
-<a href="#" onclick="openTechModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1c1c1c, #2a2a2a); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="#" onclick="openTechModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px; display:flex; align-items:center; justify-content:center; width:42px; height:42px;">
   🌦️
 </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #9c27b0; font-size: 1.1rem; display: block; margin-bottom: 2px;">
+<strong style="color: #9c27b0; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Specifiche Tecniche
       </strong>
-<span style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
        Stazione &amp; Motta Visconti
       </span>
 </div>

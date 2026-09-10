@@ -8,6 +8,7 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Nuovo box "Rilevazioni Stazione Meteo" che raggruppa Temperatura, Umidità, Pressione, Vento, Raggi UV, Pioggia e Ultimo Fulmine sotto un unico titolo, con lo stesso stile del box Previsioni Future
 - Pulsanti di navigazione ◀ ▶ nelle pagine storiche per scorrere avanti/indietro tra i giorni disponibili, senza dover riaprire il menu a tendina
 - Link "GitHub" e "Changelog" nel footer del sito, che rimandano a questo repository
+- Nuovo pulsante "Webcam nei Dintorni" nel footer, che rimanda alle webcam pubbliche più vicine a Motta Visconti (Pavia, Gaggiano, Dorno e altre)
 
 ### Modificato
 - Uniformata la spaziatura sopra e sotto il titolo di tutti i box del sito (Previsioni Future, Rilevazioni Stazione Meteo, Qualità dell'Aria, Livello Polline, Fiume Ticino)
@@ -15,6 +16,8 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Box Fiume Ticino: le 3 stazioni ora stanno su un'unica riga con formato compatto (nome, valore, orario su righe separate); i grafici si aprono uno alla volta invece di accumularsi; rimossi i pallini dal grafico, lasciando solo la linea
 - Pagine storiche (temperatura, umidità, vento, fulmini, pioggia, qualità dell'aria, polline): refresh completo del layout — font più piccoli per titolo, pulsante indietro, menu data e titoli dei grafici; box Massima/Minima più compatti; grafici più bassi e con linee/istogrammi più sottili; margine dinamico sopra i grafici a barre per evitare che le etichette dei valori più alti si sovrappongano alla legenda
 - Popup "Specifiche Tecniche": aggiunta la sezione "Fonti Dati Esterne" con l'elenco completo delle integrazioni (Open-Meteo, Laghi.net, ARPA Lombardia, Protezione Civile, Google Maps Platform)
+- Box Fiume Ticino: sfondo delle card scurito
+- Pulsanti del footer (Record Storici, Webcam, App Android, Foto Storiche, Specifiche Tecniche): sfondo scurito, font di titolo e descrizione ridotti per renderli più compatti
 
 ### Risolto
 - Bug nel calcolo del box fulmini (variabile usata prima di essere definita), che causava un errore silenzioso nei giorni senza rilevamenti; aggiunta anche l'indicazione del fulmine più vicino rilevato nella giornata

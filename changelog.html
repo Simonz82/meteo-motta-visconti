@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog - Stazione Meteo Motta Visconti</title>
+<style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #111111; color: #ccc; margin: 0; padding: 15px; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 0.8rem; line-height: 1.5; }
+    .header { display: flex; align-items: center; margin-bottom: 15px; }
+    .back-btn { background: #1e1e1e; border: 1px solid #444; color: #fff; padding: 8px 14px; border-radius: 10px; cursor: pointer; text-decoration: none; font-weight: bold; margin-right: 12px; font-size: 0.75rem; }
+    .title { color: #fff; font-size: 1.1rem; font-weight: 800; margin: 0; }
+    .subtitle { color: #777; font-size: 0.7rem; margin: 0 0 20px 0; }
+    h2 { color: #00d4ff; font-size: 0.85rem; border-bottom: 1px solid #333; padding-bottom: 6px; margin: 24px 0 10px 0; }
+    h3 { color: #fff; font-size: 0.78rem; margin: 14px 0 6px 0; }
+    ul { margin: 0 0 4px 0; padding-left: 18px; }
+    li { margin-bottom: 4px; color: #aaa; }
+    #status { text-align: center; color: #777; font-size: 0.75rem; padding: 20px; }
+    a { color: #00d4ff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <a href="index.html" class="back-btn">⬅ Indietro</a>
+    <h1 class="title">Changelog</h1>
+</div>
+<div class="subtitle">Cronologia delle modifiche al sito, aggiornata direttamente da <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+
+<div id="status">Caricamento...</div>
+<div id="content"></div>
+
+<script>
+fetch('https://raw.githubusercontent.com/Simonz82/meteo-motta-visconti/main/CHANGELOG.md?_=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(md) {
+        document.getElementById('status').style.display = 'none';
+        document.getElementById('content').innerHTML = renderMarkdown(md);
+    })
+    .catch(function() {
+        document.getElementById('status').textContent = 'Changelog non disponibile al momento.';
+    });
+
+function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderMarkdown(md) {
+    var lines = md.split(/\r?\n/);
+    var html = '';
+    var inList = false;
+
+    function closeList() {
+        if (inList) { html += '</ul>'; inList = false; }
+    }
+
+    lines.forEach(function(line) {
+        var l = line.trim();
+        if (l === '' ) { return; }
+        if (l.indexOf('# ') === 0) { return; }
+        if (l.indexOf('## ') === 0) {
+            closeList();
+            html += '<h2>' + escapeHtml(l.slice(3)) + '</h2>';
+            return;
+        }
+        if (l.indexOf('### ') === 0) {
+            closeList();
+            html += '<h3>' + escapeHtml(l.slice(4)) + '</h3>';
+            return;
+        }
+        if (l.indexOf('- ') === 0) {
+            if (!inList) { html += '<ul>'; inList = true; }
+            html += '<li>' + escapeHtml(l.slice(2)) + '</li>';
+            return;
+        }
+        closeList();
+        html += '<p>' + escapeHtml(l) + '</p>';
+    });
+    closeList();
+    return html;
+}
+</script>
+
+</body>
+</html>
