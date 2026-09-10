@@ -1081,12 +1081,12 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 </div>
 </a>
 <!-- Pulsante App Android -->
-<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="#" id="linkApp" onclick="openAppModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📱
      </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
+<strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'App per abilitare anche le Notifiche Meteo</strong>
 <span id="dataApp" style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
        Verifica versione in corso...
       </span>
@@ -2308,25 +2308,37 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             }).catch(err => console.error("Errore script:", err));
 
         // Cerca automaticamente l'APK dell'app
-        fetch('app_info.php')
+        let appLatest = null;
+        fetch('latest_version.json')
         .then(response => response.json())
         .then(data => {
-            const linkApp = document.getElementById('linkApp');
             const dataApp = document.getElementById('dataApp');
             if (data.file) {
-                // Inserisce il link al file corretto e la data di modifica
-                linkApp.href = data.file;
+                appLatest = data;
                 dataApp.innerText = "Aggiornata al: " + data.date;
             } else {
-                // Se non c'è nessun apk nella cartella
                 dataApp.innerText = "App momentaneamente non disp.";
-                if(linkApp) {
+                const linkApp = document.getElementById('linkApp');
+                if (linkApp) {
                     linkApp.style.opacity = "0.5";
                     linkApp.onclick = (e) => e.preventDefault();
                 }
             }
         })
         .catch(err => console.error("Errore caricamento info app:", err));
+
+        // --- GESTIONE MODALE DOWNLOAD APP ---
+        function openAppModal(e) {
+            if (e) e.preventDefault();
+            if (!appLatest) return;
+            document.getElementById('appModalVersion').innerText = "Versione " + appLatest.version_name;
+            document.getElementById('appModalDownloadBtn').href = appLatest.file;
+            document.getElementById('appModal').style.display = 'flex';
+        }
+        function closeAppModal(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('appModal').style.display = 'none';
+        }
    // --- GESTIONE MODALE SPECIFICHE TECNICHE ---
 function openTechModal(e) {
     if(e) e.preventDefault();
@@ -2425,6 +2437,25 @@ function closeTechModal(e) {
 <li style="margin-bottom: 6px;"><strong>Allerte Meteo:</strong> bollettino di criticità del Dipartimento della Protezione Civile, integrato tramite sensore Home Assistant.</li>
 <li style="margin-bottom: 6px;"><strong>Qualità dell'Aria &amp; Polline:</strong> Google Maps Platform (Air Quality API e Pollen API).</li>
 </ul>
+</div>
+</div>
+</div>
+<!-- Modale Download App -->
+<div class="modal-overlay" id="appModal" onclick="closeAppModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px;">
+<button class="modal-close" onclick="closeAppModal(event)">×</button>
+<h3 class="modal-title" style="color: #4caf50; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">📱 Installare l'App Android</h3>
+<div style="text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.6;">
+<p style="margin-top:0;">L'app non è distribuita tramite Google Play Store, quindi Android potrebbe mostrare alcuni avvisi durante il download e l'installazione. È tutto normale, ecco come procedere:</p>
+<ul style="padding-left: 18px; margin-bottom: 15px;">
+<li style="margin-bottom: 8px;">Se il download si ferma un istante intorno al <strong>99%</strong>, è normale: Google Play Protect sta scansionando il file. Attendi il completamento.</li>
+<li style="margin-bottom: 8px;">Se compare un avviso tipo <strong>"App non riconosciuta"</strong> o <strong>"Potrebbe essere dannosa"</strong>, tocca <strong>"Scarica comunque"</strong> / <strong>"Installa comunque"</strong> per procedere.</li>
+<li style="margin-bottom: 8px;">Alla prima installazione, il sistema potrebbe chiedere di autorizzare <strong>"Installa app sconosciute"</strong> per il browser: concedi il permesso e prosegui.</li>
+<li>Al termine del download, apri il file per installare l'app. Gli aggiornamenti successivi si installeranno sullo stesso posto, senza bisogno di disinstallare nulla.</li>
+</ul>
+<a id="appModalDownloadBtn" href="#" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1b5e20, #2e7d32); color: #fff; padding: 12px 20px; border-radius: 15px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+⬇️&nbsp; Scarica <span id="appModalVersion" style="margin-left: 4px;"></span>
+</a>
 </div>
 </div>
 </div>
