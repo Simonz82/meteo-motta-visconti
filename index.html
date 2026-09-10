@@ -51,7 +51,7 @@
         @media (min-width: 600px) { .gauge-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .gauge-card { padding: 10px 8px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .gauge-card h3 { margin: 0 0 12px 0; font-size: 15px; color: #fff; font-weight: 700; pointer-events: none;}
+        .gauge-card h3 { margin: 0 0 12px 0; font-size: 14px; color: #fff; font-weight: 700; pointer-events: none;}
         
         .gauge-visual-container { position: relative; width: 100%; display: flex; justify-content: center; }
         .gauge-visual-container.circle-type { height: 115px; align-items: center; max-width: 120px; margin-top: 0; }
@@ -83,8 +83,8 @@
         .twin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 12px; }
         .twin-card { padding: 10px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; text-align: left;}
         .twin-info { margin-bottom: 0; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; } 
-        .twin-info h3 { margin: 0; font-size: 15px; color: #fff; font-weight: 700; }
-        .twin-val { font-size: 0.95rem; font-weight: 800; color: #fff; line-height: 1.1; margin-top: 5px; } 
+        .twin-info h3 { margin: 0; font-size: 14px; color: #fff; font-weight: 700; }
+        .twin-val { font-size: 0.89rem; font-weight: 800; color: #fff; line-height: 1.1; margin-top: 5px; } 
         .twin-val span { font-size: 0.65rem; font-weight: 600; color: #9e9e9e;}
         .twin-desc { font-size: 8px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-top: 8px; color: #111; letter-spacing: 0.5px; }
         
@@ -97,10 +97,10 @@
         .drop-svg { width: 100%; height: 100%; overflow: visible; }
 
         /* NUOVA SEZIONE: QUALITÀ ARIA */
-        .dashboard-panel { background: #1c1c1c; border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; margin-bottom: 12px;}
-        .section-title { text-align: center; color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 15px 0; padding-bottom: 5px; border-bottom: 1px solid #333; }
+        .dashboard-panel { background: #1c1c1c; border-radius: 20px; padding: 8px 15px 15px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; margin-bottom: 12px;}
+        .section-title { text-align: center; color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 12px 0; padding-bottom: 5px; border-bottom: 1px solid #333; }
         /* LEGENDA POLLINI */
-        .pollen-legend { display: flex; justify-content: center; align-items: center; gap: 8px; margin: -10px 0 15px 0; flex-wrap: nowrap; }
+        .pollen-legend { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 0 0 15px 0; flex-wrap: nowrap; }
         .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.55rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
         .bg-0 { background: #558b2f; }
@@ -276,7 +276,7 @@
 </div>
 <!-- PREVISIONI PROSSIMI GIORNI (Open-Meteo) -->
 <div class="dashboard-panel">
-  <h2 class="section-title" style="margin-bottom: 12px;">Previsioni Future</h2>
+  <h2 class="section-title">Previsioni Future</h2>
   <div id="forecast-status" style="text-align: center; color: #9e9e9e; font-size: 0.75rem; margin-bottom: 10px;">Caricamento...</div>
   <div id="forecast-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;"></div>
 </div>
@@ -386,6 +386,9 @@ loadForecast();
     </div>
 </div>
 </div>
+<!-- PANNELLO RILEVAZIONI STAZIONE METEO -->
+<div class="dashboard-panel">
+  <h2 class="section-title">Rilevazioni Stazione Meteo</h2>
 <!-- OROLOGINI GRAFANA E STRUMENTI -->
 <div class="gauge-grid">
 <div class="card-interactive gauge-card" onclick="window.location.href='storico.html?misura=temp'" style="position: relative;">
@@ -601,7 +604,7 @@ loadForecast();
 </div>
 </div>
 <!-- BANNER DI ALLERTA FULMINI (A tutta larghezza) -->
-<div class="card-interactive" id="lightning_banner" onclick="window.location.href='storico.html?misura=lightning'" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-left: 5px solid #333; margin-bottom: 15px; background: #1a1a1a;">
+<div class="card-interactive" id="lightning_banner" onclick="window.location.href='storico.html?misura=lightning'" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-left: 5px solid #333; margin-bottom: 0; background: #1a1a1a;">
 <div style="display: flex; align-items: center; gap: 15px;">
 <i class="fas fa-bolt" id="lightning_icon" style="font-size: 28px; color: #555;">
 </i>
@@ -634,6 +637,7 @@ loadForecast();
      <span id="lightning_count" style="font-weight: bold; color: #999;">
       --
      </span>
+</div>
 </div>
 </div>
 </div>
@@ -851,44 +855,45 @@ loadForecast();
 
   <div style="width: 100%; height: 1px; background: #333; margin-bottom: 15px;"></div>
 
-  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
 
     <a href="#" onclick="toggleStationChart(event, 'bereguardo')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
        onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
        onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
-      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Bereguardo</span>
-      <span id="bereguardo-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
-      <span id="bereguardo-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
+      <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Bereguardo</span>
+      <span id="bereguardo-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
     </a>
+
+    <a href="#" onclick="toggleStationChart(event, 'vigevano')"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
+       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+      <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Vigevano</span>
+      <span id="vigevano-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
+    </a>
+
+    <a href="#" onclick="toggleStationChart(event, 'pavia')"
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
+       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
+      <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Pavia</span>
+      <span id="pavia-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
+    </a>
+
     <div id="bereguardo-chart-wrap" style="display:none; grid-column: 1 / -1;">
       <div id="bereguardo-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="bereguardo-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="bereguardo-chart" height="220"></canvas>
     </div>
-
-    <a href="#" onclick="toggleStationChart(event, 'vigevano')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
-       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
-      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Vigevano</span>
-      <span id="vigevano-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
-      <span id="vigevano-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
-    </a>
     <div id="vigevano-chart-wrap" style="display:none; grid-column: 1 / -1;">
       <div id="vigevano-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="vigevano-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="vigevano-chart" height="220"></canvas>
     </div>
-
-    <a href="#" onclick="toggleStationChart(event, 'pavia')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2a2a2a; color: #e1e1e1; padding: 9px 12px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px; grid-column: 1 / -1;"
-       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#2a2a2a'; this.style.borderColor='#444';">
-      <span style="font-weight: 700; font-size: 0.9rem; color: #00d4ff; margin-bottom: 4px;">Rilevazione Pavia</span>
-      <span id="pavia-last-value" style="font-size: 0.85rem; color: #e1e1e1; font-weight: 700; margin-bottom: 2px;">Caricamento...</span>
-      <span id="pavia-toggle-label" style="font-size: 0.7rem; color: #9e9e9e; font-weight: 600;">Tocca per il grafico storico</span>
-    </a>
     <div id="pavia-chart-wrap" style="display:none; grid-column: 1 / -1;">
       <div id="pavia-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="pavia-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
@@ -908,7 +913,7 @@ var stationLoaded = {};
 
 function formatStationLabel(p) {
   var t = p.t.split(' ')[1] ? p.t.split(' ')[1].slice(0,5) : p.t;
-  return p.v.toFixed(1) + ' cm (ore ' + t + ')';
+  return { val: p.v.toFixed(1) + ' cm', time: 'ore ' + t };
 }
 
 function loadStationLastValue(station) {
@@ -923,7 +928,8 @@ function loadStationLastValue(station) {
         return;
       }
       var last = d.points[d.points.length - 1];
-      el.textContent = 'Ultimo: ' + formatStationLabel(last);
+      var lbl = formatStationLabel(last);
+      el.innerHTML = lbl.val + '<br>' + lbl.time;
     })
     .catch(function() {
       var el = document.getElementById(station + '-last-value');
@@ -934,15 +940,16 @@ function loadStationLastValue(station) {
 function toggleStationChart(e, station) {
   e.preventDefault();
   var wrap = document.getElementById(station + '-chart-wrap');
-  var label = document.getElementById(station + '-toggle-label');
   var showing = wrap.style.display !== 'none';
-  if (showing) {
-    wrap.style.display = 'none';
-    label.textContent = 'Tocca per il grafico storico';
-    return;
-  }
+
+  Object.keys(stationConfigs).forEach(function(s) {
+    var w = document.getElementById(s + '-chart-wrap');
+    if (w) w.style.display = 'none';
+  });
+
+  if (showing) return;
+
   wrap.style.display = 'block';
-  label.textContent = 'Tocca per nascondere il grafico';
   if (!stationLoaded[station]) {
     stationLoaded[station] = true;
     loadStationChart(station);
@@ -979,8 +986,8 @@ function loadStationChart(station) {
             data: values,
             borderColor: '#00d4ff',
             backgroundColor: 'rgba(0,212,255,0.1)',
-            borderWidth: 2,
-            pointRadius: 2,
+            borderWidth: 1,
+            pointRadius: 0,
             pointHoverRadius: 6,
             pointBackgroundColor: '#00d4ff',
             tension: 0.2,
@@ -1095,6 +1102,10 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
    </span>
 <span class="tech">
     Powered by Home Assistant, InfluxDB &amp; Ecowitt Sensors
+   </span>
+<br/>
+<span style="font-size: 0.65rem;">
+    Progetto su <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">GitHub</a> · <a href="https://github.com/Simonz82/meteo-motta-visconti/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">Changelog</a>
    </span>
 <br/>
    Sistema di acquisizione sviluppato e curato da

@@ -41,6 +41,11 @@ Il sito è stato realizzato con l'aiuto di diversi strumenti di intelligenza art
 
 Le modifiche vengono registrate in [CHANGELOG.md](CHANGELOG.md).
 
+## Struttura del repository
+
+- `index.html` — homepage con tutte le card in tempo reale
+- `storico.html` — pagina condivisa per lo storico di ogni misura (temperatura, umidità, vento, fulmini, pioggia, qualità dell'aria, polline), selezionata via `?misura=`
+
 ## Nota
 
 Questo repository documenta il concept e l'evoluzione del progetto. Il codice del backend (integrazione con i sensori, chiavi/endpoint privati) non è incluso per motivi di privacy e sicurezza.
