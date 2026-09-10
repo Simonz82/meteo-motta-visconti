@@ -31,27 +31,27 @@
         box-sizing: border-box;
     }
     
-   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #111111; color: #e1e1e1; margin: 0; padding: 15px; max-width: 800px; margin-left: auto; margin-right: auto; }
+   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-page); color: var(--text-secondary); margin: 0; padding: 15px; max-width: 800px; margin-left: auto; margin-right: auto; }
         
-        .main-title { text-align: center; color: #fff; font-size: 1.8rem; font-weight: 800; margin: 1px 0 25px 0; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .main-title { text-align: center; color: var(--text-primary); font-size: 1.8rem; font-weight: 800; margin: 1px 0 25px 0; letter-spacing: 1px; text-shadow: 0 2px 10px var(--shadow-soft); }
 
-        .card-interactive { background: #1c1c1c; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); position: relative; cursor: pointer; transition: transform 0.2s, background 0.2s; overflow: hidden; }
-        .card-interactive:hover, .card-interactive:active { transform: scale(1.03); background: #252525; }
+        .card-interactive { background: var(--bg-card); border-radius: 20px; box-shadow: 0 4px 15px var(--shadow-card); position: relative; cursor: pointer; transition: transform 0.2s, background 0.2s; overflow: hidden; }
+        .card-interactive:hover, .card-interactive:active { transform: scale(1.03); background: var(--bg-card-hover); }
 
         /* 1. CICLI */
         .cycles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 10px; }
-        .cycle-item { background: #1c1c1c; border-radius: 20px; padding: 9px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
-        .cycle-item:hover { transform: scale(1.05); background: #252525; }
-        .cycle-icon { width: 45px; height: 45px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .cycle-name { font-size: 0.75rem; font-weight: bold; color: #fff; margin: 0; }
-        .cycle-state { font-size: 0.65rem; color: #9e9e9e; text-align: center; line-height: 1.1; text-transform: capitalize;}
+        .cycle-item { background: var(--bg-card); border-radius: 20px; padding: 9px; box-shadow: 0 4px 15px var(--shadow-card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: transform 0.2s; }
+        .cycle-item:hover { transform: scale(1.05); background: var(--bg-card-hover); }
+        .cycle-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--bg-card-2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .cycle-name { font-size: 0.75rem; font-weight: bold; color: var(--text-primary); margin: 0; }
+        .cycle-state { font-size: 0.65rem; color: var(--text-muted); text-align: center; line-height: 1.1; text-transform: capitalize;}
 
         /* 2. I QUATTRO OROLOGINI */
         .gauge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 12px; }
         @media (min-width: 600px) { .gauge-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .gauge-card { padding: 10px 8px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .gauge-card h3 { margin: 0 0 12px 0; font-size: 14px; color: #fff; font-weight: 700; pointer-events: none;}
+        .gauge-card h3 { margin: 0 0 12px 0; font-size: 14px; color: var(--text-primary); font-weight: 700; pointer-events: none;}
         
         .gauge-visual-container { position: relative; width: 100%; display: flex; justify-content: center; }
         .gauge-visual-container.circle-type { height: 115px; align-items: center; max-width: 120px; margin-top: 0; }
@@ -61,47 +61,47 @@
         
         .gauge-value { position: absolute; text-align: center; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .gauge-value.inside-circle { bottom: 3px; }
-        .gauge-value.inside-circle .gauge-val { font-size: 1rem; font-weight: 700; color: #fff; line-height: 1; }
-        .gauge-value.inside-circle .gauge-unit { font-size: 0.6rem; color: #9e9e9e; margin-top: 1px; font-weight: 600;}
+        .gauge-value.inside-circle .gauge-val { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
+        .gauge-value.inside-circle .gauge-unit { font-size: 0.6rem; color: var(--text-muted); margin-top: 1px; font-weight: 600;}
 
         /* Bussola Vento */
-        .compass-container { width: 115px; height: 115px; border-radius: 50%; border: 3px solid #333; position: relative; background: radial-gradient(circle, #2a2a2a 0%, #1c1c1c 100%); pointer-events: none;}
-        .compass-label { position: absolute; font-size: 0.75rem; font-weight: bold; color: #9e9e9e; z-index: 2;}
+        .compass-container { width: 115px; height: 115px; border-radius: 50%; border: 3px solid var(--border-color); position: relative; background: radial-gradient(circle, var(--bg-card-2) 0%, var(--bg-card) 100%); pointer-events: none;}
+        .compass-label { position: absolute; font-size: 0.75rem; font-weight: bold; color: var(--text-muted); z-index: 2;}
         .comp-n { top: 14px; left: 50%; transform: translateX(-50%); color: #ff5252;}
         .comp-s { bottom: 14px; left: 50%; transform: translateX(-50%); }
         .comp-e { top: 50%; right: 16px; transform: translateY(-50%); }
         .comp-w { top: 50%; left: 16px; transform: translateY(-50%); }
-        .compass-sublabel { position: absolute; font-size: 0.6rem; font-weight: 600; color: #555; z-index: 2;}
+        .compass-sublabel { position: absolute; font-size: 0.6rem; font-weight: 600; color: var(--border-color-3); z-index: 2;}
         .comp-ne { top: 24%; right: 24%; transform: translate(50%, -50%); }
         .comp-se { bottom: 24%; right: 24%; transform: translate(50%, 50%); }
         .comp-sw { bottom: 24%; left: 24%; transform: translate(-50%, 50%); }
         .comp-nw { top: 24%; left: 24%; transform: translate(-50%, -50%); }
-        .compass-arrow { position: absolute; top: 32%; left: 50%; width: 4px; height: 18%; background: #00d4ff; transform-origin: bottom center; transform: translateX(-50%) rotate(0deg); transition: transform 1s cubic-bezier(0.4, 2.5, 0.3, 1); border-radius: 2px; z-index: 1;}
-        .compass-arrow::after { content: ''; position: absolute; top: -5px; left: -3px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid #00d4ff; }
+        .compass-arrow { position: absolute; top: 32%; left: 50%; width: 4px; height: 18%; background: var(--accent-primary); transform-origin: bottom center; transform: translateX(-50%) rotate(0deg); transition: transform 1s cubic-bezier(0.4, 2.5, 0.3, 1); border-radius: 2px; z-index: 1;}
+        .compass-arrow::after { content: ''; position: absolute; top: -5px; left: -3px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid var(--accent-primary); }
 
         /* 3. TWIN CARDS ORIZZONTALI */
         .twin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 12px; }
         .twin-card { padding: 10px 14px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; text-align: left;}
         .twin-info { margin-bottom: 0; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; } 
-        .twin-info h3 { margin: 0; font-size: 14px; color: #fff; font-weight: 700; }
-        .twin-val { font-size: 0.89rem; font-weight: 800; color: #fff; line-height: 1.1; margin-top: 5px; } 
-        .twin-val span { font-size: 0.65rem; font-weight: 600; color: #9e9e9e;}
+        .twin-info h3 { margin: 0; font-size: 14px; color: var(--text-primary); font-weight: 700; }
+        .twin-val { font-size: 0.89rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin-top: 5px; } 
+        .twin-val span { font-size: 0.65rem; font-weight: 600; color: var(--text-muted);}
         .twin-desc { font-size: 8px; font-weight: 700; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-top: 8px; color: #111; letter-spacing: 0.5px; }
         
-        .pyramid-container { width: 55px; height: 55px; position: relative; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background-color: #2a2a2a; pointer-events: none; flex-shrink: 0;}
+        .pyramid-container { width: 55px; height: 55px; position: relative; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); background-color: var(--bg-card-2); pointer-events: none; flex-shrink: 0;}
         .pyramid-fill-wrapper { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
         .pyramid-gradient { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(to top, #4caf50 0%, #ffeb3b 40%, #ff9800 60%, #f44336 80%, #9c27b0 100%); }
-        .pyramid-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(to bottom, transparent, transparent 19.5%, rgba(0,0,0,0.6) 20%); z-index: 2; pointer-events: none; }
+        .pyramid-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(to bottom, transparent, transparent 19.5%, var(--shadow-strong) 20%); z-index: 2; pointer-events: none; }
 
         .drop-container { width: 47px; height: 55px; position: relative; pointer-events: none; display: flex; justify-content: center; flex-shrink: 0;}
         .drop-svg { width: 100%; height: 100%; overflow: visible; }
 
         /* NUOVA SEZIONE: QUALITÀ ARIA */
-        .dashboard-panel { background: #1c1c1c; border-radius: 20px; padding: 8px 15px 15px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; margin-bottom: 12px;}
-        .section-title { text-align: center; color: #fff; font-size: 15px; font-weight: 700; margin: 0 0 12px 0; padding-bottom: 5px; border-bottom: 1px solid #333; }
+        .dashboard-panel { background: var(--bg-card); border-radius: 20px; padding: 8px 15px 15px 15px; box-shadow: 0 4px 15px var(--shadow-card); display: flex; flex-direction: column; margin-bottom: 12px;}
+        .section-title { text-align: center; color: var(--text-primary); font-size: 15px; font-weight: 700; margin: 0 0 12px 0; padding-bottom: 5px; border-bottom: 1px solid var(--border-color); }
         /* LEGENDA POLLINI */
         .pollen-legend { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 0 0 15px 0; flex-wrap: nowrap; }
-        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.55rem; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; white-space: nowrap; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
         .bg-0 { background: #558b2f; }
         .bg-1 { background: #7cb342; }
@@ -121,21 +121,21 @@
         @media (max-width: 600px) { .pm-bars-container { grid-template-columns: 1fr; } }
         
         .pm-bar-item { display: flex; flex-direction: column; cursor: pointer; padding: 2px 8px; border-radius: 8px; transition: background 0.2s;}
-        .pm-bar-item:hover { background: #252525; }
+        .pm-bar-item:hover { background: var(--bg-card-hover); }
         .pm-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 6px; }
-        .pm-title { font-size: 0.75rem; font-weight: 700; color: #e1e1e1; margin: 0; }
-        .pm-val { font-size: 0.85rem; font-weight: 800; color: #fff; line-height: 1; }
-        .pm-val span { font-size: 0.55rem; font-weight: 600; color: #9e9e9e; margin-left: 2px;}
+        .pm-title { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin: 0; }
+        .pm-val { font-size: 0.85rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+        .pm-val span { font-size: 0.55rem; font-weight: 600; color: var(--text-muted); margin-left: 2px;}
         
-        .progress-track { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; position: relative; }
+        .progress-track { width: 100%; height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; position: relative; }
         .progress-fill { height: 100%; width: 0%; border-radius: 3px; transition: width 1.5s ease-out, background-color 1.5s ease; }
         .progress-markers { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .marker { position: absolute; top: 0; height: 100%; width: 2px; background: #1c1c1c; }
+        .marker { position: absolute; top: 0; height: 100%; width: 2px; background: var(--bg-card); }
 
         /* 4. POLLINI */
         .pollen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .pollen-item { height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 8px; font-weight: bold; font-size: 0.65rem; color: #999; background: transparent; text-align: center; border: 2px solid #333; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s; }
-        .pollen-item:hover, .pollen-item:active { transform: scale(1.05); background: #252525; }
+        .pollen-item { height: 55px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 8px; font-weight: bold; font-size: 0.65rem; color: var(--text-muted-2); background: transparent; text-align: center; border: 2px solid var(--border-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s; }
+        .pollen-item:hover, .pollen-item:active { transform: scale(1.05); background: var(--bg-card-hover); }
         .pollen-icon { font-size: 1.1rem; }
         /* 0: Nessuno (Grigio-Verde spento) */
         .level-0 { border-color: #558b2f !important; color: #558b2f !important; }
@@ -151,27 +151,27 @@
         .level-5 { border-color: #ff5252 !important; color: #ff5252 !important; box-shadow: 0 0 10px 2px rgba(255, 82, 82, 0.6); }
 
         /* 5. MAPPA WINDY (IFRAME) */
-        .windy-card { background: #1c1c1c; border-radius: 20px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden; }
-        .windy-card h3 { margin: 0 0 10px 0; font-size: 15px; color: #ffffff; font-weight: 700; padding-left: 5px; }
+        .windy-card { background: var(--bg-card); border-radius: 20px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 15px var(--shadow-card); display: flex; flex-direction: column; overflow: hidden; }
+        .windy-card h3 { margin: 0 0 10px 0; font-size: 15px; color: var(--text-primary); font-weight: 700; padding-left: 5px; }
         .windy-iframe { width: 100%; height: 400px; border: none; border-radius: 12px; }
 
         /* MODAL POP-UP STYLES */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: #1c1c1c; border-radius: 20px; width: 92%; max-width: 600px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #757575; cursor: pointer; border: none; background: none; line-height: 1; padding: 0; }
-        .modal-title { margin: 0 0 15px 0; color: #fff; font-size: 1.3rem; font-weight: 600; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg-card); border-radius: 20px; width: 92%; max-width: 600px; padding: 20px; box-shadow: 0 10px 30px var(--shadow-modal); position: relative; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--icon-muted); cursor: pointer; border: none; background: none; line-height: 1; padding: 0; }
+        .modal-title { margin: 0 0 15px 0; color: var(--text-primary); font-size: 1.3rem; font-weight: 600; }
         .time-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
-        .time-btn { background: #2a2a2a; border: 1px solid #444; color: #e1e1e1; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; flex: 1; transition: all 0.2s;}
-        .time-btn.active { background: #333; border-color: #fff; color: #fff; font-weight: bold; box-shadow: inset 0 0 0 1px #fff;}
+        .time-btn { background: var(--bg-card-2); border: 1px solid var(--border-color-2); color: var(--text-secondary); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; flex: 1; transition: all 0.2s;}
+        .time-btn.active { background: var(--border-color); border-color: var(--text-primary); color: var(--text-primary); font-weight: bold; box-shadow: inset 0 0 0 1px var(--text-primary);}
         .modal-chart-wrapper { position: relative; height: 35vh; width: 100%; }
                 /* FOOTER */
-        .site-footer { text-align: center; margin-top: 35px; margin-bottom: 30px; padding-top: 10px; border-top: 1px solid #333; font-size: 0.7rem; color: #777; line-height: 1.6; }
-        .site-footer .disclaimer { font-size: 0.65rem; color: #555; display: block; margin-top: 2px; margin-bottom: 12px; }
-        .site-footer .tech { color: #888; font-style: italic; }
-        .site-footer strong { color: #aaa; font-weight: 700; letter-spacing: 0.5px; }
+        .site-footer { text-align: center; margin-top: 35px; margin-bottom: 30px; padding-top: 10px; border-top: 1px solid var(--border-color); font-size: 0.7rem; color: var(--text-faint-2); line-height: 1.6; }
+        .site-footer .disclaimer { font-size: 0.65rem; color: var(--border-color-3); display: block; margin-top: 2px; margin-bottom: 12px; }
+        .site-footer .tech { color: var(--text-faint); font-style: italic; }
+        .site-footer strong { color: var(--text-secondary-2); font-weight: 700; letter-spacing: 0.5px; }
         .site-footer a { text-decoration: none; }
-        .site-footer a strong { color: #aaa; transition: color 0.3s ease; }
-        .site-footer a:hover strong { color: #00d4ff; text-shadow: 0 0 8px rgba(0, 212, 255, 0.5); }
+        .site-footer a strong { color: var(--text-secondary-2); transition: color 0.3s ease; }
+        .site-footer a:hover strong { color: var(--accent-primary); text-shadow: 0 0 8px rgba(var(--accent-primary-rgb), 0.5); }
   
     .footer-buttons-grid {
         display: grid;
@@ -205,11 +205,357 @@
       })();
   </script>
 <!-- End Matomo Code -->
+<style id="theme-vars">
+  /* ===== SISTEMA TEMI — variabili CSS =====
+     Il tema di default (nessun attributo data-theme, o data-theme="scuro")
+     riproduce ESATTAMENTE l'aspetto storico del sito: nessuna variabile
+     qui sotto deve differire dai valori hardcoded originali. */
+  :root, :root[data-theme="scuro"] {
+    --bg-page: #111111;
+    --bg-card: #1c1c1c;
+    --bg-card-hover: #252525;
+    --bg-card-2: #2a2a2a;
+    --bg-card-3: #1e1e1e;
+    --bg-card-4: #232323;
+    --bg-elevated: #1a1a1a;
+    --bg-deep: #131313;
+
+    --border-color: #333333;
+    --border-color-2: #444444;
+    --border-color-3: #555555;
+
+    --text-primary: #ffffff;
+    --text-secondary: #e1e1e1;
+    --text-secondary-2: #aaaaaa;
+    --icon-muted: #757575;
+    --text-body: #cccccc;
+    --text-muted: #9e9e9e;
+    --text-muted-2: #999999;
+    --text-faint: #888888;
+    --text-faint-2: #777777;
+    --text-faint-3: #666666;
+    --gauge-track: #222222;
+
+    --accent-primary: #00d4ff;
+    --accent-primary-rgb: 0,212,255;
+    --accent-secondary: #4caf50;
+    --accent-secondary-rgb: 76,175,80;
+
+    --shadow-card: rgba(0,0,0,0.4);
+    --shadow-soft: rgba(0,0,0,0.5);
+    --shadow-strong: rgba(0,0,0,0.6);
+    --shadow-modal: rgba(0,0,0,0.8);
+    --overlay-bg: rgba(0,0,0,0.85);
+
+    --card-blur: 0px;
+    --card-border-glass: transparent;
+  }
+
+  :root[data-theme="chiaro"] {
+    --bg-page: #eef1f5;
+    --bg-card: rgba(255,255,255,0.70);
+    --bg-card-hover: rgba(255,255,255,0.92);
+    --bg-card-2: rgba(15,23,42,0.045);
+    --bg-card-3: rgba(255,255,255,0.85);
+    --bg-card-4: rgba(15,23,42,0.035);
+    --bg-elevated: rgba(255,255,255,0.85);
+    --bg-deep: #dfe4ea;
+
+    --border-color: rgba(15,23,42,0.10);
+    --border-color-2: rgba(15,23,42,0.14);
+    --border-color-3: rgba(15,23,42,0.20);
+
+    --text-primary: #171a1f;
+    --text-secondary: #2f343c;
+    --text-secondary-2: #4a505a;
+    --icon-muted: #7d838c;
+    --text-body: #454b54;
+    --text-muted: #656b74;
+    --text-muted-2: #6f7580;
+    --text-faint: #7d838c;
+    --text-faint-2: #8b919a;
+    --text-faint-3: #9aa0a8;
+    --gauge-track: #c7cbd1;
+
+    --accent-primary: #0090c8;
+    --accent-primary-rgb: 0,144,200;
+    --accent-secondary: #2e9e46;
+    --accent-secondary-rgb: 46,158,70;
+
+    --shadow-card: rgba(30,41,59,0.10);
+    --shadow-soft: rgba(30,41,59,0.14);
+    --shadow-strong: rgba(30,41,59,0.18);
+    --shadow-modal: rgba(30,41,59,0.30);
+    --overlay-bg: rgba(15,23,42,0.45);
+
+    --card-blur: 18px;
+    --card-border-glass: rgba(255,255,255,0.5);
+  }
+
+  :root[data-theme="black"] {
+    --bg-page: #000000;
+    --bg-card: rgba(255,255,255,0.045);
+    --bg-card-hover: rgba(255,255,255,0.085);
+    --bg-card-2: rgba(255,255,255,0.07);
+    --bg-card-3: rgba(255,255,255,0.05);
+    --bg-card-4: rgba(255,255,255,0.06);
+    --bg-elevated: rgba(255,255,255,0.04);
+    --bg-deep: #000000;
+
+    --border-color: rgba(255,255,255,0.08);
+    --border-color-2: rgba(255,255,255,0.12);
+    --border-color-3: rgba(255,255,255,0.16);
+
+    --text-primary: #ffffff;
+    --text-secondary: #e6e6e6;
+    --text-secondary-2: #b0b0b0;
+    --icon-muted: #7d7d7d;
+    --text-body: #cfcfcf;
+    --text-muted: #9a9a9a;
+    --text-muted-2: #8f8f8f;
+    --text-faint: #7d7d7d;
+    --text-faint-2: #6c6c6c;
+    --text-faint-3: #5a5a5a;
+    --gauge-track: #2a2a2a;
+
+    --accent-primary: #00e5ff;
+    --accent-primary-rgb: 0,229,255;
+    --accent-secondary: #00e676;
+    --accent-secondary-rgb: 0,230,118;
+
+    --shadow-card: rgba(0,0,0,0.6);
+    --shadow-soft: rgba(0,0,0,0.6);
+    --shadow-strong: rgba(0,0,0,0.7);
+    --shadow-modal: rgba(0,0,0,0.9);
+    --overlay-bg: rgba(0,0,0,0.92);
+
+    --card-blur: 16px;
+    --card-border-glass: rgba(255,255,255,0.10);
+  }
+
+  :root[data-theme="blu"] {
+    --bg-page: #0a1626;
+    --bg-card: rgba(90,150,220,0.14);
+    --bg-card-hover: rgba(90,150,220,0.22);
+    --bg-card-2: rgba(255,255,255,0.06);
+    --bg-card-3: rgba(90,150,220,0.18);
+    --bg-card-4: rgba(90,150,220,0.12);
+    --bg-elevated: rgba(90,150,220,0.16);
+    --bg-deep: #071021;
+
+    --border-color: rgba(140,190,240,0.18);
+    --border-color-2: rgba(140,190,240,0.25);
+    --border-color-3: rgba(140,190,240,0.32);
+
+    --text-primary: #f0f6ff;
+    --text-secondary: #cfe0f5;
+    --text-secondary-2: #a8c2e0;
+    --icon-muted: #7695b8;
+    --text-body: #b7cbe3;
+    --text-muted: #8fa8c7;
+    --text-muted-2: #84a0c0;
+    --text-faint: #7695b8;
+    --text-faint-2: #6788ab;
+    --text-faint-3: #587a9d;
+    --gauge-track: #23384f;
+
+    --accent-primary: #3fa9ff;
+    --accent-primary-rgb: 63,169,255;
+    --accent-secondary: #64d8c6;
+    --accent-secondary-rgb: 100,216,198;
+
+    --shadow-card: rgba(0,5,20,0.45);
+    --shadow-soft: rgba(0,5,20,0.5);
+    --shadow-strong: rgba(0,5,20,0.6);
+    --shadow-modal: rgba(0,5,20,0.75);
+    --overlay-bg: rgba(3,10,25,0.85);
+
+    --card-blur: 16px;
+    --card-border-glass: rgba(150,200,255,0.14);
+  }
+
+  :root[data-theme="green"] {
+    --bg-page: #0a1c14;
+    --bg-card: rgba(110,200,150,0.14);
+    --bg-card-hover: rgba(110,200,150,0.22);
+    --bg-card-2: rgba(255,255,255,0.06);
+    --bg-card-3: rgba(110,200,150,0.18);
+    --bg-card-4: rgba(110,200,150,0.12);
+    --bg-elevated: rgba(110,200,150,0.16);
+    --bg-deep: #071510;
+
+    --border-color: rgba(150,220,180,0.18);
+    --border-color-2: rgba(150,220,180,0.25);
+    --border-color-3: rgba(150,220,180,0.32);
+
+    --text-primary: #eefff4;
+    --text-secondary: #cdeed9;
+    --text-secondary-2: #a8d6bd;
+    --icon-muted: #76a889;
+    --text-body: #b7ddc6;
+    --text-muted: #8fbfa2;
+    --text-muted-2: #84b697;
+    --text-faint: #76a889;
+    --text-faint-2: #679a7a;
+    --text-faint-3: #588c6c;
+    --gauge-track: #234a37;
+
+    --accent-primary: #2fdb85;
+    --accent-primary-rgb: 47,219,133;
+    --accent-secondary: #9ccc65;
+    --accent-secondary-rgb: 156,204,101;
+
+    --shadow-card: rgba(0,15,8,0.45);
+    --shadow-soft: rgba(0,15,8,0.5);
+    --shadow-strong: rgba(0,15,8,0.6);
+    --shadow-modal: rgba(0,15,8,0.75);
+    --overlay-bg: rgba(3,18,12,0.85);
+
+    --card-blur: 16px;
+    --card-border-glass: rgba(160,230,190,0.14);
+  }
+
+  :root[data-theme="pink"] {
+    --bg-page: #1e0a17;
+    --bg-card: rgba(230,110,180,0.14);
+    --bg-card-hover: rgba(230,110,180,0.22);
+    --bg-card-2: rgba(255,255,255,0.06);
+    --bg-card-3: rgba(230,110,180,0.18);
+    --bg-card-4: rgba(230,110,180,0.12);
+    --bg-elevated: rgba(230,110,180,0.16);
+    --bg-deep: #170714;
+
+    --border-color: rgba(240,160,210,0.18);
+    --border-color-2: rgba(240,160,210,0.25);
+    --border-color-3: rgba(240,160,210,0.32);
+
+    --text-primary: #fff0f8;
+    --text-secondary: #f0d3e5;
+    --text-secondary-2: #d9a8c8;
+    --icon-muted: #ac789e;
+    --text-body: #e3bdd6;
+    --text-muted: #c791b6;
+    --text-muted-2: #bd86ac;
+    --text-faint: #ac789e;
+    --text-faint-2: #9c6a8f;
+    --text-faint-3: #8b5c7f;
+    --gauge-track: #4a2340;
+
+    --accent-primary: #ff5cad;
+    --accent-primary-rgb: 255,92,173;
+    --accent-secondary: #ffb86b;
+    --accent-secondary-rgb: 255,184,107;
+
+    --shadow-card: rgba(20,0,15,0.45);
+    --shadow-soft: rgba(20,0,15,0.5);
+    --shadow-strong: rgba(20,0,15,0.6);
+    --shadow-modal: rgba(20,0,15,0.75);
+    --overlay-bg: rgba(20,3,17,0.85);
+
+    --card-blur: 16px;
+    --card-border-glass: rgba(255,190,225,0.14);
+  }
+
+  :root[data-theme="red"] {
+    --bg-page: #1c0b0b;
+    --bg-card: rgba(230,110,110,0.14);
+    --bg-card-hover: rgba(230,110,110,0.22);
+    --bg-card-2: rgba(255,255,255,0.06);
+    --bg-card-3: rgba(230,110,110,0.18);
+    --bg-card-4: rgba(230,110,110,0.12);
+    --bg-elevated: rgba(230,110,110,0.16);
+    --bg-deep: #150707;
+
+    --border-color: rgba(240,160,160,0.18);
+    --border-color-2: rgba(240,160,160,0.25);
+    --border-color-3: rgba(240,160,160,0.32);
+
+    --text-primary: #fff2f0;
+    --text-secondary: #f0d6d3;
+    --text-secondary-2: #d9a8a4;
+    --icon-muted: #ac7c78;
+    --text-body: #e3c0bc;
+    --text-muted: #c79591;
+    --text-muted-2: #bd8a86;
+    --text-faint: #ac7c78;
+    --text-faint-2: #9c6e6a;
+    --text-faint-3: #8b605c;
+    --gauge-track: #4a2624;
+
+    --accent-primary: #ff5252;
+    --accent-primary-rgb: 255,82,82;
+    --accent-secondary: #ffb74d;
+    --accent-secondary-rgb: 255,183,77;
+
+    --shadow-card: rgba(20,0,0,0.45);
+    --shadow-soft: rgba(20,0,0,0.5);
+    --shadow-strong: rgba(20,0,0,0.6);
+    --shadow-modal: rgba(20,0,0,0.75);
+    --overlay-bg: rgba(20,3,3,0.85);
+
+    --card-blur: 16px;
+    --card-border-glass: rgba(255,190,190,0.14);
+  }
+
+  /* Applica il "vetro" (blur) SOLO quando un tema alternativo è attivo.
+     La regola non è applicata affatto nel tema di default (nessun
+     attributo, o data-theme="scuro"): anche un blur(0px) "innocuo"
+     può forzare il browser a promuovere l'elemento su un layer di
+     compositing a parte e alterare impercettibilmente l'antialiasing
+     del testo — verificato via confronto pixel-per-pixel con il sito
+     live. Per restare identici al pixel, la proprietà è del tutto
+     assente finché non serve davvero. */
+  :root[data-theme]:not([data-theme="scuro"]) .card-interactive,
+  :root[data-theme]:not([data-theme="scuro"]) .dashboard-panel,
+  :root[data-theme]:not([data-theme="scuro"]) .windy-card,
+  :root[data-theme]:not([data-theme="scuro"]) .modal-content,
+  :root[data-theme]:not([data-theme="scuro"]) .cycle-item,
+  :root[data-theme]:not([data-theme="scuro"]) .time-btn,
+  :root[data-theme]:not([data-theme="scuro"]) .pollen-item,
+  :root[data-theme]:not([data-theme="scuro"]) .twin-card {
+    backdrop-filter: blur(var(--card-blur));
+    -webkit-backdrop-filter: blur(var(--card-blur));
+  }
+</style>
+
+<script id="theme-switcher">
+(function() {
+  var VALID_THEMES = ['scuro', 'chiaro', 'black', 'blu', 'green', 'pink', 'red'];
+
+  function applyTheme(name, persist) {
+    if (VALID_THEMES.indexOf(name) === -1) return false;
+    if (name === 'scuro') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', name);
+    }
+    if (persist) {
+      try { localStorage.setItem('siteTheme', name); } catch (e) {}
+    }
+    return true;
+  }
+
+  // Chiamata esposta per l'app Android (WebView.evaluateJavascript) per
+  // cambiare tema in tempo reale, senza dover ricaricare la pagina.
+  window.setAppTheme = function(name) { applyTheme(name, true); };
+
+  var params = new URLSearchParams(window.location.search);
+  var fromUrl = params.get('theme');
+  if (fromUrl) {
+    applyTheme(fromUrl, true);
+  } else {
+    var stored = null;
+    try { stored = localStorage.getItem('siteTheme'); } catch (e) {}
+    if (stored) applyTheme(stored, false);
+  }
+})();
+</script>
+
 </head>
 <body>
 <svg aria-hidden="true" focusable="false" style="width:0;height:0;position:absolute;">
 <lineargradient id="gradRainFill" x1="0%" x2="0%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#00d4ff">
+<stop offset="0%" style="stop-color: var(--accent-primary);">
 </stop>
 <stop offset="100%" stop-color="#0077ff">
 </stop>
@@ -225,8 +571,8 @@
 <div id="dpc-alert-banner" style="display:none; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; margin:0 auto 8px auto; max-width:600px; text-align:left; cursor:pointer;">
   <span id="dpc-alert-icon" style="font-size:26px; line-height:1; flex-shrink:0;">⚠️</span>
   <div>
-    <div id="dpc-alert-title" style="font-weight:bold; font-size:12px; color:#fff;"></div>
-    <div id="dpc-alert-subtitle" style="font-size:10px; color:#ccc; margin-top:2px;"></div>
+    <div id="dpc-alert-title" style="font-weight:bold; font-size:12px; color:var(--text-primary);"></div>
+    <div id="dpc-alert-subtitle" style="font-size:10px; color:var(--text-body); margin-top:2px;"></div>
   </div>
 </div>
 <script>
@@ -271,13 +617,13 @@
   }
 </style>
 
-<div id="lastUpdateText" style="text-align: center; color: #888; font-size: 0.65rem; margin-bottom: 8px; font-weight: 500; letter-spacing: 0.5px;">
+<div id="lastUpdateText" style="text-align: center; color: var(--text-faint); font-size: 0.65rem; margin-bottom: 8px; font-weight: 500; letter-spacing: 0.5px;">
   Ultimo aggiornamento dati: in caricamento...
 </div>
 <!-- PREVISIONI PROSSIMI GIORNI (Open-Meteo) -->
 <div class="dashboard-panel">
   <h2 class="section-title">Previsioni Future</h2>
-  <div id="forecast-status" style="text-align: center; color: #9e9e9e; font-size: 0.75rem; margin-bottom: 10px;">Caricamento...</div>
+  <div id="forecast-status" style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-bottom: 10px;">Caricamento...</div>
   <div id="forecast-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;"></div>
 </div>
 
@@ -295,12 +641,12 @@ function loadForecast() {
       status.style.display = 'none';
       window.forecastGiorni = d.giorni;
       grid.innerHTML = d.giorni.map(function(g, idx) {
-        return '<div onclick="openForecastDayModal(' + idx + ')" style="background:#2a2a2a; border-radius:12px; padding:10px 4px; text-align:center; cursor:pointer;">' +
-          '<div style="font-size:0.65rem; color:#9e9e9e; font-weight:600;">' + (g.giorno === 'Oggi' ? 'Oggi' : g.giorno.slice(0,3)) + '</div>' +
-          '<div style="font-size:0.6rem; color:#666; margin-bottom:4px;">' + g.data + '</div>' +
+        return '<div onclick="openForecastDayModal(' + idx + ')" style="background:var(--bg-card-2); border-radius:12px; padding:10px 4px; text-align:center; cursor:pointer;">' +
+          '<div style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">' + (g.giorno === 'Oggi' ? 'Oggi' : g.giorno.slice(0,3)) + '</div>' +
+          '<div style="font-size:0.6rem; color:var(--text-faint-3); margin-bottom:4px;">' + g.data + '</div>' +
           '<div style="font-size:2.2rem; line-height:1;">' + g.icona + '</div>' +
           '<div style="font-size:0.75rem; font-weight:700; color:#ff5252; margin-top:4px;">' + g.temp_max + '°</div>' +
-          '<div style="font-size:0.7rem; color:#00d4ff;">' + g.temp_min + '°</div>' +
+          '<div style="font-size:0.7rem; color:var(--accent-primary);">' + g.temp_min + '°</div>' +
           (g.pioggia > 0 ? '<div style="font-size:0.6rem; color:#4caf50; margin-top:2px;">💧' + g.pioggia + 'mm</div>' : '') +
           '</div>';
       }).join('');
@@ -317,7 +663,7 @@ function openForecastDayModal(idx) {
   document.getElementById('modalDataZone').style.display = 'none';
   document.getElementById('modalAstroZone').style.display = 'block';
   document.getElementById('modalTitle').innerText = g.giorno + ' ' + g.data;
-  document.getElementById('astroImage').innerHTML = '<div style="font-size: 5rem; line-height:1;">' + g.icona + '</div><div style="color:#9e9e9e; font-size:0.85rem; margin-top:5px;">' + g.descrizione + '</div>';
+  document.getElementById('astroImage').innerHTML = '<div style="font-size: 5rem; line-height:1;">' + g.icona + '</div><div style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">' + g.descrizione + '</div>';
 
   // Mostra il dettaglio ogni 3 ore, come le fasce orarie dei siti meteo classici.
   var oreFasce = (g.ore || []).filter(function(o) {
@@ -326,23 +672,23 @@ function openForecastDayModal(idx) {
   });
 
   var righe = oreFasce.map(function(o) {
-    return '<div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid #333;">' +
-      '<span style="width:45px; color:#9e9e9e;">' + o.ora + '</span>' +
+    return '<div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color);">' +
+      '<span style="width:45px; color:var(--text-muted);">' + o.ora + '</span>' +
       '<span style="font-size:1.3rem;">' + o.icona + '</span>' +
-      '<span style="width:40px; text-align:right; font-weight:700; color:#fff;">' + o.temp + '°</span>' +
-      '<span style="width:55px; text-align:right; color:#00d4ff; font-size:0.75rem;">💧' + o.pioggia_prob + '%</span>' +
-      '<span style="width:55px; text-align:right; color:#9e9e9e; font-size:0.75rem;">🌬️' + o.vento + 'km/h</span>' +
+      '<span style="width:40px; text-align:right; font-weight:700; color:var(--text-primary);">' + o.temp + '°</span>' +
+      '<span style="width:55px; text-align:right; color:var(--accent-primary); font-size:0.75rem;">💧' + o.pioggia_prob + '%</span>' +
+      '<span style="width:55px; text-align:right; color:var(--text-muted); font-size:0.75rem;">🌬️' + o.vento + 'km/h</span>' +
       '</div>';
   }).join('');
 
   document.getElementById('astroDataBox').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #444;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border-color-2);">
       <span>Max: <strong style="color:#ff5252;">${g.temp_max}°</strong></span>
-      <span>Min: <strong style="color:#00d4ff;">${g.temp_min}°</strong></span>
-      <span>Raffica: <strong style="color:#fff;">${g.raffica} km/h</strong></span>
+      <span>Min: <strong style="color:var(--accent-primary);">${g.temp_min}°</strong></span>
+      <span>Raffica: <strong style="color:var(--text-primary);">${g.raffica} km/h</strong></span>
     </div>
     ${righe}
-    <div style="text-align:center; margin-top:12px; font-size:0.65rem; color:#666;">Previsione: Open-Meteo</div>
+    <div style="text-align:center; margin-top:12px; font-size:0.65rem; color:var(--text-faint-3);">Previsione: Open-Meteo</div>
   `;
   document.getElementById('chartModal').style.display = 'flex';
 }
@@ -375,7 +721,7 @@ loadForecast();
     </div>
 </div>
 <div class="cycle-item" onclick="openMoonModal()">
-<div class="cycle-icon" id="icon_moon" style="font-size: 1.8rem; filter: drop-shadow(0 0 5px #fff);">
+<div class="cycle-icon" id="icon_moon" style="font-size: 1.8rem; filter: drop-shadow(0 0 5px var(--text-primary));">
      🌑
     </div>
 <div class="cycle-name">
@@ -399,10 +745,10 @@ loadForecast();
 </div>
 <!-- Freccia MINIMA (In basso a Sinistra, piccola) -->
 <div style="position: absolute; bottom: 8px; left: 10px; text-align: left; line-height: 1.2;">
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Min
      </div>
-<div style="font-size: 11px; font-weight: bold; color: #00d4ff; display: flex; align-items: center; gap: 2px;">
+<div style="font-size: 11px; font-weight: bold; color: var(--accent-primary); display: flex; align-items: center; gap: 2px;">
 <span>
       ↓
      </span>
@@ -413,7 +759,7 @@ loadForecast();
 </div>
 <!-- Freccia MASSIMA (In basso a Destra, piccola) -->
 <div style="position: absolute; bottom: 8px; right: 10px; text-align: right; line-height: 1.2;">
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Max
      </div>
 <div style="font-size: 12px; font-weight: bold; color: #ff5252; display: flex; align-items: center; gap: 2px; justify-content: flex-end;">
@@ -434,10 +780,10 @@ loadForecast();
 </div>
 <!-- Freccia MINIMA Umidità -->
 <div style="position: absolute; bottom: 8px; left: 10px; text-align: left; line-height: 1.2;">
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Min
      </div>
-<div style="font-size: 11px; font-weight: bold; color: #00d4ff; display: flex; align-items: center; gap: 2px;">
+<div style="font-size: 11px; font-weight: bold; color: var(--accent-primary); display: flex; align-items: center; gap: 2px;">
 <span>
       ↓
      </span>
@@ -448,7 +794,7 @@ loadForecast();
 </div>
 <!-- Freccia MASSIMA Umidità -->
 <div style="position: absolute; bottom: 8px; right: 10px; text-align: right; line-height: 1.2;">
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Max
      </div>
 <div style="font-size: 12px; font-weight: bold; color: #ff5252; display: flex; align-items: center; gap: 2px; justify-content: flex-end;">
@@ -471,7 +817,7 @@ loadForecast();
 </g>
 <polygon fill="#9c27b0" id="baro_needle" points="48.5,50 51.5,50 50,13" style="transition: transform 1.5s cubic-bezier(0.4, 2.5, 0.3, 1); transform-origin: 50px 50px; transform: rotate(-135deg);">
 </polygon>
-<circle cx="50" cy="50" fill="#1c1c1c" r="3.5" stroke="#9c27b0" stroke-width="2">
+<circle cx="50" cy="50" fill="var(--bg-card)" r="3.5" stroke="#9c27b0" stroke-width="2">
 </circle>
 </svg>
 <div class="gauge-value inside-circle">
@@ -520,11 +866,11 @@ loadForecast();
       </div>
 <div class="compass-arrow" id="compass_arrow">
 </div>
-<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#1c1c1c; border-radius:50%; width:50px; height:50px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:3; box-shadow: 0 0 10px rgba(0,0,0,0.8);">
-<div id="val_wind" style="font-size:0.95rem; font-weight:700; color:#fff; line-height: 1;">
+<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-card); border-radius:50%; width:50px; height:50px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:3; box-shadow: 0 0 10px var(--shadow-modal);">
+<div id="val_wind" style="font-size:0.95rem; font-weight:700; color:var(--text-primary); line-height: 1;">
         --
        </div>
-<div style="font-size:0.55rem; color:#9e9e9e;">
+<div style="font-size:0.55rem; color:var(--text-muted);">
         km/h
        </div>
 </div>
@@ -532,10 +878,10 @@ loadForecast();
 </div>
 <!-- SCRITTINA RAFFICA MASSIMA (A capo e allineata a destra) -->
 <div style="position: absolute; bottom: 6px; right: 8px; text-align: right; line-height: 1.2; z-index: 10;">
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Max
      </div>
-<div style="font-size: 9px; font-weight: normal; color: #9e9e9e;">
+<div style="font-size: 9px; font-weight: normal; color: var(--text-muted);">
       Raffica:
      </div>
 <div style="font-size: 11px; font-weight: bold; color: #ff5252;">
@@ -559,7 +905,7 @@ loadForecast();
 <div class="twin-val" id="val_uv">
       --
      </div>
-<div class="twin-desc" id="desc_uv" style="background: #333; color: #999;">
+<div class="twin-desc" id="desc_uv" style="background: var(--border-color); color: var(--text-muted-2);">
       In attesa
      </div>
 </div>
@@ -583,7 +929,7 @@ loadForecast();
        mm
       </span>
 </div>
-<div class="twin-desc" id="desc_rain" style="background: #333; color: #999;">
+<div class="twin-desc" id="desc_rain" style="background: var(--border-color); color: var(--text-muted-2);">
       In attesa
      </div>
 </div>
@@ -595,7 +941,7 @@ loadForecast();
 </path>
 </clippath>
 </defs>
-<path d="M50 5 C50 5 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 5 50 5 Z" fill="#2a2a2a" stroke="#333" stroke-width="3">
+<path d="M50 5 C50 5 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 5 50 5 Z" fill="var(--bg-card-2)" stroke="var(--border-color)" stroke-width="3">
 </path>
 <rect clip-path="url(#dropClip)" fill="url(#gradRainFill)" height="100" id="rain_fill_rect" style="transition: y 1.5s ease-out;" width="100" x="0" y="100">
 </rect>
@@ -604,15 +950,15 @@ loadForecast();
 </div>
 </div>
 <!-- BANNER DI ALLERTA FULMINI (A tutta larghezza) -->
-<div class="card-interactive" id="lightning_banner" onclick="window.location.href='storico.html?misura=lightning'" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-left: 5px solid #333; margin-bottom: 0; background: #1a1a1a;">
+<div class="card-interactive" id="lightning_banner" onclick="window.location.href='storico.html?misura=lightning'" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; border-left: 5px solid var(--border-color); margin-bottom: 0; background: var(--bg-elevated);">
 <div style="display: flex; align-items: center; gap: 15px;">
-<i class="fas fa-bolt" id="lightning_icon" style="font-size: 28px; color: #555;">
+<i class="fas fa-bolt" id="lightning_icon" style="font-size: 28px; color: var(--border-color-3);">
 </i>
 <div>
-<h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: 700; color: #fff;">
+<h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: 700; color: var(--text-primary);">
       Ultimo Fulmine
      </h3>
-<div id="lightning_time" style="font-size: 12px; color: #999; margin-top: 2px;">
+<div id="lightning_time" style="font-size: 12px; color: var(--text-muted-2); margin-top: 2px;">
       Nessun rilevamento nelle ultime ore
      </div>
 <div id="lightning_nearest_header" style="font-size: 11px; color: #4fc3f7; margin-top: 3px; font-weight: 600;">
@@ -620,21 +966,21 @@ loadForecast();
 </div>
 </div>
 <div style="text-align: right;">
-<div style="font-size: 9px; color: #777; text-transform: uppercase; letter-spacing: 0.3px;">
+<div style="font-size: 9px; color: var(--text-faint-2); text-transform: uppercase; letter-spacing: 0.3px;">
       Ultimo rilevamento
      </div>
 <div style="display: flex; align-items: baseline; justify-content: flex-end; gap: 4px;">
-<span id="lightning_dist" style="font-size: 26px; font-weight: bold; color: #555;">
+<span id="lightning_dist" style="font-size: 26px; font-weight: bold; color: var(--border-color-3);">
       --
      </span>
-<span style="font-size: 14px; color: #777;">
+<span style="font-size: 14px; color: var(--text-faint-2);">
       km
      </span>
 </div>
 <!-- Contatore lampi totale odierno -->
-<div style="font-size: 11px; color: #777; margin-top: 2px;">
+<div style="font-size: 11px; color: var(--text-faint-2); margin-top: 2px;">
      Totale oggi:
-     <span id="lightning_count" style="font-weight: bold; color: #999;">
+     <span id="lightning_count" style="font-weight: bold; color: var(--text-muted-2);">
       --
      </span>
 </div>
@@ -651,7 +997,7 @@ loadForecast();
 <div class="aqi-gauge-wrapper" onclick="window.location.href='storico.html?misura=aqi'" style="cursor: pointer;">
 <div class="gauge-visual-container circle-type" id="container_aqi" style="height: 85px; max-width: 108px; margin-top: 5px;">
 </div>
-<div class="aqi-badge" id="badge_aqi" style="background: #333; color: #999;">
+<div class="aqi-badge" id="badge_aqi" style="background: var(--border-color); color: var(--text-muted-2);">
       In attesa
      </div>
 </div>
@@ -662,7 +1008,7 @@ loadForecast();
 <div class="pm-header">
 <h4 class="pm-title">
         PM 2.5
-        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+        <span style="font-size:0.55rem; color:var(--text-muted-2); font-weight:normal;">
          (Smog)
         </span>
 </h4>
@@ -674,7 +1020,7 @@ loadForecast();
 </div>
 </div>
 <div class="progress-track">
-<div class="progress-fill" id="fill_pm25" style="background: #333;">
+<div class="progress-fill" id="fill_pm25" style="background: var(--border-color);">
 </div>
 <div class="progress-markers">
 <div class="marker" style="left: 30%;">
@@ -689,7 +1035,7 @@ loadForecast();
 <div class="pm-header">
 <h4 class="pm-title">
         Ozono
-        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+        <span style="font-size:0.55rem; color:var(--text-muted-2); font-weight:normal;">
          (O3)
         </span>
 </h4>
@@ -701,7 +1047,7 @@ loadForecast();
 </div>
 </div>
 <div class="progress-track">
-<div class="progress-fill" id="fill_o3" style="background: #333;">
+<div class="progress-fill" id="fill_o3" style="background: var(--border-color);">
 </div>
 <div class="progress-markers">
 <div class="marker" style="left: 30%;">
@@ -716,7 +1062,7 @@ loadForecast();
 <div class="pm-header">
 <h4 class="pm-title">
         PM 10
-        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+        <span style="font-size:0.55rem; color:var(--text-muted-2); font-weight:normal;">
          (Polveri)
         </span>
 </h4>
@@ -728,7 +1074,7 @@ loadForecast();
 </div>
 </div>
 <div class="progress-track">
-<div class="progress-fill" id="fill_pm10" style="background: #333;">
+<div class="progress-fill" id="fill_pm10" style="background: var(--border-color);">
 </div>
 <div class="progress-markers">
 <div class="marker" style="left: 40%;">
@@ -743,7 +1089,7 @@ loadForecast();
 <div class="pm-header">
 <h4 class="pm-title">
         Anidride Nitrosa
-        <span style="font-size:0.55rem; color:#999; font-weight:normal;">
+        <span style="font-size:0.55rem; color:var(--text-muted-2); font-weight:normal;">
          (NO2)
         </span>
 </h4>
@@ -755,7 +1101,7 @@ loadForecast();
 </div>
 </div>
 <div class="progress-track">
-<div class="progress-fill" id="fill_no2" style="background: #333;">
+<div class="progress-fill" id="fill_no2" style="background: var(--border-color);">
 </div>
 <div class="progress-markers">
 <div class="marker" style="left: 40%;">
@@ -849,54 +1195,54 @@ loadForecast();
     Fiume Ticino
   </h2>
 
-  <div style="text-align: center; color: #9e9e9e; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+  <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
     Livello Idrometrico e Portata
   </div>
 
-  <div style="width: 100%; height: 1px; background: #333; margin-bottom: 15px;"></div>
+  <div style="width: 100%; height: 1px; background: var(--border-color); margin-bottom: 15px;"></div>
 
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
 
     <a href="#" onclick="toggleStationChart(event, 'bereguardo')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
-       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card-3); color: var(--text-secondary); padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid var(--border-color-2); text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       onmouseover="this.style.background='var(--border-color)'; this.style.borderColor='var(--accent-primary)';"
+       onmouseout="this.style.background='var(--bg-card-3)'; this.style.borderColor='var(--border-color-2)';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
-      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Bereguardo</span>
-      <span id="bereguardo-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: var(--accent-primary);">Bereguardo</span>
+      <span id="bereguardo-last-value" style="font-size: 0.68rem; color: var(--text-secondary); font-weight: 600;">Caricamento...</span>
     </a>
 
     <a href="#" onclick="toggleStationChart(event, 'vigevano')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
-       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card-3); color: var(--text-secondary); padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid var(--border-color-2); text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       onmouseover="this.style.background='var(--border-color)'; this.style.borderColor='var(--accent-primary)';"
+       onmouseout="this.style.background='var(--bg-card-3)'; this.style.borderColor='var(--border-color-2)';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
-      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Vigevano</span>
-      <span id="vigevano-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: var(--accent-primary);">Vigevano</span>
+      <span id="vigevano-last-value" style="font-size: 0.68rem; color: var(--text-secondary); font-weight: 600;">Caricamento...</span>
     </a>
 
     <a href="#" onclick="toggleStationChart(event, 'pavia')"
-       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1e1e1e; color: #e1e1e1; padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid #444; text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
-       onmouseover="this.style.background='#333'; this.style.borderColor='#00d4ff';"
-       onmouseout="this.style.background='#1e1e1e'; this.style.borderColor='#444';">
+       style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-card-3); color: var(--text-secondary); padding: 8px 4px; border-radius: 12px; text-decoration: none; border: 1px solid var(--border-color-2); text-align: center; transition: all 0.2s; cursor: pointer; min-height: 54px;"
+       onmouseover="this.style.background='var(--border-color)'; this.style.borderColor='var(--accent-primary)';"
+       onmouseout="this.style.background='var(--bg-card-3)'; this.style.borderColor='var(--border-color-2)';">
       <span style="font-size: 1.1rem; margin-bottom: 2px;">💧</span>
-      <span style="font-weight: 700; font-size: 0.8rem; color: #00d4ff;">Pavia</span>
-      <span id="pavia-last-value" style="font-size: 0.68rem; color: #e1e1e1; font-weight: 600;">Caricamento...</span>
+      <span style="font-weight: 700; font-size: 0.8rem; color: var(--accent-primary);">Pavia</span>
+      <span id="pavia-last-value" style="font-size: 0.68rem; color: var(--text-secondary); font-weight: 600;">Caricamento...</span>
     </a>
 
     <div id="bereguardo-chart-wrap" style="display:none; grid-column: 1 / -1;">
-      <div id="bereguardo-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
-      <div id="bereguardo-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <div id="bereguardo-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="bereguardo-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="bereguardo-chart" height="220"></canvas>
     </div>
     <div id="vigevano-chart-wrap" style="display:none; grid-column: 1 / -1;">
-      <div id="vigevano-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
-      <div id="vigevano-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <div id="vigevano-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="vigevano-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="vigevano-chart" height="220"></canvas>
     </div>
     <div id="pavia-chart-wrap" style="display:none; grid-column: 1 / -1;">
-      <div id="pavia-chart-status" style="text-align:center; color:#9e9e9e; font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
-      <div id="pavia-chart-summary" style="text-align:center; color:#e1e1e1; font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+      <div id="pavia-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+      <div id="pavia-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="pavia-chart" height="220"></canvas>
     </div>
 
@@ -984,12 +1330,12 @@ function loadStationChart(station) {
           datasets: [{
             label: 'Livello (cm)',
             data: values,
-            borderColor: '#00d4ff',
-            backgroundColor: 'rgba(0,212,255,0.1)',
+            borderColor: 'var(--accent-primary)',
+            backgroundColor: 'rgba(var(--accent-primary-rgb), 0.1)',
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#00d4ff',
+            pointBackgroundColor: 'var(--accent-primary)',
             tension: 0.2,
             fill: true
           }]
@@ -1009,8 +1355,8 @@ function loadStationChart(station) {
             }
           },
           scales: {
-            x: { ticks: { color: '#9e9e9e', maxTicksLimit: 8 }, grid: { color: '#333' } },
-            y: { ticks: { color: '#9e9e9e' }, grid: { color: '#333' } }
+            x: { ticks: { color: 'var(--text-muted)', maxTicksLimit: 8 }, grid: { color: 'var(--border-color)' } },
+            y: { ticks: { color: 'var(--text-muted)' }, grid: { color: 'var(--border-color)' } }
           }
         }
       });
@@ -1039,9 +1385,9 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <!-- FOOTER -->
 <div class="site-footer">
 <!-- MENU COLLEGAMENTI: METEO, APP E STORIA -->
-<div class="footer-buttons-grid" style="width: 100%; padding-bottom: 25px; padding-top: 15px; border-bottom: 1px solid #333; margin-bottom: 20px;   ">
+<div class="footer-buttons-grid" style="width: 100%; padding-bottom: 25px; padding-top: 15px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;   ">
 <!-- Pulsante Record Storici -->
-<a href="#" onclick="openRecordsModal(); return false;" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s; cursor: pointer;">
+<a href="#" onclick="openRecordsModal(); return false;" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s; cursor: pointer;">
 <span style="font-size: 2rem; margin-right: 15px;">
       🏆
      </span>
@@ -1049,13 +1395,13 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <strong style="color: #ffeb3b; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Record Storici
       </strong>
-<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
        Temperature e pioggia dal 1940
       </span>
 </div>
 </a>
 <!-- Pulsante Webcam nei Dintorni -->
-<a href="https://www.meteoblue.com/en/weather/webcams/motta-visconti_italy_3172502" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="https://www.meteoblue.com/en/weather/webcams/motta-visconti_italy_3172502" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📷
      </span>
@@ -1063,37 +1409,37 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <strong style="color: #4dd0e1; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Webcam nei Dintorni
       </strong>
-<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
        Viste live intorno a Motta Visconti
       </span>
 </div>
 </a>
 <!-- Pulsante Foto Storiche -->
-<a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📸
      </span>
 <div style="text-align: left; flex: 1;">
 <strong style="color: #00d4ff; font-size: 0.975rem; display: block; margin-bottom: 2px;">Archivio Storico Foto</strong>
-<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
        Com'era Motta Visconti
       </span>
 </div>
 </a>
 <!-- Pulsante App Android -->
-<a href="#" id="linkApp" onclick="openAppModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="#" id="linkApp" onclick="openAppModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📱
      </span>
 <div style="text-align: left; flex: 1;">
 <strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'APP di ANDROID per abilitare tutte le notifiche</strong>
-<span id="dataApp" style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span id="dataApp" style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
        Verifica versione in corso...
       </span>
 </div>
 </a>
 <!-- Pulsante Specifiche Tecniche -->
-<a href="#" onclick="openTechModal(event)" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="#" onclick="openTechModal(event)" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px; display:flex; align-items:center; justify-content:center; width:42px; height:42px;">
   🌦️
 </span>
@@ -1101,7 +1447,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <strong style="color: #9c27b0; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Specifiche Tecniche
       </strong>
-<span style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+<span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
        Stazione &amp; Motta Visconti
       </span>
 </div>
@@ -1112,7 +1458,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <div class="dashboard-panel">
   <h2 class="section-title">News su Telegram</h2>
   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-<a href="https://t.me/gruppomottavisconti" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="https://t.me/gruppomottavisconti" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 1.6rem; margin-right: 10px;">
       🏘️
      </span>
@@ -1120,7 +1466,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
       Motta Visconti
      </strong>
 </a>
-<a href="https://t.me/IlnostroTicino" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; margin: 0; transition: transform 0.2s;">
+<a href="https://t.me/IlnostroTicino" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 1.6rem; margin-right: 10px;">
       🌊
      </span>
@@ -1144,7 +1490,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
    </span>
 <br/>
 <span style="font-size: 0.65rem;">
-    Progetto su <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">GitHub</a> · <a href="changelog.html" style="color: #9e9e9e; text-decoration: underline;">Changelog</a>
+    Progetto su <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted); text-decoration: underline;">GitHub</a> · <a href="changelog.html" style="color: var(--text-muted); text-decoration: underline;">Changelog</a>
    </span>
 <br/>
    Sistema di acquisizione sviluppato e curato da
@@ -1197,7 +1543,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <div id="modalAstroZone" style="display: none; text-align: center;">
 <div id="astroImage" style="margin: 20px auto; width: 120px; height: 120px;">
 </div>
-<div id="astroDataBox" style="background: #2a2a2a; border-radius: 15px; padding: 15px; text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.8;">
+<div id="astroDataBox" style="background: var(--bg-card-2); border-radius: 15px; padding: 15px; text-align: left; font-size: 0.85rem; color: var(--text-body); line-height: 1.8;">
 </div>
 </div>
 </div>
@@ -1250,7 +1596,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             const dashLen = 2 * Math.PI * innerRadius * (240 / 360);
 
             svg += `<defs><mask id="mask_${needleId}"><path id="mask_path_${needleId}" d="${describeArc(50, 50, innerRadius, startAngle, 120)}" fill="none" stroke="white" stroke-width="${innerWidth+2}" stroke-linecap="round" stroke-dasharray="${dashLen}" stroke-dashoffset="${dashLen}" style="transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 2.5, 0.3, 1);"/></mask></defs>`;
-            svg += `<path d="${describeArc(50, 50, innerRadius, startAngle, 120)}" fill="none" stroke="#222" stroke-width="${innerWidth}" stroke-linecap="round"/>`;
+            svg += `<path d="${describeArc(50, 50, innerRadius, startAngle, 120)}" fill="none" stroke="var(--gauge-track)" stroke-width="${innerWidth}" stroke-linecap="round"/>`;
 
             const steps = 60; const angleStep = totalAngle / steps; const valStep = (max - min) / steps;
             
@@ -1284,12 +1630,12 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 let pStart = polarToCartesian(50, 50, outerRadius + 2.5, angle);
                 let pEnd = polarToCartesian(50, 50, outerRadius + 5, angle);
                 let pText = polarToCartesian(50, 50, outerRadius + 11.5, angle); 
-                svg += `<line x1="${pStart.x}" y1="${pStart.y}" x2="${pEnd.x}" y2="${pEnd.y}" stroke="#555" stroke-width="1.5" />`;
-                svg += `<text x="${pText.x}" y="${pText.y}" fill="#888" font-size="7" font-weight="600" text-anchor="middle" dominant-baseline="central">${t}</text>`;
+                svg += `<line x1="${pStart.x}" y1="${pStart.y}" x2="${pEnd.x}" y2="${pEnd.y}" stroke="var(--border-color-3)" stroke-width="1.5" />`;
+                svg += `<text x="${pText.x}" y="${pText.y}" fill="var(--text-faint)" font-size="7" font-weight="600" text-anchor="middle" dominant-baseline="central">${t}</text>`;
             });
 
             /* Perno con raggio modificabile e base lancetta sollevata */
-            svg += `<g style="filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));"><polygon id="${needleId}" points="48.5,50 51.5,50 50,25" fill="#e1e1e1" style="transition: transform 1.5s cubic-bezier(0.4, 2.5, 0.3, 1); transform-origin: 50px 50px; transform: rotate(-120deg);"/><circle cx="50" cy="50" r="${centerRadius}" fill="#111" stroke="#e1e1e1" stroke-width="1.5"/></g></svg>`;
+            svg += `<g style="filter: drop-shadow(0px 2px 4px var(--shadow-strong));"><polygon id="${needleId}" points="48.5,50 51.5,50 50,25" fill="var(--text-secondary)" style="transition: transform 1.5s cubic-bezier(0.4, 2.5, 0.3, 1); transform-origin: 50px 50px; transform: rotate(-120deg);"/><circle cx="50" cy="50" r="${centerRadius}" fill="#111" stroke="var(--text-secondary)" stroke-width="1.5"/></g></svg>`;
             
             /* Usa il bottomOffset molto esagerato per l'AQI */
             svg += `<div class="gauge-value inside-circle" style="bottom: ${bottomOffset};"><div class="gauge-val" id="${textId}" style="transition: color 1s ease; font-size: ${valSize}; line-height: 0.9;">${min}</div><div class="gauge-unit" style="font-size: ${unitSize}; margin-top:0;">${unit}</div></div>`;
@@ -1330,10 +1676,10 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             for(let p = 960; p <= 1030; p += 2) {
                 let deg = -135 + ((p - 960) / 70) * 270;
                 let isMajor = (p % 10 === 0);
-                html += `<line x1="50" y1="4" x2="50" y2="${isMajor ? 12 : 8}" stroke="${isMajor ? '#fff' : '#555'}" stroke-width="${isMajor ? 2 : 1}" transform="rotate(${deg}, 50, 50)" />`;
+                html += `<line x1="50" y1="4" x2="50" y2="${isMajor ? 12 : 8}" stroke="${isMajor ? 'var(--text-primary)' : 'var(--border-color-3)'}" stroke-width="${isMajor ? 2 : 1}" transform="rotate(${deg}, 50, 50)" />`;
                 if (isMajor) {
                     let rad = (deg - 90) * Math.PI / 180;
-                    html += `<text x="${50 + 26 * Math.cos(rad)}" y="${50 + 26 * Math.sin(rad)}" fill="#9e9e9e" font-size="5.5" font-weight="bold" text-anchor="middle" dominant-baseline="central">${p}</text>`;
+                    html += `<text x="${50 + 26 * Math.cos(rad)}" y="${50 + 26 * Math.sin(rad)}" fill="var(--text-muted)" font-size="5.5" font-weight="bold" text-anchor="middle" dominant-baseline="central">${p}</text>`;
                 }
             }
             svg.innerHTML = html;
@@ -1345,7 +1691,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 let isMajor = (d % 45 === 0); let isMinor = (d % 15 === 0) && !isMajor;
                 let len = isMajor ? 5 : (isMinor ? 3.5 : 2);
                 let sw = isMajor ? 2 : (isMinor ? 1.5 : 1);
-                let col = isMajor ? '#999' : (isMinor ? '#777' : '#555');
+                let col = isMajor ? 'var(--text-muted-2)' : (isMinor ? 'var(--text-faint-2)' : 'var(--border-color-3)');
                 html += `<line x1="50" y1="1" x2="50" y2="${1+len}" stroke="${col}" stroke-width="${sw}" transform="rotate(${d}, 50, 50)" />`;
             }
             svg.innerHTML = html;
@@ -1474,18 +1820,18 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 
             document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));">${moonIcon}</div>`;
             document.getElementById('astroDataBox').innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Stato Attuale:</span> <strong style="color:#fff;">${phaseName}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Illuminazione:</span> <strong style="color:#00d4ff;">${(moonIllum.fraction * 100).toFixed(1)}%</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Età della Luna:</span> <strong style="color:#fff;">${ageDays} giorni</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:5px;"><span>Stato Attuale:</span> <strong style="color:var(--text-primary);">${phaseName}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Illuminazione:</span> <strong style="color:var(--accent-primary);">${(moonIllum.fraction * 100).toFixed(1)}%</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Età della Luna:</span> <strong style="color:var(--text-primary);">${ageDays} giorni</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Prossima Piena tra:</span> <strong style="color:#ffeb3b;">~ ${daysToFull} gg</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Prossima Nuova tra:</span> <strong style="color:#aaa;">~ ${daysToNew} gg</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Prossima Nuova tra:</span> <strong style="color:var(--text-secondary-2);">~ ${daysToNew} gg</strong></div>
                 
-                <div style="margin-top:15px; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px; color:#ffeb3b; font-weight:bold; font-size:0.75rem;">POSIZIONE NEL CIELO (Motta Visconti)</div>
+                <div style="margin-top:15px; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:5px; color:#ffeb3b; font-weight:bold; font-size:0.75rem;">POSIZIONE NEL CIELO (Motta Visconti)</div>
                 
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Altitudine (Elevazione):</span> <strong style="color:#fff;">${altitudeDeg}° ${altitudeDeg > 0 ? '(Visibile)' : '(Sotto orizz.)'}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Azimut (Direzione):</span> <strong style="color:#fff;">${azimuthDeg}°</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Distanza:</span> <strong style="color:#fff;">${moonPos.distance.toFixed(0)} km</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Culminazione (Altezza Max):</span> <strong style="color:#00d4ff;">${culmTime}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Altitudine (Elevazione):</span> <strong style="color:var(--text-primary);">${altitudeDeg}° ${altitudeDeg > 0 ? '(Visibile)' : '(Sotto orizz.)'}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Azimut (Direzione):</span> <strong style="color:var(--text-primary);">${azimuthDeg}°</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Distanza:</span> <strong style="color:var(--text-primary);">${moonPos.distance.toFixed(0)} km</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Culminazione (Altezza Max):</span> <strong style="color:var(--accent-primary);">${culmTime}</strong></div>
             `;
             document.getElementById('chartModal').style.display = 'flex';
         }
@@ -1520,18 +1866,18 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             let isDay = (now >= alba && now < tramonto);
             
             document.getElementById('astroImage').innerHTML = `
-                <div style="position:relative; width:100%; height:60px; border-bottom: 2px solid #555; overflow:hidden;">
-                    <div style="position:absolute; bottom:-60px; left:0; width:100%; height:120px; border-radius:50%; border:2px dashed #666;"></div>
+                <div style="position:relative; width:100%; height:60px; border-bottom: 2px solid var(--border-color-3); overflow:hidden;">
+                    <div style="position:absolute; bottom:-60px; left:0; width:100%; height:120px; border-radius:50%; border:2px dashed var(--text-faint-3);"></div>
                     <div style="position:absolute; ${isDay ? 'top:10px' : 'bottom:-20px'}; left:50%; transform:translateX(-50%); font-size: 3rem; filter: drop-shadow(0 0 20px #ffeb3b); transition: top 1s;">☀️</div>
                 </div>
             `;
             
             document.getElementById('astroDataBox').innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Posizione Attuale:</span> <strong style="color:#fff;">${isDay ? 'Sopra l\'orizzonte' : 'Sotto l\'orizzonte'}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:5px;"><span>Posizione Attuale:</span> <strong style="color:var(--text-primary);">${isDay ? 'Sopra l\'orizzonte' : 'Sotto l\'orizzonte'}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Alba:</span> <strong style="color:#ff9800;">${albaStr}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Mezzogiorno solare:</span> <strong style="color:#ffeb3b;">${mezzogiornoStr}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Tramonto:</span> <strong style="color:#ff5252;">${tramontoStr}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Ore di luce totali:</span> <strong style="color:#fff;">${oreLuce}h ${minLuce}m</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Ore di luce totali:</span> <strong style="color:var(--text-primary);">${oreLuce}h ${minLuce}m</strong></div>
             `;
             document.getElementById('chartModal').style.display = 'flex';
         }
@@ -1568,12 +1914,12 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 
             document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px ${sColor});">${icon}</div>`;
             document.getElementById('astroDataBox').innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px;"><span>Stagione Attuale:</span> <strong style="color:${sColor};">${season}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Primavera:</span> <strong style="color:#fff;">20 Marzo</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Estate:</span> <strong style="color:#fff;">21 Giugno</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Autunno:</span> <strong style="color:#fff;">22 Settembre</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Inverno:</span> <strong style="color:#fff;">21 Dicembre</strong></div>
-                <div style="text-align:center; margin-top:15px; font-style:italic; color:#888;">${prog}</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:5px;"><span>Stagione Attuale:</span> <strong style="color:${sColor};">${season}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Primavera:</span> <strong style="color:var(--text-primary);">20 Marzo</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Estate:</span> <strong style="color:var(--text-primary);">21 Giugno</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Autunno:</span> <strong style="color:var(--text-primary);">22 Settembre</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Inverno:</span> <strong style="color:var(--text-primary);">21 Dicembre</strong></div>
+                <div style="text-align:center; margin-top:15px; font-style:italic; color:var(--text-faint);">${prog}</div>
             `;
             document.getElementById('chartModal').style.display = 'flex';
         }
@@ -1584,31 +1930,31 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             document.getElementById('modalAstroZone').style.display = 'block';
             document.getElementById('modalTitle').innerText = "Record Storici";
             document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px #ffeb3b);">🏆</div>`;
-            document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Caricamento dati storici...</div>`;
+            document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:var(--text-faint);">Caricamento dati storici...</div>`;
             document.getElementById('chartModal').style.display = 'flex';
 
             fetch('/records.php', { cache: 'no-store' })
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (!d.success) {
-                        document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Dati non disponibili al momento.</div>`;
+                        document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:var(--text-faint);">Dati non disponibili al momento.</div>`;
                         return;
                     }
                     const r = d.records;
                     document.getElementById('astroDataBox').innerHTML = `
                         <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Temperatura più alta:</span> <strong style="color:#ff5252;">${r.temp_max.valore}${r.temp_max.unita}</strong></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.temp_max.data}</span></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Temperatura più bassa:</span> <strong style="color:#00d4ff;">${r.temp_min.valore}${r.temp_min.unita}</strong></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.temp_min.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:8px; font-size:0.75rem; color:var(--text-faint);"><span></span> <span>${r.temp_max.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Temperatura più bassa:</span> <strong style="color:var(--accent-primary);">${r.temp_min.valore}${r.temp_min.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:8px; font-size:0.75rem; color:var(--text-faint);"><span></span> <span>${r.temp_min.data}</span></div>
                         <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Pioggia in un giorno:</span> <strong style="color:#4caf50;">${r.pioggia_max.valore}${r.pioggia_max.unita}</strong></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.pioggia_max.data}</span></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Raffica di vento max:</span> <strong style="color:#fff;">${r.raffica_max.valore}${r.raffica_max.unita}</strong></div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.75rem; color:#888;"><span></span> <span>${r.raffica_max.data}</span></div>
-                        <div style="text-align:center; margin-top:15px; font-size:0.7rem; color:#666;">Periodo analizzato: ${d.periodo_da} — ${d.periodo_a}<br>Fonte: ${d.fonte}</div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-color-2); padding-bottom:8px; font-size:0.75rem; color:var(--text-faint);"><span></span> <span>${r.pioggia_max.data}</span></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>Raffica di vento max:</span> <strong style="color:var(--text-primary);">${r.raffica_max.valore}${r.raffica_max.unita}</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.75rem; color:var(--text-faint);"><span></span> <span>${r.raffica_max.data}</span></div>
+                        <div style="text-align:center; margin-top:15px; font-size:0.7rem; color:var(--text-faint-3);">Periodo analizzato: ${d.periodo_da} — ${d.periodo_a}<br>Fonte: ${d.fonte}</div>
                     `;
                 })
                 .catch(function() {
-                    document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:#888;">Errore nel caricamento dei dati storici.</div>`;
+                    document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:var(--text-faint);">Errore nel caricamento dei dati storici.</div>`;
                 });
         }
 
@@ -1672,7 +2018,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 modalChartInstance.destroy();
             }
 
-            Chart.defaults.color = '#9e9e9e';
+            Chart.defaults.color = 'var(--text-muted)';
 
             // REGOLAZIONE MATEMATICA DELLE ETICHETTE SULL'ASSE X
             let limiteEtichette;
@@ -1740,7 +2086,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                     plugins: { 
                         legend: { 
                             display: isWind, // <-- Mostra la legenda solo se c'è il vento!
-                            labels: { color: '#9e9e9e', usePointStyle: true, boxWidth: 8 }
+                            labels: { color: 'var(--text-muted)', usePointStyle: true, boxWidth: 8 }
                         } 
                     },
                     scales: {
@@ -2130,7 +2476,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                         });
                     }
                     if (document.getElementById('val_rad')) {
-                        document.getElementById('val_rad').innerHTML = `${rad.toFixed(1)} <span style="font-size: 0.6rem; color: #9e9e9e;">W/m²</span>`;
+                        document.getElementById('val_rad').innerHTML = `${rad.toFixed(1)} <span style="font-size: 0.6rem; color: var(--text-muted);">W/m²</span>`;
                     }
 
                     let lux = 0;
@@ -2145,7 +2491,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                     }
                     if (document.getElementById('val_lux')) {
                         let klx = lux / 1000;
-                        document.getElementById('val_lux').innerHTML = `${klx.toFixed(1)} <span style="font-size: 0.6rem; color: #9e9e9e;">klx</span>`;
+                        document.getElementById('val_lux').innerHTML = `${klx.toFixed(1)} <span style="font-size: 0.6rem; color: var(--text-muted);">klx</span>`;
                     }
                 } catch(e) { console.error("Errore RAD/LUX:", e); }
                 // --- FULMINI (Allerta e Totale) ---
@@ -2354,11 +2700,11 @@ function closeTechModal(e) {
 <button class="modal-close" onclick="closeTechModal(event)">
      ×
     </button>
-<h3 class="modal-title" style="color: #9c27b0; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
+<h3 class="modal-title" style="color: #9c27b0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
      Specifiche Tecniche
     </h3>
-<div style="text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.6;">
-<h4 style="color: #fff; margin-bottom: 5px;">
+<div style="text-align: left; font-size: 0.85rem; color: var(--text-body); line-height: 1.6;">
+<h4 style="color: var(--text-primary); margin-bottom: 5px;">
       📍 Informazioni Geografiche
      </h4>
 <ul style="list-style-type: none; padding-left: 0; margin-bottom: 15px;">
@@ -2381,7 +2727,7 @@ function closeTechModal(e) {
        ~93 m s.l.m.
       </li>
 </ul>
-<h4 style="color: #fff; margin-bottom: 5px;">
+<h4 style="color: var(--text-primary); margin-bottom: 5px;">
       📡 Ecosistema Ecowitt &amp; Sensori
      </h4>
 <ul style="list-style-type: none; padding-left: 0; margin-bottom: 15px;">
@@ -2416,7 +2762,7 @@ function closeTechModal(e) {
        Frequenza 868 MHz al gateway locale, invio diretto a Home Assistant (API no-cloud).
       </li>
 </ul>
-<h4 style="color: #fff; margin-bottom: 5px;">
+<h4 style="color: var(--text-primary); margin-bottom: 5px;">
       💻 Infrastruttura IT
      </h4>
 <ul style="list-style-type: none; padding-left: 0;">
@@ -2426,7 +2772,7 @@ function closeTechModal(e) {
 <li style="margin-bottom: 6px;"><strong>Architettura:</strong> infrastruttura locale basata su Synology NAS DS925+ per pubblicazione web e storage, Home Assistant in macchina virtuale per acquisizione e orchestrazione dei dati, InfluxDB in container Docker per la storicizzazione delle serie temporali e API Google per l’integrazione dei dati ambientali esterni.</li>
 <li style="margin-bottom: 6px;"><strong>Gestione e Sviluppo:</strong> sistema progettato, integrato e curato da <a href="https://t.me/Simonz82" rel="noopener noreferrer" style="color: #9c27b0; text-decoration: none; font-weight: 700;" target="_blank">Simonz82</a>.</li>
 </ul>
-<h4 style="color: #fff; margin-bottom: 5px;">
+<h4 style="color: var(--text-primary); margin-bottom: 5px;">
       🌍 Fonti Dati Esterne
      </h4>
 <ul style="list-style-type: none; padding-left: 0;">
@@ -2445,12 +2791,12 @@ function closeTechModal(e) {
 <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px; display: flex; flex-direction: column; padding: 0; max-height: 85vh; overflow: hidden;">
 <button class="modal-close" onclick="closeAppModal(event)" style="z-index: 2;">×</button>
 <div style="overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 15px 20px;">
-<h3 class="modal-title" style="color: #4caf50; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">📱 Installare l'App Android</h3>
-<div style="text-align: left; font-size: 0.85rem; color: #ccc; line-height: 1.6;">
+<h3 class="modal-title" style="color: var(--accent-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">📱 Installare l'App Android</h3>
+<div style="text-align: left; font-size: 0.85rem; color: var(--text-body); line-height: 1.6;">
 <p style="margin-top:0;">L'app non è distribuita tramite Google Play Store, quindi Android mostra alcuni avvisi di sicurezza durante il download e l'installazione. È del tutto normale: ecco i passaggi per procedere senza problemi.</p>
 
-<div style="background: #232323; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; border: 1px solid #333;">
-<p style="margin: 0 0 8px 0; color: #4caf50; font-weight: bold;">✨ Perché installare l'app</p>
+<div style="background: var(--bg-card-4); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; border: 1px solid var(--border-color);">
+<p style="margin: 0 0 8px 0; color: var(--accent-secondary); font-weight: bold;">✨ Perché installare l'app</p>
 <ul style="margin: 0; padding-left: 20px;">
 <li style="margin-bottom: 6px;">Notifiche personalizzate (allerte, fulmini, pioggia, record storici) attivabili solo nelle fasce orarie che preferisci</li>
 <li style="margin-bottom: 6px;">Tema chiaro o scuro a tua scelta</li>
@@ -2459,23 +2805,23 @@ function closeTechModal(e) {
 </ul>
 </div>
 
-<p style="margin-bottom: 4px;"><strong style="color: #fff;">1. Durante il download</strong></p>
+<p style="margin-bottom: 4px;"><strong style="color: var(--text-primary);">1. Durante il download</strong></p>
 <p style="margin-top: 0; margin-bottom: 10px;">Chrome potrebbe mostrare l'avviso <strong>"Potrebbe essere dannoso"</strong>, semplicemente perché il file non arriva dal Play Store. Tocca <strong>"Scarica comunque"</strong> per proseguire.</p>
-<img src="image/app_install_warning_download.jpg" alt="Avviso di Chrome durante il download con il pulsante Scarica comunque" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333;">
+<img src="image/app_install_warning_download.jpg" alt="Avviso di Chrome durante il download con il pulsante Scarica comunque" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color);">
 
-<p style="margin-bottom: 4px;"><strong style="color: #fff;">2. All'apertura del file scaricato</strong></p>
+<p style="margin-bottom: 4px;"><strong style="color: var(--text-primary);">2. All'apertura del file scaricato</strong></p>
 <p style="margin-top: 0; margin-bottom: 10px;">Comparirà un avviso di Play Protect come questo, perché l'app è nuova e non ancora "conosciuta" da Google. Tocca <strong>"Installa comunque"</strong> per andare avanti.</p>
-<img src="image/app_install_warning.jpg" alt="Avviso Google Play Protect con freccia che indica il pulsante Installa comunque" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333;">
+<img src="image/app_install_warning.jpg" alt="Avviso Google Play Protect con freccia che indica il pulsante Installa comunque" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border-color);">
 
-<p style="margin-bottom: 4px;"><strong style="color: #fff;">3. Se richiesto</strong></p>
+<p style="margin-bottom: 4px;"><strong style="color: var(--text-primary);">3. Se richiesto</strong></p>
 <p style="margin-top: 0; margin-bottom: 15px;">Alla primissima installazione, il sistema potrebbe chiedere di autorizzare <strong>"Installa app sconosciute"</strong> per il browser che stai usando: concedi il permesso e riprova l'installazione.</p>
 
-<p style="margin-bottom: 4px;"><strong style="color: #fff;">4. Fatto</strong></p>
+<p style="margin-bottom: 4px;"><strong style="color: var(--text-primary);">4. Fatto</strong></p>
 <p style="margin-top: 0; margin-bottom: 0;">Gli aggiornamenti futuri si installeranno automaticamente sopra a questa versione, senza mai dover disinstallare nulla.</p>
 </div>
 </div>
-<div style="flex-shrink: 0; padding: 15px 20px 20px 20px; border-top: 1px solid #333; background: #1c1c1c; border-radius: 0 0 20px 20px;">
-<a id="appModalDownloadBtn" href="#" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1b5e20, #2e7d32); color: #fff; padding: 12px 20px; border-radius: 15px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+<div style="flex-shrink: 0; padding: 15px 20px 20px 20px; border-top: 1px solid var(--border-color); background: var(--bg-card); border-radius: 0 0 20px 20px;">
+<a id="appModalDownloadBtn" href="#" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1b5e20, #2e7d32); color: var(--text-primary); padding: 12px 20px; border-radius: 15px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 15px var(--shadow-soft);">
 ⬇️&nbsp; Scarica <span id="appModalVersion" style="margin-left: 4px;"></span>
 </a>
 </div>

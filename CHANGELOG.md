@@ -13,6 +13,10 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Testo del pulsante di download app aggiornato per menzionare le notifiche meteo personalizzabili, poi rifinito in "Scarica l'APP di ANDROID per abilitare tutte le notifiche"
 - Icona della nebbia nel box "Previsioni Future" sostituita con una più coerente esteticamente con le altre (la precedente non veniva renderizzata correttamente su alcuni dispositivi)
 
+### Aggiunto — Sistema di temi
+- Introdotto un sistema di temi selezionabili (Scuro, Chiaro, Black/AMOLED, Blu, Green, Pink, Red), ciascuno con superfici in vetro traslucido (blur) sulle card. Il sito web pubblico continua a mostrare sempre il tema Scuro originale, identico pixel per pixel a prima: il tema si attiva solo esplicitamente (dall'app, o con `?theme=nome` nell'URL) e resta invariato per chi visita il sito normalmente
+- Tutti i colori legati al significato dei dati (scale di gravità inquinamento/polline, temperature, allerte) restano fissi in ogni tema, per non comprometterne la leggibilità
+
 ## 2026-09-10
 
 ### Aggiunto
