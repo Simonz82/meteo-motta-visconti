@@ -9,6 +9,11 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Pulsanti di navigazione ◀ ▶ nelle pagine storiche per scorrere avanti/indietro tra i giorni disponibili, senza dover riaprire il menu a tendina
 - Link "GitHub" e "Changelog" nel footer del sito, che rimandano a questo repository
 - Nuovo pulsante "Webcam nei Dintorni" nel footer, che rimanda alle webcam pubbliche più vicine a Motta Visconti (Pavia, Gaggiano, Dorno e altre)
+- Nuovo box "News su Telegram" nel footer, con pulsanti diretti ai canali Telegram Motta Visconti e Ticino
+
+### Modificato (footer)
+- Invertito l'ordine dei pulsanti: "Archivio Storico Foto" ora precede "Scarica l'App Android"
+- Il box "News su Telegram" è stato spostato sotto "Specifiche Tecniche" e reso un box a parte (stesso stile di "Previsioni Future"), per non sembrare parte del pulsante precedente
 
 ### Modificato
 - Uniformata la spaziatura sopra e sotto il titolo di tutti i box del sito (Previsioni Future, Rilevazioni Stazione Meteo, Qualità dell'Aria, Livello Polline, Fiume Ticino)

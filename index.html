@@ -1068,18 +1068,6 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
       </span>
 </div>
 </a>
-<!-- Pulsante App Android -->
-<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
-<span style="font-size: 2rem; margin-right: 15px;">
-      📱
-     </span>
-<div style="text-align: left; flex: 1;">
-<strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
-<span id="dataApp" style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
-       Verifica versione in corso...
-      </span>
-</div>
-</a>
 <!-- Pulsante Foto Storiche -->
 <a href="foto.html" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
@@ -1092,7 +1080,20 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
       </span>
 </div>
 </a>
-<a href="#" onclick="openTechModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<!-- Pulsante App Android -->
+<a href="#" id="linkApp" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      📱
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #4caf50; font-size: 0.825rem; display: block; margin-bottom: 2px;">Scarica l'App Android della Stazione Meteo di Motta Visconti</strong>
+<span id="dataApp" style="font-size: 0.625rem; color: #aaa; text-transform: uppercase; font-weight: 600;">
+       Verifica versione in corso...
+      </span>
+</div>
+</a>
+<!-- Pulsante Specifiche Tecniche -->
+<a href="#" onclick="openTechModal(event)" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px; display:flex; align-items:center; justify-content:center; width:42px; height:42px;">
   🌦️
 </span>
@@ -1106,6 +1107,30 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 </div>
 </a>
 </div>
+
+<!-- BOX NEWS SU TELEGRAM -->
+<div class="dashboard-panel">
+  <h2 class="section-title">News su Telegram</h2>
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+<a href="https://t.me/gruppomottavisconti" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 1.6rem; margin-right: 10px;">
+      🏘️
+     </span>
+<strong style="color: #ffca28; font-size: 0.85rem;">
+      Motta Visconti
+     </strong>
+</a>
+<a href="https://t.me/IlnostroTicino" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #131313, #1e1e1e); color: #fff; padding: 9px 12px; border-radius: 15px; text-decoration: none; border: 1px solid #555; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 1.6rem; margin-right: 10px;">
+      🌊
+     </span>
+<strong style="color: #00d4ff; font-size: 0.85rem;">
+      Ticino
+     </strong>
+</a>
+  </div>
+</div>
+
 <strong>
     Stazione Meteo – Motta Visconti (MI)
    </strong>
@@ -1119,7 +1144,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
    </span>
 <br/>
 <span style="font-size: 0.65rem;">
-    Progetto su <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">GitHub</a> · <a href="https://github.com/Simonz82/meteo-motta-visconti/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">Changelog</a>
+    Progetto su <a href="https://github.com/Simonz82/meteo-motta-visconti" target="_blank" rel="noopener noreferrer" style="color: #9e9e9e; text-decoration: underline;">GitHub</a> · <a href="changelog.html" style="color: #9e9e9e; text-decoration: underline;">Changelog</a>
    </span>
 <br/>
    Sistema di acquisizione sviluppato e curato da
