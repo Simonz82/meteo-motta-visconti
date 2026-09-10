@@ -3,7 +3,7 @@
 Sito web pubblico che mostra in tempo reale i dati ambientali rilevati dalla stazione meteo personale di Motta Visconti (MI), con previsioni future, record storici e monitoraggio idrometrico del Fiume Ticino.
 
 🔗 **Sito live:** https://meteo.nas.vagitaly.it/
-📱 **App Android:** disponibile per il download dal pulsante nel footer del [sito](https://meteo.nas.vagitaly.it/)
+📱 **App Android:** [repository e changelog](https://github.com/Simonz82/meteo-motta-visconti-app) · download dal pulsante nel footer del [sito](https://meteo.nas.vagitaly.it/)
 
 ## Cos'è
 
