@@ -17,6 +17,9 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 - Introdotto un sistema di temi selezionabili (Scuro, Chiaro, Black/AMOLED, Blu, Green, Pink, Red), ciascuno con superfici in vetro traslucido (blur) sulle card. Il sito web pubblico continua a mostrare sempre il tema Scuro originale, identico pixel per pixel a prima: il tema si attiva solo esplicitamente (dall'app, o con `?theme=nome` nell'URL) e resta invariato per chi visita il sito normalmente
 - Tutti i colori legati al significato dei dati (scale di gravità inquinamento/polline, temperature, allerte) restano fissi in ogni tema, per non comprometterne la leggibilità
 
+### Aggiunto
+- Sezione finale nel popup di installazione con la vecchia icona dell'app: avvisa chi ha ancora installata la versione superata (icona diversa da quella attuale) che può disinstallarla, non riceverà più aggiornamenti
+
 ## 2026-09-10
 
 ### Aggiunto
