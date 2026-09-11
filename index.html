@@ -711,7 +711,7 @@ loadForecast();
 </div>
 <div class="cycle-item" onclick="openSunModal()">
 <div class="cycle-icon" id="icon_sun">
-<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;"/>
+<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px #ffcc33);"/>
 </div>
 <div class="cycle-name">
      Sole
@@ -2292,7 +2292,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                     let isUp = (now >= sunTimes.sunrise && now < sunTimes.sunset);
                     document.getElementById('val_sun').innerText = isUp ? 'Sopra orizz.' : 'Sotto orizz.';
                     document.getElementById('icon_sun').innerHTML = isUp ?
-                        `<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;">` :
+                        `<img src="/image/sun_above_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px #ffcc33);">` :
                         `<img src="/image/sun_below_horizon.png" alt="Sole" style="width: 40px; height: 40px; object-fit: contain;">`;
                 }
                 updateCyclesUI();
