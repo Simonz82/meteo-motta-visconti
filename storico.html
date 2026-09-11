@@ -819,7 +819,7 @@
                 });
             }
 
-            chartDayInstance = new Chart(ctx, {
+            Chart.defaults.color = themeColor('--text-muted'); chartDayInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: labelsArray, datasets: datasetsConfig },
                 options: {
@@ -843,7 +843,7 @@
             const ctx = document.getElementById('chart30d').getContext('2d');
             if (chart30dInstance) chart30dInstance.destroy();
             const maxVal30d = Math.max(...dailyAverages.map(d => d.val), 0);
-            chart30dInstance = new Chart(ctx, {
+            Chart.defaults.color = themeColor('--text-muted'); chart30dInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: dailyAverages.map(d => d.dateStr),
@@ -944,7 +944,7 @@
                     if (parts) document.getElementById('rain24hTitle').innerText = `Intensità Pioggia (24h del ${parts[2]}/${parts[1]}/${parts[0]})`;
 
                     if (rain24hChartInstance) rain24hChartInstance.destroy();
-                    rain24hChartInstance = new Chart(document.getElementById('chartRain24h').getContext('2d'), {
+                    Chart.defaults.color = themeColor('--text-muted'); rain24hChartInstance = new Chart(document.getElementById('chartRain24h').getContext('2d'), {
                         type: 'line',
                         data: {
                             labels: data24h.map(d => d.x.getHours().toString().padStart(2, '0') + ':' + d.x.getMinutes().toString().padStart(2, '0')),
@@ -1015,7 +1015,7 @@
 
                 if (rain30dChartInstance) rain30dChartInstance.destroy();
                 const maxRain30d = Math.max(...last30.map(d => d.val), 0);
-                rain30dChartInstance = new Chart(document.getElementById('chartRain30d').getContext('2d'), {
+                Chart.defaults.color = themeColor('--text-muted'); rain30dChartInstance = new Chart(document.getElementById('chartRain30d').getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: last30.map(d => d.dayKey.slice(8,10) + '/' + d.dayKey.slice(5,7)),
@@ -1059,7 +1059,7 @@
 
                 if (rainMonthlyChartInstance) rainMonthlyChartInstance.destroy();
                 const maxRainMonthly = Math.max(...monthlyCurrent, 0);
-                rainMonthlyChartInstance = new Chart(document.getElementById('chartRainMonthly').getContext('2d'), {
+                Chart.defaults.color = themeColor('--text-muted'); rainMonthlyChartInstance = new Chart(document.getElementById('chartRainMonthly').getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: monthNames,

@@ -6,6 +6,7 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 
 ### Risolto
 - Testo dei grafici (storico e livello idrometrico Fiume Ticino) illeggibile nei temi diversi dallo Scuro: i grafici usano canvas (Chart.js), che non legge le variabili CSS dei temi — ora il colore viene letto e applicato correttamente ad ogni disegno del grafico
+- Corretto anche un problema di tempistica: nell'app il tema viene applicato dopo che la pagina ha già finito di caricare, quindi i grafici di Temperatura/Umidità/Qualità dell'Aria (che usano un colore di default globale letto una sola volta) restavano col colore sbagliato. Ora ogni grafico rilegge il colore corretto appena prima di essere disegnato. Verificato su tutti e 7 i temi
 - Icona meteo di "Oggi" nel box Previsioni Future: mostrava il codice meteo "dell'intera giornata" di Open-Meteo (es. nebbia mattutina persistente anche a mezzogiorno) invece della condizione reale dell'ora corrente — ora usa il dato orario più vicino all'ora attuale
 
 ### Risolto
