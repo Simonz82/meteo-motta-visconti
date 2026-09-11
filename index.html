@@ -10,7 +10,7 @@
 <meta property="og:url" content="https://meteo.nas.vagitaly.it/">
 <meta property="og:title" content="Stazione Meteo Motta Visconti">
 <meta property="og:description" content="Dati meteo in tempo reale e storico della stazione meteorologica di Motta Visconti.">
-<meta property="og:image" content="https://meteo.nas.vagitaly.it/image/og-image.png">
+<meta property="og:image" content="https://meteo.nas.vagitaly.it/image/og-image-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
@@ -1403,10 +1403,10 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 <!-- Pulsante Webcam nei Dintorni -->
 <a href="https://www.meteoblue.com/en/weather/webcams/motta-visconti_italy_3172502" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
-      📷
+      📹
      </span>
 <div style="text-align: left; flex: 1;">
-<strong style="color: #4dd0e1; font-size: 0.975rem; display: block; margin-bottom: 2px;">
+<strong style="color: #ffa726; font-size: 0.975rem; display: block; margin-bottom: 2px;">
        Webcam nei Dintorni
       </strong>
 <span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
@@ -1427,6 +1427,13 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 </div>
 </a>
 <!-- Pulsante App Android -->
+<style>
+  @keyframes linkAppPulse {
+    0%, 100% { box-shadow: 0 4px 15px var(--shadow-soft); }
+    50% { box-shadow: 0 4px 22px rgba(var(--accent-secondary-rgb), 0.65); }
+  }
+  #linkApp { animation: linkAppPulse 2.6s ease-in-out infinite; }
+</style>
 <a href="#" id="linkApp" onclick="openAppModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px;">
       📱

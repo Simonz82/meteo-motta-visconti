@@ -5,6 +5,11 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 ## 2026-09-11
 
 ### Aggiunto
+- Nuova immagine di anteprima (Open Graph) per la condivisione su Facebook/social, caricata come file separato per forzare l'aggiornamento della cache di Facebook
+- Pulsante "Scarica l'app" con un leggero bagliore pulsante per farsi notare di più
+
+### Modificato
+- Pulsante "Webcam nei Dintorni": icona cambiata in una videocamera (invece della fotocamera, troppo simile a quella di "Archivio Storico Foto") e colore del testo reso distinto dagli altri pulsanti
 - Popup di istruzioni all'installazione dell'app Android: spiega gli avvisi che Android può mostrare durante il download e all'apertura del file, con i passaggi per procedere e un pulsante di download che mostra la versione esatta in scarico
 - Popup riorganizzato in passaggi numerati con gli screenshot reali dei due avvisi (Chrome "Potrebbe essere dannoso" e Google Play Protect, con freccia che indica il pulsante "Installa comunque"), area istruzioni scorrevole e pulsante di download sempre visibile in fondo
 - Box "Perché installare l'app" nel popup, prima delle istruzioni: elenca i vantaggi (notifiche personalizzate per fascia oraria, tema chiaro/scuro, avviso aggiornamenti, accesso anticipato alle nuove funzioni)
