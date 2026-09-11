@@ -1262,6 +1262,10 @@ function formatStationLabel(p) {
   return { val: p.v.toFixed(1) + ' cm', time: 'ore ' + t };
 }
 
+function themeColor(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 function loadStationLastValue(station) {
   var cfg = stationConfigs[station];
   fetch(cfg.endpoint + '?days=1', { cache: 'no-store' })
@@ -1330,12 +1334,12 @@ function loadStationChart(station) {
           datasets: [{
             label: 'Livello (cm)',
             data: values,
-            borderColor: 'var(--accent-primary)',
-            backgroundColor: 'rgba(var(--accent-primary-rgb), 0.1)',
+            borderColor: themeColor('--accent-primary'),
+            backgroundColor: 'rgba(' + themeColor('--accent-primary-rgb') + ', 0.1)',
             borderWidth: 1,
             pointRadius: 0,
             pointHoverRadius: 6,
-            pointBackgroundColor: 'var(--accent-primary)',
+            pointBackgroundColor: themeColor('--accent-primary'),
             tension: 0.2,
             fill: true
           }]
@@ -1355,8 +1359,8 @@ function loadStationChart(station) {
             }
           },
           scales: {
-            x: { ticks: { color: 'var(--text-muted)', maxTicksLimit: 8 }, grid: { color: 'var(--border-color)' } },
-            y: { ticks: { color: 'var(--text-muted)' }, grid: { color: 'var(--border-color)' } }
+            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8 }, grid: { color: themeColor('--border-color') } },
+            y: { ticks: { color: themeColor('--text-muted') }, grid: { color: themeColor('--border-color') } }
           }
         }
       });

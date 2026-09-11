@@ -489,6 +489,10 @@
     </div>
 
     <script>
+        
+        function themeColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
         const urlParams = new URLSearchParams(window.location.search);
         const tipoMisura = urlParams.get('misura') || 'temp'; 
         window.globalStoreData = {}; 
@@ -532,7 +536,7 @@
         document.getElementById('pageTitle').innerText = 'Storico ' + CONFIG.NOME;
         document.title = 'Storico ' + CONFIG.NOME;
 
-        Chart.defaults.color = 'var(--text-muted)';
+        Chart.defaults.color = themeColor('--text-muted');
         Chart.defaults.plugins.legend.labels.boxWidth = 12;
         Chart.defaults.plugins.legend.labels.boxHeight = 12;
         Chart.defaults.plugins.legend.labels.font = { size: 10 };
@@ -854,7 +858,7 @@
                     layout: { padding: { top: 45 } },
                     plugins: {
                         datalabels: {
-                            color: 'var(--text-primary)',
+                            color: themeColor('--text-primary'),
                             rotation: -90,
                             anchor: 'end',
                             align: 'top',
@@ -1028,7 +1032,7 @@
                         layout: { padding: { top: 45, right: 10 } },
                         plugins: {
                             datalabels: {
-                                color: 'var(--text-secondary)',
+                                color: themeColor('--text-secondary'),
                                 rotation: -90,
                                 anchor: 'end',
                                 align: 'top',
@@ -1072,7 +1076,7 @@
                         layout: { padding: { top: 45, right: 10 } },
                         plugins: {
                             datalabels: {
-                                color: 'var(--text-secondary)',
+                                color: themeColor('--text-secondary'),
                                 rotation: -90,
                                 anchor: 'end',
                                 align: 'top',

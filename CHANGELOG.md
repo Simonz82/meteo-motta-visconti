@@ -5,6 +5,10 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 ## 2026-09-11
 
 ### Risolto
+- Testo dei grafici (storico e livello idrometrico Fiume Ticino) illeggibile nei temi diversi dallo Scuro: i grafici usano canvas (Chart.js), che non legge le variabili CSS dei temi — ora il colore viene letto e applicato correttamente ad ogni disegno del grafico
+- Icona meteo di "Oggi" nel box Previsioni Future: mostrava il codice meteo "dell'intera giornata" di Open-Meteo (es. nebbia mattutina persistente anche a mezzogiorno) invece della condizione reale dell'ora corrente — ora usa il dato orario più vicino all'ora attuale
+
+### Risolto
 - Tasto Indietro (browser e app): aprendo un popup (download app, record storici, specifiche tecniche, meteo/sole/luna/stagione) e premendo Indietro, ora si chiude solo il popup restando sulla pagina corrente, invece di uscire dall'app o saltare a una pagina precedente inaspettata (es. lo storico pioggia)
 
 ### Aggiunto
