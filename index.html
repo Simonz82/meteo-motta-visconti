@@ -690,7 +690,7 @@ function openForecastDayModal(idx) {
     ${righe}
     <div style="text-align:center; margin-top:12px; font-size:0.65rem; color:var(--text-faint-3);">Previsione: Open-Meteo</div>
   `;
-  document.getElementById('chartModal').style.display = 'flex';
+  document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
 }
 
 loadForecast();
@@ -1751,7 +1751,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 solarTabs.style.display = 'none';
             }
 
-            document.getElementById('chartModal').style.display = 'flex';
+            document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
             updateModalRange(24);
         }
 
@@ -1772,7 +1772,14 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             updateModalRange(activeHours);
         }
 
-        function closeModal(e) { document.getElementById('chartModal').style.display = 'none'; }
+        function closeModal(e) {
+            if (e) e.stopPropagation();
+            if (history.state && history.state.modal === 'chartModal') {
+                history.back();
+            } else {
+                document.getElementById('chartModal').style.display = 'none';
+            }
+        }
 
 
         // --- FUNZIONI ASTRONOMICHE (Motta Visconti) ---
@@ -1840,7 +1847,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Distanza:</span> <strong style="color:var(--text-primary);">${moonPos.distance.toFixed(0)} km</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Culminazione (Altezza Max):</span> <strong style="color:var(--accent-primary);">${culmTime}</strong></div>
             `;
-            document.getElementById('chartModal').style.display = 'flex';
+            document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
         }
 
 
@@ -1886,7 +1893,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Tramonto:</span> <strong style="color:#ff5252;">${tramontoStr}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Ore di luce totali:</span> <strong style="color:var(--text-primary);">${oreLuce}h ${minLuce}m</strong></div>
             `;
-            document.getElementById('chartModal').style.display = 'flex';
+            document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
         }
 
         function openSeasonModal() {
@@ -1928,7 +1935,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Inizio Inverno:</span> <strong style="color:var(--text-primary);">21 Dicembre</strong></div>
                 <div style="text-align:center; margin-top:15px; font-style:italic; color:var(--text-faint);">${prog}</div>
             `;
-            document.getElementById('chartModal').style.display = 'flex';
+            document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
         }
 
 
@@ -1938,7 +1945,7 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             document.getElementById('modalTitle').innerText = "Record Storici";
             document.getElementById('astroImage').innerHTML = `<div style="font-size: 6rem; line-height:1; filter: drop-shadow(0 0 15px #ffeb3b);">🏆</div>`;
             document.getElementById('astroDataBox').innerHTML = `<div style="text-align:center; color:var(--text-faint);">Caricamento dati storici...</div>`;
-            document.getElementById('chartModal').style.display = 'flex';
+            document.getElementById('chartModal').style.display = 'flex'; history.pushState({ modal: 'chartModal' }, '', location.pathname);
 
             fetch('/records.php', { cache: 'no-store' })
                 .then(function(r) { return r.json(); })
@@ -2687,19 +2694,36 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
             document.getElementById('appModalVersion').innerText = "Versione " + appLatest.version_name;
             document.getElementById('appModalDownloadBtn').href = appLatest.file;
             document.getElementById('appModal').style.display = 'flex';
+            // Aggancia la chiusura al tasto Indietro (browser e app): senza questo,
+            // Indietro uscirebbe dalla pagina/app invece di chiudere solo il popup.
+            history.pushState({ modal: 'appDownload' }, '', '#scarica-app');
         }
         function closeAppModal(e) {
             if (e) e.stopPropagation();
-            document.getElementById('appModal').style.display = 'none';
+            if (history.state && history.state.modal === 'appDownload') {
+                history.back();
+            } else {
+                document.getElementById('appModal').style.display = 'none';
+            }
         }
+        window.addEventListener('popstate', function() {
+            document.getElementById('appModal').style.display = 'none';
+            document.getElementById('chartModal').style.display = 'none';
+            document.getElementById('techModal').style.display = 'none';
+        });
    // --- GESTIONE MODALE SPECIFICHE TECNICHE ---
 function openTechModal(e) {
     if(e) e.preventDefault();
     document.getElementById('techModal').style.display = 'flex';
+    history.pushState({ modal: 'techModal' }, '', location.pathname);
 }
 function closeTechModal(e) {
     if(e) e.stopPropagation();
-    document.getElementById('techModal').style.display = 'none';
+    if (history.state && history.state.modal === 'techModal') {
+        history.back();
+    } else {
+        document.getElementById('techModal').style.display = 'none';
+    }
 }
   </script>
 <div class="modal-overlay" id="techModal" onclick="closeTechModal(event)">

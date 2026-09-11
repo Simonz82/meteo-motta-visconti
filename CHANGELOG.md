@@ -4,6 +4,9 @@ Tutte le modifiche rilevanti al sito della Stazione Meteo di Motta Visconti veng
 
 ## 2026-09-11
 
+### Risolto
+- Tasto Indietro (browser e app): aprendo un popup (download app, record storici, specifiche tecniche, meteo/sole/luna/stagione) e premendo Indietro, ora si chiude solo il popup restando sulla pagina corrente, invece di uscire dall'app o saltare a una pagina precedente inaspettata (es. lo storico pioggia)
+
 ### Aggiunto
 - Nuova immagine di anteprima (Open Graph) per la condivisione su Facebook/social, caricata come file separato per forzare l'aggiornamento della cache di Facebook
 - Pulsante "Scarica l'app" con un leggero bagliore pulsante per farsi notare di più
