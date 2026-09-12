@@ -21,6 +21,12 @@
 <meta content="305" http-equiv="refresh"/>
 <!-- Favicon Meteo incorporata -->
 <link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;⛅&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<!-- Supporto "Aggiungi alla schermata Home" su iPhone/iPad (Safari): apre a
+     schermo intero, senza barra degli indirizzi, con icona e nome dedicati. -->
+<link rel="apple-touch-icon" href="/image/icon.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Meteo Motta"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js">
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js">
@@ -1603,6 +1609,18 @@ function loadMaggioreChart() {
       </span>
 </div>
 </a>
+<!-- Pulsante iPhone / iPad -->
+<a href="#" onclick="openIosModal(event)" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
+<span style="font-size: 2rem; margin-right: 15px;">
+      🍏
+     </span>
+<div style="text-align: left; flex: 1;">
+<strong style="color: #e0e0e0; font-size: 0.825rem; display: block; margin-bottom: 2px;">Come installare su iPhone / iPad</strong>
+<span style="font-size: 0.625rem; color: var(--text-secondary-2); text-transform: uppercase; font-weight: 600;">
+       Aggiungila alla schermata Home
+      </span>
+</div>
+</a>
 <!-- Pulsante Specifiche Tecniche -->
 <a href="#" onclick="openTechModal(event)" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, var(--bg-deep), var(--bg-card-3)); color: var(--text-primary); padding: 9px 25px; border-radius: 15px; text-decoration: none; border: 1px solid var(--border-color-3); box-shadow: 0 4px 15px var(--shadow-soft); max-width: 100%; width: 100%; margin: 0; transition: transform 0.2s;">
 <span style="font-size: 2rem; margin-right: 15px; display:flex; align-items:center; justify-content:center; width:42px; height:42px;">
@@ -2882,6 +2900,8 @@ function loadMaggioreChart() {
             document.getElementById('appModal').style.display = 'none';
             document.getElementById('chartModal').style.display = 'none';
             document.getElementById('techModal').style.display = 'none';
+            var iosM = document.getElementById('iosModal');
+            if (iosM) iosM.style.display = 'none';
         });
    // --- GESTIONE MODALE SPECIFICHE TECNICHE ---
 function openTechModal(e) {
@@ -2895,6 +2915,20 @@ function closeTechModal(e) {
         history.back();
     } else {
         document.getElementById('techModal').style.display = 'none';
+    }
+}
+   // --- GESTIONE MODALE ISTRUZIONI IPHONE/IPAD ---
+function openIosModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('iosModal').style.display = 'flex';
+    history.pushState({ modal: 'iosModal' }, '', location.pathname);
+}
+function closeIosModal(e) {
+    if (e) e.stopPropagation();
+    if (history.state && history.state.modal === 'iosModal') {
+        history.back();
+    } else {
+        document.getElementById('iosModal').style.display = 'none';
     }
 }
   </script>
@@ -3035,6 +3069,33 @@ function closeTechModal(e) {
 <a id="appModalDownloadBtn" href="#" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(145deg, #1b5e20, #2e7d32); color: var(--text-primary); padding: 12px 20px; border-radius: 15px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 15px var(--shadow-soft);">
 ⬇️&nbsp; Scarica <span id="appModalVersion" style="margin-left: 4px;"></span>
 </a>
+</div>
+</div>
+</div>
+
+<!-- MODAL ISTRUZIONI IPHONE/IPAD -->
+<div class="modal-overlay" id="iosModal" onclick="closeIosModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px; display: flex; flex-direction: column; padding: 0; max-height: 85vh; overflow: hidden;">
+<button class="modal-close" onclick="closeIosModal(event)" style="z-index: 2;">×</button>
+<div style="overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 20px 20px;">
+<h3 class="modal-title" style="color: var(--accent-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">🍏 Installare su iPhone / iPad</h3>
+<div style="text-align: left; font-size: 0.85rem; color: var(--text-body); line-height: 1.6;">
+<p style="margin-top:0;">Apple non permette di installare app al di fuori dell'App Store senza un account sviluppatore, quindi non esiste una vera app da scaricare per iPhone/iPad come per Android.</p>
+<p>La soluzione è <strong style="color: var(--text-primary);">aggiungere il sito alla schermata Home</strong> da Safari: si comporta come un'app vera, con la sua icona, aperta a schermo intero e senza la barra degli indirizzi.</p>
+
+<div style="background: var(--bg-card-4); border-radius: 12px; padding: 14px 16px; margin: 15px 0; border: 1px solid var(--border-color);">
+<p style="margin: 0 0 8px 0; color: var(--accent-secondary); font-weight: bold;">📋 Passaggi (solo da Safari)</p>
+<ol style="margin: 0; padding-left: 20px;">
+<li style="margin-bottom: 8px;">Apri questo sito con <strong>Safari</strong> (funziona solo da Safari, non da Chrome o altri browser su iOS)</li>
+<li style="margin-bottom: 8px;">Tocca l'icona <strong>Condividi</strong> (il quadrato con la freccia verso l'alto), di solito in basso al centro</li>
+<li style="margin-bottom: 8px;">Scorri l'elenco e tocca <strong>"Aggiungi alla schermata Home"</strong></li>
+<li style="margin-bottom: 8px;">Conferma toccando <strong>"Aggiungi"</strong> in alto a destra</li>
+<li style="margin-bottom: 0;">Troverai l'icona sulla schermata Home: aprendola vedrai il sito a schermo intero, come un'app</li>
+</ol>
+</div>
+
+<p style="margin-bottom: 0;">Le notifiche push personalizzate restano al momento disponibili solo sull'app Android — questa modalità serve per un accesso rapido e comodo dalla schermata Home.</p>
+</div>
 </div>
 </div>
 </div>
