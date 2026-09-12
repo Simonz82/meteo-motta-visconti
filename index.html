@@ -1234,16 +1234,19 @@ loadForecast();
       <div id="bereguardo-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="bereguardo-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="bereguardo-chart" height="220"></canvas>
+      <div id="bereguardo-chart-extra" style="text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:8px;"></div>
     </div>
     <div id="vigevano-chart-wrap" style="display:none; grid-column: 1 / -1;">
       <div id="vigevano-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="vigevano-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="vigevano-chart" height="220"></canvas>
+      <div id="vigevano-chart-extra" style="text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:8px;"></div>
     </div>
     <div id="pavia-chart-wrap" style="display:none; grid-column: 1 / -1;">
       <div id="pavia-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
       <div id="pavia-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
       <canvas id="pavia-chart" height="220"></canvas>
+      <div id="pavia-chart-extra" style="text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:8px;"></div>
     </div>
 
   </div>
@@ -1371,12 +1374,122 @@ function loadStationChart(station) {
 }
 
 Object.keys(stationConfigs).forEach(loadStationLastValue);
+
+function loadLagoMaggiore() {
+  var status = document.getElementById('maggiore-chart-status');
+  var summary = document.getElementById('maggiore-chart-summary');
+  fetch('/lago_maggiore.php?days=7', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.success || !d.points || d.points.length === 0) {
+        status.textContent = 'Dati non disponibili al momento.';
+        return;
+      }
+      var last = d.points[d.points.length - 1];
+      document.getElementById('maggiore-val-livello').textContent = last.v.toFixed(1) + ' cm';
+      document.getElementById('maggiore-val-afflusso').textContent = (d.afflusso_m3s != null ? d.afflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
+      document.getElementById('maggiore-val-deflusso').textContent = (d.deflusso_m3s != null ? d.deflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
+      document.getElementById('maggiore-val-riempimento').textContent = (d.riempimento_pct != null ? d.riempimento_pct.toFixed(1) + ' %' : 'n/d');
+
+      status.textContent = 'Ultimi 7 giorni — ' + d.label;
+      var values = d.points.map(function(p) { return p.v; });
+      var min = Math.min.apply(null, values);
+      var max = Math.max.apply(null, values);
+      summary.textContent = 'Ultimo: ' + last.v.toFixed(1) + ' cm  •  Min: ' + min.toFixed(1) + ' cm  •  Max: ' + max.toFixed(1) + ' cm';
+
+      var labels = d.points.map(function(p) { return p.t; });
+      var ctx = document.getElementById('maggiore-chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Livello (cm)',
+            data: values,
+            borderColor: themeColor('--accent-primary'),
+            backgroundColor: 'rgba(' + themeColor('--accent-primary-rgb') + ', 0.1)',
+            borderWidth: 1,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointBackgroundColor: themeColor('--accent-primary'),
+            tension: 0.2,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          interaction: { mode: 'nearest', intersect: false, axis: 'x' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              mode: 'nearest',
+              intersect: false,
+              callbacks: {
+                label: function(ctx) { return ctx.parsed.y.toFixed(1) + ' cm'; }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8 }, grid: { color: themeColor('--border-color') } },
+            y: { ticks: { color: themeColor('--text-muted') }, grid: { color: themeColor('--border-color') } }
+          }
+        }
+      });
+
+      // Sotto ai 3 box dei fiumi mostra la stessa portata regolata dal lago:
+      // e' il deflusso che alimenta tutto il corso del Ticino a valle.
+      if (d.deflusso_m3s != null) {
+        ['bereguardo', 'vigevano', 'pavia'].forEach(function(s) {
+          var el = document.getElementById(s + '-chart-extra');
+          if (el) el.textContent = 'Portata Ticino regolata dal Lago Maggiore: ' + d.deflusso_m3s.toFixed(1) + ' m³/s';
+        });
+      }
+    })
+    .catch(function() {
+      status.textContent = 'Errore nel caricamento dei dati.';
+    });
+}
 </script>
 
 </div>
 
+<!-- SEZIONE LAGO MAGGIORE -->
+<div class="dashboard-panel">
+  <h2 class="section-title" style="margin-bottom: 5px; border-bottom: none; padding-bottom: 0;">
+    Lago Maggiore
+  </h2>
 
+  <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">
+    Livello Idrometrico e Regolazione — sorgente del Ticino
+  </div>
 
+  <div style="width: 100%; height: 1px; background: var(--border-color); margin-bottom: 15px;"></div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px;">
+    <div style="text-align:center;">
+      <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase;">Livello</div>
+      <div id="maggiore-val-livello" style="font-size:0.95rem; font-weight:700; color:var(--accent-primary);">--</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase;">Afflusso</div>
+      <div id="maggiore-val-afflusso" style="font-size:0.95rem; font-weight:700; color:var(--text-secondary);">--</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase;">Deflusso</div>
+      <div id="maggiore-val-deflusso" style="font-size:0.95rem; font-weight:700; color:var(--text-secondary);">--</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase;">Riempimento</div>
+      <div id="maggiore-val-riempimento" style="font-size:0.95rem; font-weight:700; color:var(--text-secondary);">--</div>
+    </div>
+  </div>
+
+  <div id="maggiore-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+  <div id="maggiore-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+  <canvas id="maggiore-chart" height="220"></canvas>
+</div>
+<script>loadLagoMaggiore();</script>
 
 <!-- MAPPA WINDY.COM -->
 <div class="windy-card">
@@ -2540,11 +2653,17 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                         });
                     }
 
-                    // Estrae il totale giornaliero più alto
+                    // Estrae il totale giornaliero più alto. IMPORTANTE: filtrato sulla
+                    // sola data odierna — live.csv copre una finestra di 24h scorrevoli
+                    // (non "da mezzanotte", per evitare il file vuoto proprio a
+                    // mezzanotte), quindi puo' contenere anche il valore di IERI prima
+                    // del reset di questo contatore giornaliero; senza il filtro, un
+                    // giorno con fulmini seguito da un giorno senza ne mostrerebbe
+                    // ancora il totale di ieri invece di 0.
                     let totaleOggi = 0;
                     if (store[idTotale] && store[idTotale].length > 0) {
                         store[idTotale].forEach(punto => {
-                            if (!isNaN(punto.value) && punto.value > totaleOggi) {
+                            if (!isNaN(punto.value) && punto.time && punto.time.toDateString() === oraAttuale.toDateString() && punto.value > totaleOggi) {
                                 totaleOggi = punto.value;
                             }
                         });
@@ -2574,9 +2693,13 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                     }
 
                     // 2. Stampa l'Ultimo Fulmine e gestisce l'allarme giallo
-                    // Se oggi non ha fulminato, impediamo i falsi segnali rimasti in pancia al sensore
-                    let o = ultimoFulmine ? ultimoFulmine.time : new Date(0);
-                    if (totaleOggi === 0 && o.getDate() === oraAttuale.getDate()) {
+                    // Se il totale odierno e' 0, non mostriamo nessun "ultimo rilevamento":
+                    // altrimenti, con la finestra di 24h scorrevoli di live.csv, resterebbe
+                    // visibile l'ultimo fulmine di IERI (distanza/orario) anche in una
+                    // giornata senza fulmini, dando l'impressione di un rilevamento recente.
+                    // (Il confronto precedente guardava solo il giorno del mese, non la
+                    // data intera, quindi non scattava mai per un fulmine del giorno prima.)
+                    if (totaleOggi === 0) {
                         ultimoFulmine = null;
                     }
 
@@ -2608,9 +2731,10 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
 
                 // --- PIOGGIA (LIVE E TOTALE ODIERNO) ---
                 try {
+                    const oraAttualePioggia = new Date();
                     let rainDaily = 0.0;
                     let rainRate = 0.0;
-                    
+
                     // 1. Estrae l'intensità attuale (il timestamp più grande)
                     if (store['ecowitt_rain_rate']) {
                         let maxTime = 0;
@@ -2622,10 +2746,13 @@ Object.keys(stationConfigs).forEach(loadStationLastValue);
                         });
                     }
 
-                    // 2. Estrae la pioggia totale (il valore massimo cumulato raggiunto oggi)
+                    // 2. Estrae la pioggia totale (il valore massimo cumulato raggiunto
+                    // oggi). Filtrato sulla data odierna per lo stesso motivo del totale
+                    // fulmini: live.csv e' una finestra di 24h scorrevoli, quindi puo'
+                    // contenere anche il cumulato di IERI prima del reset di mezzanotte.
                     if (store['ecowitt_daily_rain']) {
                         store['ecowitt_daily_rain'].forEach(punto => {
-                            if (!isNaN(punto.value) && punto.value > rainDaily) {
+                            if (!isNaN(punto.value) && punto.time && punto.time.toDateString() === oraAttualePioggia.toDateString() && punto.value > rainDaily) {
                                 rainDaily = punto.value;
                             }
                         });
