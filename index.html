@@ -3094,7 +3094,12 @@ function closeIosModal(e) {
 </ol>
 </div>
 
-<p style="margin-bottom: 0;">Le notifiche push personalizzate restano al momento disponibili solo sull'app Android — questa modalità serve per un accesso rapido e comodo dalla schermata Home.</p>
+<p>Le notifiche push personalizzate restano al momento disponibili solo sull'app Android — su iPhone/iPad non possiamo ancora inviartele.</p>
+
+<div style="background: var(--bg-card-4); border-radius: 12px; padding: 14px 16px; margin: 15px 0 0 0; border: 1px solid var(--accent-primary);">
+<p style="margin: 0 0 8px 0; color: var(--accent-primary); font-weight: bold;">👤 Registrati comunque dal sito</p>
+<p style="margin: 0;">Anche senza notifiche, creando un account dal pulsante <strong>👤 in alto a sinistra</strong> puoi già <strong>scegliere il tuo tema preferito</strong> (si sincronizza anche con l'app se lo installi in futuro), e sarai pronto per le prossime funzioni che aggiungeremo legate all'account.</p>
+</div>
 </div>
 </div>
 </div>
@@ -3136,6 +3141,226 @@ function closeIosModal(e) {
     document.body.style.paddingBottom = '';
     try { localStorage.setItem('webAppBannerDismissed', '1'); } catch (ex) {}
   };
+})();
+</script>
+
+<!-- PULSANTE E MENU ACCOUNT — SOLO WEB, MAI DENTRO L'APP ANDROID -->
+<button id="webMenuBtn" onclick="openWebMenu(event)" aria-label="Account" style="display:none; position:fixed; top:12px; left:12px; z-index:9998; width:42px; height:42px; border-radius:50%; background:var(--accent-primary); color:#0a0a0a; border:none; box-shadow:0 4px 15px var(--shadow-soft); font-size:1.3rem; cursor:pointer; align-items:center; justify-content:center;">👤</button>
+
+<div class="modal-overlay" id="webMenuModal" onclick="closeWebMenu(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="max-width:420px; padding:0; overflow:hidden; display:flex; flex-direction:column; max-height:85vh;">
+<button class="modal-close" onclick="closeWebMenu(event)" style="z-index:2;">×</button>
+<div id="webMenuBody" style="overflow-y:auto; -webkit-overflow-scrolling:touch; padding:20px;"></div>
+</div>
+</div>
+
+<script>
+(function() {
+  var isAndroidApp = navigator.userAgent.indexOf('MeteoMottaAndroidApp') !== -1;
+  if (isAndroidApp) return; // il menu account web non deve mai comparire dentro l'app
+
+  var btn = document.getElementById('webMenuBtn');
+  if (btn) btn.style.display = 'flex';
+
+  var THEMES = [
+    { key: 'scuro', label: 'Scuro' },
+    { key: 'chiaro', label: 'Chiaro' },
+    { key: 'black', label: 'Black' },
+    { key: 'blu', label: 'Blu' },
+    { key: 'green', label: 'Green' },
+    { key: 'pink', label: 'Pink' },
+    { key: 'red', label: 'Red' }
+  ];
+
+  function getToken() { return localStorage.getItem('webAccountToken'); }
+  function getEmail() { return localStorage.getItem('webAccountEmail'); }
+  function saveAccount(token, email, nome) {
+    localStorage.setItem('webAccountToken', token);
+    localStorage.setItem('webAccountEmail', email || '');
+    localStorage.setItem('webAccountNome', nome || '');
+  }
+  function clearAccount() {
+    localStorage.removeItem('webAccountToken');
+    localStorage.removeItem('webAccountEmail');
+    localStorage.removeItem('webAccountNome');
+  }
+
+  window.openWebMenu = function(e) {
+    if (e) e.preventDefault();
+    document.getElementById('webMenuModal').style.display = 'flex';
+    history.pushState({ modal: 'webMenu' }, '', location.pathname);
+    renderWebMenu();
+  };
+  window.closeWebMenu = function(e) {
+    if (e) e.stopPropagation();
+    if (history.state && history.state.modal === 'webMenu') {
+      history.back();
+    } else {
+      document.getElementById('webMenuModal').style.display = 'none';
+    }
+  };
+  window.addEventListener('popstate', function() {
+    var m = document.getElementById('webMenuModal');
+    if (m) m.style.display = 'none';
+  });
+
+  var isRegisterMode = false;
+  var fieldStyle = "width:100%; box-sizing:border-box; padding:10px; margin-bottom:10px; border-radius:10px; border:1px solid var(--border-color-2); background:var(--bg-card-3); color:var(--text-primary);";
+
+  function renderWebMenu() {
+    var body = document.getElementById('webMenuBody');
+    var token = getToken();
+    if (token) {
+      renderLoggedIn(body, token);
+    } else {
+      renderLoginForm(body);
+    }
+  }
+
+  function renderLoginForm(body) {
+    body.innerHTML =
+      '<h3 class="modal-title" style="color:var(--accent-secondary); border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">' + (isRegisterMode ? 'Registrati' : 'Accedi') + '</h3>' +
+      '<div id="webAuthError" style="display:none; background:rgba(244,67,54,0.15); color:#ff8a80; padding:8px 12px; border-radius:8px; font-size:0.8rem; margin-bottom:12px;"></div>' +
+      '<input id="waEmail" type="email" placeholder="Email" style="' + fieldStyle + '">' +
+      '<input id="waPassword" type="password" placeholder="Password" style="' + fieldStyle + '">' +
+      (isRegisterMode ?
+        '<input id="waNome" type="text" placeholder="Nome" style="' + fieldStyle + '">' +
+        '<input id="waCognome" type="text" placeholder="Cognome" style="' + fieldStyle + '">' +
+        '<input id="waCitta" type="text" placeholder="Città di residenza" style="' + fieldStyle + '">' +
+        '<label style="display:block; font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Data di nascita</label>' +
+        '<input id="waDataNascita" type="date" style="' + fieldStyle + ' margin-bottom:14px;">'
+        : '<div style="text-align:right; margin-bottom:14px;"><a href="#" onclick="webForgotPassword(event)" style="font-size:0.75rem; color:var(--text-muted);">Password dimenticata?</a></div>'
+      ) +
+      '<button onclick="webSubmitAuth()" style="width:100%; padding:12px; border:none; border-radius:12px; background:linear-gradient(145deg,#1b5e20,#2e7d32); color:#fff; font-weight:700; cursor:pointer; margin-bottom:10px;">' + (isRegisterMode ? 'Registrati' : 'Accedi') + '</button>' +
+      '<div style="text-align:center; font-size:0.78rem;"><a href="#" onclick="webToggleAuthMode(event)" style="color:var(--accent-primary);">' + (isRegisterMode ? 'Hai già un account? Accedi' : 'Non hai un account? Registrati') + '</a></div>';
+  }
+
+  function renderLoggedIn(body, token) {
+    body.innerHTML = '<div style="text-align:center; color:var(--text-muted);">Caricamento...</div>';
+    fetch('/account.php', { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' })
+      .then(function(r) {
+        if (r.status === 401) throw new Error('unauth');
+        return r.json();
+      })
+      .then(function(d) {
+        if (!d.success) throw new Error('bad');
+        saveAccount(token, d.email, d.nome);
+        var currentTheme = localStorage.getItem('siteTheme') || 'scuro';
+        var themeButtons = THEMES.map(function(t) {
+          var active = t.key === currentTheme;
+          return '<button onclick="webPickTheme(\'' + t.key + '\')" style="padding:8px 6px; border-radius:10px; border:1px solid ' + (active ? 'var(--accent-primary)' : 'var(--border-color-2)') + '; background:' + (active ? 'var(--accent-primary)' : 'var(--bg-card-3)') + '; color:' + (active ? '#0a0a0a' : 'var(--text-primary)') + '; font-size:0.72rem; font-weight:700; cursor:pointer;">' + t.label + '</button>';
+        }).join('');
+        body.innerHTML =
+          '<h3 class="modal-title" style="color:var(--accent-secondary); border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">👋 Ciao ' + (d.nome || '') + '</h3>' +
+          '<p style="color:var(--text-secondary-2); font-size:0.8rem; margin-top:0;">' + d.email + (d.citta ? ' · ' + d.citta : '') + '</p>' +
+          '<p style="font-weight:700; color:var(--text-primary); font-size:0.85rem; margin-bottom:8px;">🎨 Tema</p>' +
+          '<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px;">' + themeButtons + '</div>' +
+          '<button onclick="webLogout()" style="width:100%; padding:10px; border:none; border-radius:12px; background:#3a1c1c; color:#ff8080; font-weight:700; cursor:pointer;">Esci</button>';
+      })
+      .catch(function() {
+        clearAccount();
+        renderLoginForm(body);
+      });
+  }
+
+  window.webToggleAuthMode = function(e) {
+    e.preventDefault();
+    isRegisterMode = !isRegisterMode;
+    renderWebMenu();
+  };
+
+  function showAuthError(msg) {
+    var el = document.getElementById('webAuthError');
+    if (el) { el.textContent = msg; el.style.display = 'block'; }
+  }
+
+  var authErrorMap = {
+    email_already_registered: "Questa email è già registrata",
+    invalid_credentials: "Email o password non corrette",
+    invalid_email: "Inserisci un'email valida",
+    password_too_short: "La password deve avere almeno 6 caratteri",
+    nome_required: "Il nome è obbligatorio",
+    cognome_required: "Il cognome è obbligatorio",
+    citta_required: "La città di residenza è obbligatoria",
+    birth_date_required: "La data di nascita è obbligatoria",
+    too_many_attempts: "Troppi tentativi, riprova più tardi"
+  };
+
+  window.webSubmitAuth = function() {
+    var email = (document.getElementById('waEmail').value || '').trim();
+    var password = document.getElementById('waPassword').value || '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAuthError("Inserisci un'email valida"); return; }
+    if (password.length < 6) { showAuthError('La password deve avere almeno 6 caratteri'); return; }
+
+    var body, url;
+    if (isRegisterMode) {
+      var nome = (document.getElementById('waNome').value || '').trim();
+      var cognome = (document.getElementById('waCognome').value || '').trim();
+      var citta = (document.getElementById('waCitta').value || '').trim();
+      var dataNascita = document.getElementById('waDataNascita').value || '';
+      body = { email: email, password: password, nome: nome, cognome: cognome, citta: citta, data_nascita: dataNascita, origine: 'web' };
+      url = '/register.php';
+    } else {
+      body = { email: email, password: password };
+      url = '/login.php';
+    }
+
+    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.success) {
+          showAuthError(authErrorMap[d.error] || 'Si è verificato un errore');
+          return;
+        }
+        saveAccount(d.token, d.email, d.nome);
+        renderWebMenu();
+      })
+      .catch(function() { showAuthError('Errore di connessione, riprova'); });
+  };
+
+  window.webForgotPassword = function(e) {
+    e.preventDefault();
+    var email = prompt("Inserisci la tua email: ti manderemo un link per reimpostare la password.");
+    if (!email) return;
+    fetch('/request_reset.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { alert(d.message || "Se l'email è registrata, riceverai a breve le istruzioni."); })
+      .catch(function() { alert('Errore di connessione, riprova.'); });
+  };
+
+  window.webLogout = function() {
+    clearAccount();
+    renderWebMenu();
+  };
+
+  window.webPickTheme = function(theme) {
+    if (typeof window.setAppTheme === 'function') window.setAppTheme(theme);
+    var token = getToken();
+    if (token) {
+      fetch('/set_theme.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ theme: theme })
+      }).catch(function() {});
+    }
+    renderWebMenu();
+  };
+
+  // Se gia' loggato da una visita precedente, applica subito il tema salvato
+  // sull'account (sincronizzato anche con l'eventuale uso dell'app).
+  var savedToken = getToken();
+  if (savedToken) {
+    fetch('/account.php', { headers: { 'Authorization': 'Bearer ' + savedToken }, cache: 'no-store' })
+      .then(function(r) { if (r.status === 401) throw new Error('unauth'); return r.json(); })
+      .then(function(d) {
+        if (!d.success) throw new Error('bad');
+        saveAccount(savedToken, d.email, d.nome);
+        if (d.ultimo_tema && typeof window.setAppTheme === 'function') {
+          window.setAppTheme(d.ultimo_tema);
+        }
+      })
+      .catch(function() { clearAccount(); });
+  }
 })();
 </script>
 </body>
