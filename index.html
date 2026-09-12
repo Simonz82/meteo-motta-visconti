@@ -3038,5 +3038,44 @@ function closeTechModal(e) {
 </div>
 </div>
 </div>
+
+<!-- BANNER FISSO "SCARICA L'APP" — SOLO WEB, MAI DENTRO L'APP ANDROID -->
+<div id="webAppBanner" onclick="openAppModal(event)" style="display:none; position:fixed; left:0; right:0; bottom:0; z-index:9999; background:linear-gradient(145deg, #1b5e20, #2e7d32); color:#ffffff; padding:12px 16px; box-shadow:0 -4px 15px rgba(0,0,0,0.4); align-items:center; justify-content:space-between; gap:12px; cursor:pointer;">
+  <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
+    <span style="font-size:1.7rem; flex-shrink:0;">📱</span>
+    <div style="min-width:0;">
+      <div style="font-weight:700; font-size:0.85rem;">Scarica l'app Android</div>
+      <div style="font-size:0.7rem; opacity:0.9;">Notifiche personalizzate, temi e altro</div>
+      <div style="font-size:0.75rem; font-weight:700; margin-top:2px;">SCARICA E REGISTRATI!</div>
+    </div>
+  </div>
+  <button onclick="closeWebAppBanner(event)" aria-label="Chiudi" style="background:rgba(255,255,255,0.18); border:none; color:#ffffff; font-size:1.2rem; line-height:1; width:32px; height:32px; border-radius:50%; cursor:pointer; flex-shrink:0;">×</button>
+</div>
+<script>
+(function() {
+  var isAndroidApp = navigator.userAgent.indexOf('MeteoMottaAndroidApp') !== -1;
+
+  if (isAndroidApp) {
+    // Dentro l'app il pulsante "Scarica l'app" (gia' installata) non deve lampeggiare.
+    var linkAppEl = document.getElementById('linkApp');
+    if (linkAppEl) linkAppEl.style.animation = 'none';
+  } else if (localStorage.getItem('webAppBannerDismissed') !== '1') {
+    var banner = document.getElementById('webAppBanner');
+    if (banner) {
+      banner.style.display = 'flex';
+      document.body.style.paddingBottom = '70px';
+    }
+  }
+
+  window.closeWebAppBanner = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    var banner = document.getElementById('webAppBanner');
+    if (banner) banner.style.display = 'none';
+    document.body.style.paddingBottom = '';
+    try { localStorage.setItem('webAppBannerDismissed', '1'); } catch (ex) {}
+  };
+})();
+</script>
 </body>
 </html>
