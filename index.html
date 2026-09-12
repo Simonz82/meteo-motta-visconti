@@ -1378,7 +1378,7 @@ function loadStationChart(station) {
             }
           },
           scales: {
-            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8 }, grid: { color: themeColor('--border-color') } },
+            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8, maxRotation: 60, minRotation: 60 }, grid: { color: themeColor('--border-color') } },
             y: { ticks: { color: themeColor('--text-muted') }, grid: { color: themeColor('--border-color') } }
           }
         }
@@ -1480,7 +1480,7 @@ function loadMaggioreChart() {
             }
           },
           scales: {
-            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8 }, grid: { color: themeColor('--border-color') } },
+            x: { ticks: { color: themeColor('--text-muted'), maxTicksLimit: 8, maxRotation: 60, minRotation: 60 }, grid: { color: themeColor('--border-color') } },
             y: { ticks: { color: themeColor('--text-muted') }, grid: { color: themeColor('--border-color') } }
           }
         }
