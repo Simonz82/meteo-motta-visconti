@@ -1269,6 +1269,16 @@ function themeColor(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
+// Da "2026-09-05 11:00" (formato dei dati) a "05/09 11:00" (italiano, senza
+// anno, tanto e' sempre entro gli ultimi 7 giorni) — usato per le etichette
+// dell'asse orizzontale dei grafici idrometrici.
+function formatChartDateLabel(t) {
+  var parts = t.split(' ');
+  var d = parts[0].split('-');
+  var time = parts[1] || '';
+  return d[2] + '/' + d[1] + (time ? ' ' + time : '');
+}
+
 function loadStationLastValue(station) {
   var cfg = stationConfigs[station];
   fetch(cfg.endpoint + '?days=1', { cache: 'no-store' })
@@ -1328,7 +1338,7 @@ function loadStationChart(station) {
       var max = Math.max.apply(null, values);
       summary.textContent = 'Ultimo: ' + last.v.toFixed(1) + ' cm  •  Min: ' + min.toFixed(1) + ' cm  •  Max: ' + max.toFixed(1) + ' cm';
 
-      var labels = d.points.map(function(p) { return p.t; });
+      var labels = d.points.map(function(p) { return formatChartDateLabel(p.t); });
       var ctx = document.getElementById(station + '-chart').getContext('2d');
       stationChartInstances[station] = new Chart(ctx, {
         type: 'line',
@@ -1375,7 +1385,45 @@ function loadStationChart(station) {
 
 Object.keys(stationConfigs).forEach(loadStationLastValue);
 
-function loadLagoMaggiore() {
+// Statistiche sempre visibili (Livello/Afflusso/Deflusso/Riempimento),
+// caricate subito — il grafico invece resta nascosto finche' non si tocca
+// il box, come per i 3 fiumi.
+function loadMaggioreStats() {
+  fetch('/lago_maggiore.php?days=1', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.success || !d.points || d.points.length === 0) return;
+      var last = d.points[d.points.length - 1];
+      document.getElementById('maggiore-val-livello').textContent = last.v.toFixed(1) + ' cm';
+      document.getElementById('maggiore-val-afflusso').textContent = (d.afflusso_m3s != null ? d.afflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
+      document.getElementById('maggiore-val-deflusso').textContent = (d.deflusso_m3s != null ? d.deflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
+      document.getElementById('maggiore-val-riempimento').textContent = (d.riempimento_pct != null ? d.riempimento_pct.toFixed(1) + ' %' : 'n/d');
+
+      // Sotto ai 3 box dei fiumi mostra la stessa portata regolata dal lago:
+      // e' il deflusso che alimenta tutto il corso del Ticino a valle.
+      if (d.deflusso_m3s != null) {
+        ['bereguardo', 'vigevano', 'pavia'].forEach(function(s) {
+          var el = document.getElementById(s + '-chart-extra');
+          if (el) el.textContent = 'Portata Ticino regolata dal Lago Maggiore: ' + d.deflusso_m3s.toFixed(1) + ' m³/s';
+        });
+      }
+    })
+    .catch(function() {});
+}
+
+var maggioreLoaded = false;
+function toggleMaggioreChart(e) {
+  e.preventDefault();
+  var wrap = document.getElementById('maggiore-chart-wrap');
+  var showing = wrap.style.display !== 'none';
+  wrap.style.display = showing ? 'none' : 'block';
+  if (!showing && !maggioreLoaded) {
+    maggioreLoaded = true;
+    loadMaggioreChart();
+  }
+}
+
+function loadMaggioreChart() {
   var status = document.getElementById('maggiore-chart-status');
   var summary = document.getElementById('maggiore-chart-summary');
   fetch('/lago_maggiore.php?days=7', { cache: 'no-store' })
@@ -1385,19 +1433,14 @@ function loadLagoMaggiore() {
         status.textContent = 'Dati non disponibili al momento.';
         return;
       }
-      var last = d.points[d.points.length - 1];
-      document.getElementById('maggiore-val-livello').textContent = last.v.toFixed(1) + ' cm';
-      document.getElementById('maggiore-val-afflusso').textContent = (d.afflusso_m3s != null ? d.afflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
-      document.getElementById('maggiore-val-deflusso').textContent = (d.deflusso_m3s != null ? d.deflusso_m3s.toFixed(1) + ' m³/s' : 'n/d');
-      document.getElementById('maggiore-val-riempimento').textContent = (d.riempimento_pct != null ? d.riempimento_pct.toFixed(1) + ' %' : 'n/d');
-
       status.textContent = 'Ultimi 7 giorni — ' + d.label;
       var values = d.points.map(function(p) { return p.v; });
+      var last = d.points[d.points.length - 1];
       var min = Math.min.apply(null, values);
       var max = Math.max.apply(null, values);
       summary.textContent = 'Ultimo: ' + last.v.toFixed(1) + ' cm  •  Min: ' + min.toFixed(1) + ' cm  •  Max: ' + max.toFixed(1) + ' cm';
 
-      var labels = d.points.map(function(p) { return p.t; });
+      var labels = d.points.map(function(p) { return formatChartDateLabel(p.t); });
       var ctx = document.getElementById('maggiore-chart').getContext('2d');
       new Chart(ctx, {
         type: 'line',
@@ -1436,15 +1479,6 @@ function loadLagoMaggiore() {
           }
         }
       });
-
-      // Sotto ai 3 box dei fiumi mostra la stessa portata regolata dal lago:
-      // e' il deflusso che alimenta tutto il corso del Ticino a valle.
-      if (d.deflusso_m3s != null) {
-        ['bereguardo', 'vigevano', 'pavia'].forEach(function(s) {
-          var el = document.getElementById(s + '-chart-extra');
-          if (el) el.textContent = 'Portata Ticino regolata dal Lago Maggiore: ' + d.deflusso_m3s.toFixed(1) + ' m³/s';
-        });
-      }
     })
     .catch(function() {
       status.textContent = 'Errore nel caricamento dei dati.';
@@ -1485,11 +1519,18 @@ function loadLagoMaggiore() {
     </div>
   </div>
 
-  <div id="maggiore-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
-  <div id="maggiore-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
-  <canvas id="maggiore-chart" height="220"></canvas>
+  <a href="#" onclick="toggleMaggioreChart(event)"
+     style="display: block; text-align: center; color: var(--accent-primary); font-size: 0.75rem; font-weight: 700; text-decoration: none; cursor: pointer; padding: 4px;">
+    📈 Tocca per il grafico storico
+  </a>
+
+  <div id="maggiore-chart-wrap" style="display:none; margin-top: 10px;">
+    <div id="maggiore-chart-status" style="text-align:center; color:var(--text-muted); font-size:0.75rem; margin-bottom:4px;">Caricamento...</div>
+    <div id="maggiore-chart-summary" style="text-align:center; color:var(--text-secondary); font-size:0.8rem; margin-bottom:10px; font-weight:600;"></div>
+    <canvas id="maggiore-chart" height="220"></canvas>
+  </div>
 </div>
-<script>loadLagoMaggiore();</script>
+<script>loadMaggioreStats();</script>
 
 <!-- MAPPA WINDY.COM -->
 <div class="windy-card">
